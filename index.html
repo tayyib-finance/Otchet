@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Конструктор Прайса для WhatsApp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Учет и Витрина</title>
 <style>
   :root {
     --bg-main: #0f111a;
@@ -12,168 +12,319 @@
     --text-muted: #8b92a5;
     --accent: #e11d48;
     --green: #10b981;
+    --btn-blue: #3b82f6;
   }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 16px; display: flex; flex-direction: column; gap: 20px; }
-
-  /* === БЛОК РЕДАКТОРА === */
-  .editor-header {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-  }
-  .wa-icon { width: 40px; height: 40px; background: linear-gradient(45deg, #25D366, #128C7E); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .editor-title h2 { margin: 0; font-size: 16px; }
-  .editor-title p { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+  body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
   
-  .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-  .btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;}
-  .btn-green { background: var(--green); color: #000; }
-  .btn-gray { background: #2a2e42; color: #fff; }
-
-  .catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .catalog-header h3 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn-add { background: #1d3557; color: #5ba4f5; border: 1px solid #2a4b73; padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
-
-  .filters { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
-  .filter { background: #1a1d2d; border: 1px solid #2a2e42; color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; }
-  .filter.active { background: #064e3b; border-color: #059669; color: #34d399; }
-
-  .item-editor {
-    background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 14px; margin-bottom: 12px;
+  /* Навигация (Нижнее меню) */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d2d; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); z-index: 100;
   }
+  .nav-item {
+    flex: 1; padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent;
+  }
+  .nav-item.active { color: var(--green); border-top-color: var(--green); background: #202436; }
+
+  /* Общие стили контента */
+  .page { padding: 16px; display: none; }
+  .page.active { display: block; }
+  .btn { padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; width: 100%;}
+  .btn-green { background: var(--green); color: #000; }
+  .btn-blue { background: var(--btn-blue); color: #fff; }
+  .btn-gray { background: #2a2e42; color: #fff; }
+  .btn-red { background: #ef4444; color: #fff; }
+  .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; border-radius: 6px;}
+
+  /* === ВКЛАДКА: ВИТРИНА === */
+  .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+  .catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .catalog-header h3 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; }
+  
+  .item-editor { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
   .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .item-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
   .badge-max { background: #3f2e14; color: #f5c76a; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
   
   .toggle-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
-  .toggle { width:; 36px; height: 20px; background: #2a2 backgrounde42; border-radius: 10px; position: relative:; cursor: pointer; transition: 0 rgba.2s; }
+  .toggle { width: 36px; height: 20px; background: #2a2e42; border-radius: 10px; position: relative; cursor: pointer; transition: 0.2s; }
   .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
   .toggle.on { background: var(--green); }
   .toggle.on::after { transform: translateX(16px); }
-  .toggle.off { background: #2a2e42; }
-  .btn-del { background: none; border: none; color: #64748b; font-size: 16px; cursor: pointer; padding: 0 4px; }
 
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .input-group input, .input-group select {
-    width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 8px 10px; border-radius: 8px; font-size: 14px;
-  }
+  .input-group input, .input-group select { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 8px 10px; border-radius: 8px; font-size: 14px; }
   .input-group input[type="number"] { color: #f5c76a; font-weight: 600; }
 
-  /* === БЛОК ПРЕДПРОСМОТРА (КАРТОЧКА) === */
-  .preview-container {
-    background: #000; border-radius: 24px; padding: 2px; position: relative;
-    border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  }
-  .poster {
-    background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%);
-    border-radius: 22px; padding: 30px 20px; position: relative; overflow: hidden;
-    text-align: center; border: 1px solid #1f1f1f;
-  }
-  /* Декоративные точки на фоне */
-  .poster::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 30px 30px; opacity: 0.05; pointer-events: none;
-  }
-  
-  .poster-instock {
-    display: inline-flex; align-items: center; gap: 6px; border: 1px solid #444; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #ccc; font-weight: 600; letter-spacing: 1px; margin-bottom: 20px; background: rgba(255,255,255,0.02);
-  }
-  .poster-title { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin: 0 0 6px; color: #fff; }
-  .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 2px; margin: 0 0 30px; text-transform: uppercase; }
-
-  .poster-list { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 2; }
-  
-  .poster-item {
-    background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px;
-    display: flex; align-items: center; justify-content: space-between; text-align: left;
-  }
+  /* Карточка витрины */
+  .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 10px;}
+  .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; position: relative; overflow: hidden; text-align: center; border: 1px solid #1f1f1f; }
+  .poster-instock { display: inline-flex; border: 1px solid #444; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #ccc; font-weight: 600; margin-bottom: 20px; }
+  .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; color: #fff; }
+  .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; margin: 0 0 30px; text-transform: uppercase; }
+  .poster-list { display: flex; flex-direction: column; gap: 10px; }
+  .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
   .p-item-left { display: flex; align-items: center; gap: 12px; }
-  .p-badge { background: var(--accent); color: #fff; font-weight: 800; font-size: 11px; padding: 6px 10px; border-radius: 8px; text-transform: uppercase; }
+  .p-badge { background: var(--accent); color: #fff; font-weight: 800; font-size: 11px; padding: 6px 10px; border-radius: 8px; }
   .p-info h4 { margin: 0 0 4px; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;}
-  .p-tag { background: #2a2e42; color: #aaa; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+  .p-tag { background: #2a2e42; color: #aaa; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
   .p-tag-sim { background: #3f1a20; color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid #5a252c;}
   .p-desc { margin: 0; font-size: 11px; color: var(--text-muted); }
-  .p-price { font-size: 18px; font-weight: 800; color: #fff; white-space: nowrap; margin-left: 10px;}
+  .p-price { font-size: 18px; font-weight: 800; color: #fff; }
+  .poster-footer { margin-top: 30px; border: 1px solid #3f2e14; background: rgba(63, 46, 20, 0.3); border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #f5c76a; }
 
-  .poster-footer {
-    margin-top: 30px; border: 1px solid #3f2e14(63, 46, 20, 0.3); border-radius: 12px; padding: 12px;
-    display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #f5c76a;
-  }
+  /* === ВКЛАДКА: СДЕЛКИ (УЧЕТ) === */
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; background: var(--bg-card); padding: 12px; border-radius: 12px; margin-bottom: 16px; }
+  .summary .num { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .green-text { color: #4ade80; }
+  .red-text { color: #f87171; }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  th, td { padding: 8px 5px; text-align: left; border-bottom: 1px solid #334155; vertical-align: top; }
+  th { color: var(--text-muted); font-size: 11px; }
+  .status { padding: 2px 6px; border-radius: 5px; font-size: 10px; font-weight: 600; display: inline-block; margin-top:4px;}
+  .st-in { background: #1e3a8a; color: #93c5fd; }
+  .st-sold { background: #14532d; color: #86efac; }
+
+  /* Модальное окно добавления сделки */
+  .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+  .modal.active { display: flex; }
+  .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+  .modal-content h2 { margin-top: 0; font-size: 18px; }
 </style>
 </head>
 <body>
 
-<!-- РЕДАКТОР -->
-<div>
-  <div class="editor-header">
-    <div class="wa-icon">💬</div>
-    <div class="editor-title">
-      <h2>Конструктор Прайса iPhone</h2>
-      <p>eSIM и Физ. SIM • Все объёмы памяти</p>
+<!-- ================= СТРАНИЦА 1: УЧЕТ СДЕЛОК ================= -->
+<div id="page-deals" class="page active">
+  <h1 style="font-size: 20px; margin-bottom: 16px;">📱 Мои сделки</h1>
+
+  <div class="summary">
+    <div>
+      <div style="font-size: 11px; color: var(--text-muted);">Закупка</div>
+      <div class="num" id="sumBuy">0 ₽</div>
+    </div>
+    <div>
+      <div style="font-size: 11px; color: var(--text-muted);">Продажи</div>
+      <div class="num" id="sumSell">0 ₽</div>
+    </div>
+    <div>
+      <div style="font-size: 11px; color: var(--text-muted);">Прибыль</div>
+      <div class="num" id="sumProfit">0 ₽</div>
     </div>
   </div>
 
+  <button class="btn btn-green" onclick="openModal()">+ Добавить сделку</button>
+
+  <div id="dealsTableWrap"></div>
+</div>
+
+<!-- ================= СТРАНИЦА 2: ВИТРИНА ================= -->
+<div id="page-store" class="page">
+  <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Конструктор Прайса</h1>
+  
   <div class="action-buttons">
-    <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD Картинку</button>
-    <button class="btn btn-gray" onclick="copyText()">📋 Текст для WhatsApp</button>
+    <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD</button>
+    <button class="btn btn-gray" onclick="copyText()">📋 Текст в WhatsApp</button>
   </div>
 
   <div class="catalog-header">
-    <h3>Каталог моделей и SIM-карт</h3>
-    <button class="btn-add" onclick="addNewItem()">+ Добавить</button>
-  </div>
-  <p style="font-size: 11px; color: var(--text-muted); margin-top: -8px; margin-bottom: 16px;">Включайте переключатель только для тех моделей, которые есть в наличии!</p>
-
-  <div class="filters">
-    <div class="filter">Все</div>
-    <div class="filter active">Только в наличии</div>
-    <div class="filter">18 Pro</div>
-    <div class="filter">18 Pro Max</div>
+    <h3>Каталог моделей</h3>
+    <button class="btn-sm btn-blue" onclick="addNewItem()">+ Добавить</button>
   </div>
 
-  <div id="editorList">
-    <!-- Сюда будут добавляться карточки редактора -->
+  <div id="editorList"></div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 5px;">
+    <span style="font-size: 13px; color: #aaa;">📱 Предпросмотр витрины</span>
+  </div>
+
+  <div class="preview-container" id="posterContainer">
+    <div class="poster" id="poster">
+      <div class="poster-instock">📱 В НАЛИЧИИ • IN STOCK</div>
+      <h1 class="poster-title">IPHONE</h1>
+      <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
+      
+      <div class="poster-list" id="posterList"></div>
+
+      <div class="poster-footer">
+        💳 Доступна рассрочка
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ПРЕДПРОСМОТР -->
-<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: -5px;">
-  <span style="font-size: 13px; color: #aaa;">📱 Вид для WhatsApp Status</span>
-  <span style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: var(--green); border-radius: 50%;"></span> Живой предпросмотр</span>
+<!-- ================= НИЖНЕЕ МЕНЮ ================= -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Учет и Прибыль</div>
+  <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина для WhatsApp</div>
 </div>
 
-<div class="preview-container" id="posterContainer">
-  <div class="poster" id="poster">
-    <div class="poster-instock">📱 В НАЛИЧИИ • IN STOCK</div>
-    <h1 class="poster-title">IPHONE 18 PRO / MAX</h1>
-    <p class="poster-subtitle" id="posterSubtitle">BURGUNDY & TITANIUM EDITION</p>
-    
-    <div class="poster-list" id="posterList">
-      <!-- Сюда рендерятся элементы витрины -->
-    </div>
-
-    <div class="poster-footer">
-      <span>💳 Доступна рассрочка</span>
-      <span style="font-size: 11px; color: #aaa; font-weight: normal; margin-left: 4px;">Халяль • Без скрытых комиссий</span>
-    </div>
+<!-- ================= МОДАЛЬНОЕ ОКНО ДЛЯ ДОБАВЛЕНИЯ СДЕЛКИ ================= -->
+<div class="modal" id="dealModal">
+  <div class="modal-content">
+    <h2>Новая сделка</h2>
+    <form id="dealForm">
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Модель</label>
+          <input name="model" placeholder="iPhone 13 128GB" required>
+        </div>
+        <div class="input-group">
+          <label>Серийный / IMEI</label>
+          <input name="imei" placeholder="356789...">
+        </div>
+      </div>
+      <div class="input-grid" style="margin-top:10px">
+        <div class="input-group">
+          <label>Цена закупки (₽)</label>
+          <input name="buy" type="number" placeholder="30000" required>
+        </div>
+        <div class="input-group">
+          <label>Цена продажи (₽)</label>
+          <input name="sell" type="number" placeholder="0">
+        </div>
+      </div>
+      <div class="input-group" style="margin-top:10px">
+        <label>Статус</label>
+        <select name="status">
+          <option value="in">В наличии</option>
+          <option value="sold">Продан</option>
+        </select>
+      </div>
+      <div class="input-grid" style="margin-top:10px">
+        <div class="input-group">
+          <label>Контакт продавца</label>
+          <input name="seller" placeholder="Имя / тел.">
+        </div>
+        <div class="input-group">
+          <label>Контакт покупателя</label>
+          <input name="buyer" placeholder="Имя / тел.">
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">Сохранить</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <!-- Подключаем библиотеку для скриншотов -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-  // Стартовые данные
-  let items = [
-    { id: 1, model: "18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, active: true },
-    { id: 2, model: "18 Pro", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 132000, active: true },
-    { id: 3, model: "18 Pro Max", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 130500, active: true },
-    { id: 4, model: "18 Pro Max", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 152000, active: true }
-  ];
+  // === НАВИГАЦИЯ ===
+  function switchTab(tab) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + tab).classList.add('active');
+    document.getElementById('nav-' + tab).classList.add('active');
+  }
 
-  // Функция отрисовки списка редактора
-  function renderEditor() {
+  // ==========================================
+  // ЛОГИКА 1: УЧЕТ СДЕЛОК (Прибыль)
+  // ==========================================
+  let deals = JSON.parse(localStorage.getItem('my_deals') || '[]');
+
+  function saveDeals() {
+    localStorage.setItem('my_deals', JSON.stringify(deals));
+    renderDeals();
+  }
+
+  function renderDeals() {
+    const wrap = document.getElementById('dealsTableWrap');
+    let sumBuy = 0, sumSell = 0, sumProfit = 0;
+
+    if (deals.length === 0) {
+      wrap.innerHTML = '<div style="text-align:center; color:#64748b; padding: 20px; font-size:14px;">Пока нет сделок. Нажмите «Добавить».</div>';
+      document.getElementById('sumBuy').textContent = '0 ₽';
+      document.getElementById('sumSell').textContent = '0 ₽';
+      document.getElementById('sumProfit').textContent = '0 ₽';
+      return;
+    }
+
+    let html = `<table>
+      <tr><th>Модель / Инфо</th><th>Закуп</th><th>Продажа</th><th>Прибыль</th><th></th></tr>`;
+
+    deals.forEach((it, i) => {
+      const profit = (it.sell || 0) - (it.buy || 0);
+      sumBuy += it.buy || 0;
+      sumSell += it.sell || 0;
+      if (it.status === 'sold') sumProfit += profit;
+
+      html += `<tr>
+        <td>
+          <b>${it.model}</b><br>
+          <span style="font-size:10px;color:#64748b">${it.imei || '—'}</span><br>
+          <span class="status ${it.status === 'sold' ? 'st-sold' : 'st-in'}">${it.status === 'sold' ? 'Продан' : 'В наличии'}</span>
+        </td>
+        <td>${(it.buy || 0).toLocaleString('ru-RU')} ₽</td>
+        <td>${it.sell ? (it.sell).toLocaleString('ru-RU') + ' ₽' : '—'}</td>
+        <td class="${profit > 0 ? 'green-text' : (profit < 0 ? 'red-text' : '')}">
+          ${it.status === 'sold' ? (profit >= 0 ? '+' : '') + profit.toLocaleString('ru-RU') + ' ₽' : '—'}
+        </td>
+        <td style="text-align:right;">
+          <button class="btn-sm btn-red" onclick="delDeal(${i})">✕</button>
+        </td>
+      </tr>`;
+    });
+    html += '</table>';
+    wrap.innerHTML = html;
+
+    document.getElementById('sumBuy').textContent = sumBuy.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('sumSell').textContent = sumSell.toLocaleString('ru-RU') + ' ₽';
+    
+    const pEl = document.getElementById('sumProfit');
+    pEl.textContent = (sumProfit >= 0 ? '+' : '') + sumProfit.toLocaleString('ru-RU') + ' ₽';
+    pEl.className = 'num ' + (sumProfit > 0 ? 'green-text' : sumProfit < 0 ? 'red-text' : '');
+  }
+
+  function delDeal(i) {
+    if (confirm('Удалить эту запись?')) {
+      deals.splice(i, 1);
+      saveDeals();
+    }
+  }
+
+  function openModal() { document.getElementById('dealModal').classList.add('active'); }
+  function closeModal() { document.getElementById('dealModal').classList.remove('active'); }
+
+  document.getElementById('dealForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    deals.push({
+      model: f.get('model'), imei: f.get('imei'), buy: Number(f.get('buy')) || 0,
+      sell: Number(f.get('sell')) || 0, status: f.get('status'),
+      seller: f.get('seller'), buyer: f.get('buyer')
+    });
+    saveDeals();
+    e.target.reset();
+    closeModal();
+  });
+
+  // ==========================================
+  // ЛОГИКА 2: ВИТРИНА ДЛЯ WHATSAPP
+  // ==========================================
+  let storeItems = JSON.parse(localStorage.getItem('my_store_items') || 'null');
+  if (!storeItems) {
+    storeItems = [
+      { id: 1, model: "18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, active: true },
+      { id: 2, model: "18 Pro", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 132000, active: true },
+      { id: 3, model: "18 Pro Max", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 130500, active: true },
+      { id: 4, model: "18 Pro Max", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 152000, active: true }
+    ];
+  }
+
+  function saveStore() {
+    localStorage.setItem('my_store_items', JSON.stringify(storeItems));
+    renderStoreEditor();
+    renderPoster();
+  }
+
+  function renderStoreEditor() {
     const wrap = document.getElementById('editorList');
-    wrap.innerHTML = items.map((item, index) => `
+    wrap.innerHTML = storeItems.map((item, index) => `
       <div class="item-editor">
         <div class="item-top">
           <div class="item-name">
@@ -181,55 +332,48 @@
             ${item.model} ${item.storage}
           </div>
           <div class="toggle-wrap">
-            ${item.active ? '' : 'СКРЫТО'}
-            <div class="toggle ${item.active ? 'on' : 'off'}" onclick="toggleItem(${index})"></div>
-            <button class="btn-del" onclick="deleteItem(${index})">✕</button>
+            <div class="toggle ${item.active ? 'on' : ''}" onclick="toggleStoreItem(${index})"></div>
+            <button style="background:none; border:none; color:#64748b; font-size:16px;" onclick="delStoreItem(${index})">✕</button>
           </div>
         </div>
         <div class="input-grid">
           <div class="input-group">
             <label>Сим-карта</label>
-            <select onchange="updateItem(${index}, 'sim', this.value)">
+            <select onchange="updateStoreItem(${index}, 'sim', this.value)">
               <option value="eSIM" ${item.sim === 'eSIM' ? 'selected' : ''}>eSIM</option>
               <option value="Физ. SIM" ${item.sim === 'Физ. SIM' ? 'selected' : ''}>Физ. SIM</option>
             </select>
           </div>
           <div class="input-group">
             <label>Цвет / Коммент</label>
-            <input type="text" value="${item.color}" onchange="updateItem(${index}, 'color', this.value)">
+            <input type="text" value="${item.color}" onchange="updateStoreItem(${index}, 'color', this.value)">
           </div>
           <div class="input-group">
             <label>Цена (₽)</label>
-            <input type="number" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
+            <input type="number" value="${item.price}" onchange="updateStoreItem(${index}, 'price', this.value)">
           </div>
           <div class="input-group">
-            <label>Кол-во</label>
-            <input type="number" value="1">
+            <label>Память (ГБ)</label>
+            <input type="text" value="${item.storage}" onchange="updateStoreItem(${index}, 'storage', this.value)">
           </div>
         </div>
       </div>
     `).join('');
   }
 
-  // Функция отрисовки витрины (предпросмотра)
   function renderPoster() {
-    const activeItems = items.filter(i => i.active);
+    const activeItems = storeItems.filter(i => i.active);
     const listWrap = document.getElementById('posterList');
-    
     if(activeItems.length === 0) {
-      listWrap.innerHTML = '<p style="color:#aaa; font-size:12px; text-align:center;">Включите переключатели в каталоге, чтобы товары появились здесь.</p>';
+      listWrap.innerHTML = '<p style="color:#aaa; font-size:12px;">Нет товаров в наличии.</p>';
       return;
     }
-
     listWrap.innerHTML = activeItems.map(item => `
       <div class="poster-item">
         <div class="p-item-left">
           <div class="p-badge">${item.model.includes('Max') ? 'MAX' : 'PRO'}</div>
           <div class="p-info">
-            <h4>
-              ${item.model} <span class="p-tag">${item.storage}</span> 
-              <span class="p-tag-sim">${item.sim}</span>
-            </h4>
+            <h4>${item.model} <span class="p-tag">${item.storage}</span> <span class="p-tag-sim">${item.sim}</span></h4>
             <p class="p-desc">${item.color} • 1 шт</p>
           </div>
         </div>
@@ -238,63 +382,54 @@
     `).join('');
   }
 
-  // Обновление данных
-  function updateItem(index, field, value) {
-    items[index][field] = field === 'price' ? Number(value) : value;
-    renderPoster();
+  function updateStoreItem(index, field, value) {
+    storeItems[index][field] = field === 'price' ? Number(value) : value;
+    saveStore();
   }
-
-  // Переключатель наличия
-  function toggleItem(index) {
-    items[index].active = !items[index].active;
-    renderEditor();
-    renderPoster();
+  function toggleStoreItem(index) {
+    storeItems[index].active = !storeItems[index].active;
+    saveStore();
   }
-
-  // Удаление
-  function deleteItem(index) {
-    items.splice(index, 1);
-    renderEditor();
-    renderPoster();
+  function delStoreItem(index) {
+    if(confirm('Удалить модель?')) {
+      storeItems.splice(index, 1);
+      saveStore();
+    }
   }
-
-  // Добавление новой
   function addNewItem() {
-    items.push({ id: Date.now(), model: "18 Pro", storage: "128GB", sim: "eSIM", color: "Titanium", price: 100000, active: true });
-    renderEditor();
-    renderPoster();
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // Прокрутка вниз к новой
+    storeItems.push({ id: Date.now(), model: "iPhone", storage: "128GB", sim: "eSIM", color: "Black", price: 50000, active: true });
+    saveStore();
   }
 
-  // Функции кнопок
+  // Скачивание картинки
   function downloadImage() {
     const poster = document.getElementById('posterContainer');
     html2canvas(poster, { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
       const link = document.createElement('a');
-      link.download = 'iphone-price.png';
+      link.download = 'price-list.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
   }
 
+  // Копирование текста
   function copyText() {
-    const activeItems = items.filter(i => i.active);
-    let text = "🔥 *В НАЛИЧИИ IPHONE 18 PRO / MAX*\n\n";
+    const activeItems = storeItems.filter(i => i.active);
+    let text = "🔥 *В НАЛИЧИИ*\n\n";
     activeItems.forEach(item => {
-      text += `▪️ ${item.model} ${item.storage} (${item.sim})\n`;
-      text += `   Цвет: ${item.color}\n`;
-      text += `   Цена: *${item.price.toLocaleString('ru-RU')} ₽*\n\n`;
+      text += `▪️ ${item.model} ${item.storage} (${item.sim})\n   Цвет: ${item.color}\n   Цена: *${item.price.toLocaleString('ru-RU')} ₽*\n\n`;
     });
     text += "💳 Доступна рассрочка!";
-    
     navigator.clipboard.writeText(text).then(() => {
       alert("Текст скопирован! Вставьте его в WhatsApp.");
     });
   }
 
-  // Первый запуск
-  renderEditor();
+  // Запуск при загрузке
+  renderDeals();
+  renderStoreEditor();
   renderPoster();
+
 </script>
 </body>
 </html>
