@@ -3,17 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Учет и Витрина</title>
+<title>Склад и Витрина</title>
 <style>
   :root {
-    --bg-main: #0f111a;
-    --bg-card: #1a1d2d;
-    --text-main: #ffffff;
-    --text-muted: #8b92a5;
-    --accent: #e11d48;
-    --green: #10b981;
-    --btn-blue: #3b82f6;
-    --old-price: #64748b;
+    --bg-main: #0f111a; --bg-card: #1a1d2d; --text-main: #ffffff;
+    --text-muted: #8b92a5; --accent: #e11d48; --green: #10b981;
+    --btn-blue: #3b82f6; --old-price: #64748b;
   }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
@@ -38,7 +33,7 @@
   .green-text { color: #4ade80; }
   .red-text { color: #f87171; }
   
-  /* Карточки */
+  /* Карточки склада */
   .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; display: flex; justify-content: space-between;}
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
@@ -54,52 +49,45 @@
   .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
   .st-in { background: #1e3a8a; color: #93c5fd; }
   .st-sold { background: #14532d; color: #86efac; }
+  .st-shop { background: #78350f; color: #fde047; }
+
+  /* Локация */
+  .location-info { font-size: 11px; color: #fbbf24; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+  .location-info svg { width: 12px; height: 12px; }
 
   /* Витрина */
   .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-  .catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .item-editor { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
-  .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .item-name { font-weight: 700; font-size: 15px; }
-  .toggle-wrap { display: flex; align-items: center; gap: 8px; }
-  .toggle { width: 36px; height: 20px; background: #2a2e42; border-radius: 10px; position: relative; cursor: pointer; transition: 0.2s; }
-  .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
-  .toggle.on { background: var(--green); }
-  .toggle.on::after { transform: translateX(16px); }
-
-  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .input-group input, .input-group select { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 10px; border-radius: 8px; font-size: 14px; outline: none;}
-  .input-group input:focus, .input-group select:focus { border-color: var(--btn-blue); }
-  .input-group input[type="number"] { color: #f5c76a; font-weight: 600; }
-
-  /* Предпросмотр */
-  .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; margin-top: 10px;}
+  .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px;}
   .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; text-align: center; }
   .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
   .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; margin: 0 0 20px; }
   .poster-list { display: flex; flex-direction: column; gap: 10px; }
+  
   .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
-  .p-info h4 { margin: 0 0 4px; font-size: 15px; display: flex; gap: 6px; flex-wrap: wrap;}
-  .p-tag { background: #2a2e42; color: #aaa; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+  .p-info { display: flex; flex-direction: column; gap: 2px; }
+  .p-model { font-size: 16px; font-weight: 800; color: #fff; }
+  .p-desc { font-size: 11px; color: #8b92a5; }
   
   .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
   .p-price { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.1; }
-  .p-old-price { font-size: 13px; color: var(--old-price); text-decoration: line-through; margin-bottom: 2px; }
-  .p-discount { font-size: 10px; background: var(--accent); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-top: 4px; }
 
-  /* Модалки */
+  /* Модалки и Поля */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
   .modal.active { display: flex; }
   .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
   .modal-content h2 { margin-top: 0; font-size: 18px; margin-bottom: 16px; }
+  
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .input-group input, .input-group select, .input-group textarea { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 10px; border-radius: 8px; font-size: 14px; outline: none;}
+  .input-group input:focus, .input-group textarea:focus { border-color: var(--btn-blue); }
   
   .loading { text-align: center; color: var(--text-muted); padding: 20px; }
 </style>
 </head>
 <body>
 
-<!-- СТРАНИЦА 1: СКЛАД И СДЕЛКИ -->
+<!-- СТРАНИЦА 1: СКЛАД -->
 <div id="page-deals" class="page active">
   <h1 style="font-size: 20px; margin-bottom: 16px;">📱 Мой склад</h1>
 
@@ -109,7 +97,10 @@
     <div><div style="font-size: 11px; color: var(--text-muted);">Прибыль</div><div class="num" id="sumProfit">0 ₽</div></div>
   </div>
 
-  <button class="btn btn-green" onclick="openAddModal()">+ Добавить товар на склад</button>
+  <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+    <button class="btn btn-blue" onclick="openImportModal()" style="flex: 1; background: #8b5cf6;">📥 Импорт</button>
+    <button class="btn btn-green" onclick="openAddModal()" style="flex: 1;">+ Вручную</button>
+  </div>
 
   <div class="section-title">📦 В наличии</div>
   <div id="stockList" class="loading">Загрузка...</div>
@@ -120,19 +111,12 @@
 
 <!-- СТРАНИЦА 2: ВИТРИНА -->
 <div id="page-store" class="page">
-  <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Конструктор Прайса</h1>
+  <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Витрина</h1>
   
   <div class="action-buttons">
     <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD</button>
     <button class="btn btn-gray" onclick="copyText()">📋 Текст в WhatsApp</button>
   </div>
-
-  <div class="catalog-header">
-    <h3>Настройка витрины</h3>
-    <button class="btn-sm btn-blue" onclick="addStoreItem()">+ Добавить</button>
-  </div>
-
-  <div id="editorList" class="loading">Загрузка...</div>
 
   <div class="preview-container" id="posterContainer">
     <div class="poster">
@@ -140,6 +124,11 @@
       <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
       <div class="poster-list" id="posterList"></div>
     </div>
+  </div>
+  
+  <div class="action-buttons">
+    <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD</button>
+    <button class="btn btn-gray" onclick="copyText()">📋 Текст в WhatsApp</button>
   </div>
 </div>
 
@@ -149,12 +138,11 @@
   <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина</div>
 </div>
 
-<!-- МОДАЛКА: ДОБАВИТЬ НА СКЛАД -->
+<!-- МОДАЛКА: ДОБАВИТЬ ВРУЧНУЮ -->
 <div class="modal" id="addModal">
   <div class="modal-content">
-    <h2>Добавить товар</h2>
+    <h2>Добавить вручную</h2>
     <form id="addForm">
-      
       <div class="input-group" style="margin-bottom:10px;">
         <label>Категория</label>
         <select name="category" id="addCategory" required>
@@ -166,32 +154,10 @@
         </select>
       </div>
 
-      <!-- Блок для iPhone -->
       <div id="iphoneFields">
         <div class="input-group" style="margin-bottom:10px;">
-          <label>Модель iPhone</label>
-          <select name="iphoneModel">
-            <option value="" disabled selected>Выберите модель...</option>
-            <option value="iPhone 15">iPhone 15</option>
-            <option value="iPhone 15 Plus">iPhone 15 Plus</option>
-            <option value="iPhone 15 Pro">iPhone 15 Pro</option>
-            <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
-            <option value="iPhone 16">iPhone 16</option>
-            <option value="iPhone 16 Plus">iPhone 16 Plus</option>
-            <option value="iPhone 16 Pro">iPhone 16 Pro</option>
-            <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
-            <option value="iPhone 17">iPhone 17</option>
-            <option value="iPhone 17 Pro">iPhone 17 Pro</option>
-            <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
-            <option value="iPhone 18">iPhone 18</option>
-            <option value="iPhone 18 Pro">iPhone 18 Pro</option>
-            <option value="iPhone 18 Pro Max">iPhone 18 Pro Max</option>
-            <option value="Другая">Другая модель...</option>
-          </select>
-        </div>
-        <div class="input-group" style="margin-bottom:10px; display:none;" id="customModelWrap">
-          <label>Напишите модель</label>
-          <input name="customModel" placeholder="iPhone ...">
+          <label>Модель</label>
+          <input name="iphoneModel" placeholder="iPhone 18 Pro" required>
         </div>
         <div class="input-grid" style="margin-bottom:10px;">
           <div class="input-group">
@@ -204,7 +170,7 @@
           </div>
           <div class="input-group">
             <label>Цвет</label>
-            <input name="color" placeholder="Black...">
+            <input name="color" placeholder="Burgundy">
           </div>
         </div>
         <div class="input-grid" style="margin-bottom:10px;">
@@ -213,37 +179,58 @@
             <select name="sim">
               <option value="eSIM">eSIM</option>
               <option value="Физ. SIM">Физ. SIM</option>
-              <option value="2 SIM">2 SIM</option>
             </select>
           </div>
           <div class="input-group">
-            <label>IMEI</label>
+            <label>IMEI (если есть)</label>
             <input name="imei" placeholder="356789...">
           </div>
         </div>
       </div>
 
-      <!-- Блок для других товаров -->
       <div id="otherFields" style="display:none;">
         <div class="input-group" style="margin-bottom:10px;">
-          <label>Название / Модель</label>
-          <input name="otherModel" placeholder="Например, PlayStation 5 Slim или Samsung 55 TV">
+          <label>Название</label>
+          <input name="otherModel" placeholder="PlayStation 5 Slim">
         </div>
         <div class="input-group" style="margin-bottom:10px;">
-          <label>Описание / Характеристики (необязательно)</label>
-          <input name="otherDesc" placeholder="1TB, Black, 120Hz">
+          <label>Описание</label>
+          <input name="otherDesc" placeholder="1TB...">
         </div>
       </div>
 
-      <!-- Общие поля (цена, контакты) -->
       <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
           <label>Цена закупки (₽)</label>
           <input name="buy" type="number" required placeholder="30000">
         </div>
         <div class="input-group">
-          <label>Контакт продавца</label>
-          <input name="seller" placeholder="Имя / тел.">
+          <label>Количество (шт.)</label>
+          <input name="qty" type="number" value="1" min="1" required>
+        </div>
+      </div>
+
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Контакт продавца</label>
+        <input name="seller" placeholder="Имя / тел.">
+      </div>
+
+      <!-- НОВОЕ: Где находится товар -->
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Где находится товар?</label>
+        <select name="location" id="addLocation" required>
+          <option value="У меня (склад)">У меня (склад)</option>
+          <option value="В магазине на продажу">В магазине на продажу</option>
+        </select>
+      </div>
+      <div id="shopFields" style="display:none; margin-bottom:10px;">
+        <div class="input-group">
+          <label>Название магазина</label>
+          <input name="shopName" placeholder="Например, Магазин на Ленина">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+          <label>Телефон магазина</label>
+          <input name="shopPhone" placeholder="+7 999 ...">
         </div>
       </div>
 
@@ -255,16 +242,44 @@
   </div>
 </div>
 
+<!-- МОДАЛКА: ИМПОРТ ТЕКСТА -->
+<div class="modal" id="importModal">
+  <div class="modal-content">
+    <h2>📥 Импорт из текста</h2>
+    <p style="font-size: 12px; color: #aaa; margin-top: -10px; margin-bottom: 15px;">Вставьте ваш текст. Программа сама найдет модель, память, цену и количество.</p>
+    
+    <div class="input-group" style="margin-bottom:10px;">
+      <textarea id="importText" rows="6" placeholder="18 Pro 256 Burgundy (eSim) - 106000 - 1 шт&#10;18 Pro Max 512 Burgundy - 148000 - 2 шт"></textarea>
+    </div>
+    
+    <div style="display:flex; gap:10px; margin-top: 20px;">
+      <button type="button" class="btn btn-gray" onclick="closeImportModal()">Отмена</button>
+      <button type="button" class="btn btn-blue" onclick="processImport()" style="background: #8b5cf6;">Распознать</button>
+    </div>
+  </div>
+</div>
+
 <!-- МОДАЛКА: ПРОДАТЬ -->
 <div class="modal" id="sellModal">
   <div class="modal-content">
     <h2>Продажа: <span id="sellModelName" style="color:var(--green)"></span></h2>
     <form id="sellForm">
       <input type="hidden" name="dealKey" id="sellKey">
+      
       <div class="input-group" style="margin-bottom:10px;">
         <label>Цена продажи (₽)</label>
         <input name="sellPrice" type="number" required placeholder="35000" style="font-size:18px; color:#4ade80;">
       </div>
+
+      <!-- НОВОЕ: Способ оплаты -->
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Как оплатил клиент?</label>
+        <select name="paymentMethod" required>
+          <option value="Наличные">Наличные</option>
+          <option value="Перевод">Перевод (ожидание)</option>
+        </select>
+      </div>
+
       <div class="input-group" style="margin-bottom:10px;">
         <label>Контакт покупателя</label>
         <input name="buyer" placeholder="Имя / тел.">
@@ -282,15 +297,11 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-  const firebaseConfig = {
-    databaseURL: "https://iphone-sklad-default-rtdb.firebaseio.com/"
-  };
-
+  const firebaseConfig = { databaseURL: "https://iphone-sklad-default-rtdb.firebaseio.com/" };
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
   let deals = {};
-  let storeItems = {};
 
   window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -299,7 +310,6 @@
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  // Смена полей при выборе категории
   document.getElementById('addCategory').addEventListener('change', function() {
     if (this.value === 'iPhone') {
       document.getElementById('iphoneFields').style.display = 'block';
@@ -310,55 +320,62 @@
     }
   });
 
-  document.querySelector('select[name="iphoneModel"]').addEventListener('change', function() {
-    const customWrap = document.getElementById('customModelWrap');
-    if (this.value === 'Другая') { customWrap.style.display = 'block'; } 
-    else { customWrap.style.display = 'none'; }
+  document.getElementById('addLocation').addEventListener('change', function() {
+    if (this.value === 'В магазине на продажу') {
+      document.getElementById('shopFields').style.display = 'block';
+    } else {
+      document.getElementById('shopFields').style.display = 'none';
+    }
   });
 
   // ==========================================
-  // СКЛАД
+  // СКЛАД И ВИТРИНА
   // ==========================================
   const dealsRef = ref(db, 'deals');
   
   onValue(dealsRef, (snapshot) => {
     deals = snapshot.val() || {};
     renderDeals();
+    renderPoster();
   });
 
   window.renderDeals = function() {
     let sumBuy = 0, sumSell = 0, sumProfit = 0;
-    
     let categoriesStock = {};
     let soldHtml = '';
 
-    const dealKeys = Object.keys(deals);
-
-    dealKeys.forEach((key) => {
+    Object.keys(deals).forEach((key) => {
       const it = deals[key];
       const profit = (it.sell || 0) - (it.buy || 0);
       sumBuy += it.buy || 0;
       
-      let title = it.model;
+      let title = it.model || 'Без названия';
       if (it.category === 'iPhone') {
-        title += ` <span style="font-size:12px; color:#aaa;">${it.storage} ${it.color}</span>`;
-      } else if (it.desc) {
-        title += ` <span style="font-size:12px; color:#aaa;">${it.desc}</span>`;
+        title += ` <span style="font-size:12px; color:#aaa;">${it.storage || ''} ${it.color || ''}</span>`;
+      }
+
+      // Локация (где лежит)
+      let locationText = '';
+      if (it.location === 'В магазине на продажу') {
+         locationText = `<div class="location-info">🏬 ${it.shopName || 'Магазин'} (${it.shopPhone || '—'})</div>`;
       }
 
       if (it.status === 'in') {
         if (!categoriesStock[it.category]) categoriesStock[it.category] = '';
-        
+        const simInfo = it.category === 'iPhone' ? (it.sim || '') : it.category;
+        const imeiInfo = it.imei ? ' • IMEI: ' + it.imei : '';
+
         categoriesStock[it.category] += `
         <div class="deal-card">
           <div class="deal-header">
             <div>
               <div class="deal-title">${title}</div>
-              <div class="deal-imei">${it.category === 'iPhone' ? it.sim + ' • IMEI: ' + (it.imei || '—') : it.category}</div>
+              <div class="deal-imei">${simInfo}${imeiInfo}</div>
+              ${locationText}
             </div>
             <div class="deal-price">
               <div class="deal-buy">Куплен за</div>
-              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy).toLocaleString('ru-RU')} ₽</div>
+              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div>
             </div>
           </div>
           <div class="deal-footer">
@@ -372,21 +389,26 @@
       } else {
         sumSell += it.sell || 0;
         sumProfit += profit;
+        
+        const payText = it.paymentMethod === 'Перевод' ? '<span class="status" style="background:#b45309; color:#fde047; margin-left:4px;">Ждёт перевод</span>' : '';
+
         soldHtml += `
         <div class="deal-card" style="opacity: 0.8;">
           <div class="deal-header">
             <div>
               <div class="deal-category">${it.category}</div>
               <div class="deal-title">${title}</div>
+              ${locationText}
             </div>
             <div class="deal-price">
-              <div class="deal-buy">Продажа: ${(it.sell).toLocaleString('ru-RU')} ₽</div>
+              <div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div>
               <div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>
             </div>
           </div>
           <div class="deal-footer">
             <div>
               <span class="status st-sold">Продан</span>
+              ${payText}
               <div style="font-size:10px; color:#64748b; margin-top:4px;">${it.buyer ? 'Покупатель: ' + it.buyer : ''}</div>
             </div>
             <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
@@ -416,23 +438,52 @@
     pEl.className = 'num ' + (sumProfit > 0 ? 'green-text' : sumProfit < 0 ? 'red-text' : '');
   }
 
-  window.delDeal = function(key) {
-    if (confirm('Удалить эту запись?')) { remove(ref(db, 'deals/' + key)); }
+  window.renderPoster = function() {
+    const listWrap = document.getElementById('posterList');
+    let posterHtml = '';
+
+    Object.keys(deals).forEach(key => {
+      const item = deals[key];
+      // На витрину берем только то, что в наличии и НЕ В МАГАЗИНЕ (т.к. оно уже выставлено там)
+      if (item.status === 'in' && item.location !== 'В магазине на продажу') {
+        const descText = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
+        posterHtml += `
+        <div class="poster-item">
+          <div class="p-info">
+            <div class="p-model">${item.model || 'Без названия'}</div>
+            <div class="p-desc">${descText || item.desc || item.category}</div>
+          </div>
+          <div class="p-price-wrap">
+            <div class="p-price">${Number(item.buy).toLocaleString('ru-RU')} ₽</div>
+          </div>
+        </div>`;
+      }
+    });
+
+    if (!posterHtml) posterHtml = '<p style="color:#aaa; font-size:12px; text-align:center;">Нет товаров на складе</p>';
+    listWrap.innerHTML = posterHtml;
   }
 
-  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); }
+  window.delDeal = function(key) { 
+    const code = prompt('Для удаления товара введите код:');
+    if (code === '0537') remove(ref(db, 'deals/' + key)); 
+    else if (code !== null) alert('Неверный код!');
+  }
+
+  window.openAddModal = function() { 
+    document.getElementById('addModal').classList.add('active'); 
+    document.getElementById('shopFields').style.display = 'none';
+  }
   window.closeAddModal = function() { 
     document.getElementById('addModal').classList.remove('active'); 
     document.getElementById('addForm').reset(); 
-    document.getElementById('customModelWrap').style.display = 'none';
-    document.getElementById('iphoneFields').style.display = 'block';
-    document.getElementById('otherFields').style.display = 'none';
   }
+  window.openImportModal = function() { document.getElementById('importModal').classList.add('active'); }
+  window.closeImportModal = function() { document.getElementById('importModal').classList.remove('active'); document.getElementById('importText').value = ''; }
   
   window.openSellModal = function(key) { 
     document.getElementById('sellKey').value = key;
-    const d = deals[key];
-    document.getElementById('sellModelName').textContent = d.model;
+    document.getElementById('sellModelName').textContent = deals[key].model;
     document.getElementById('sellForm').reset();
     document.getElementById('sellModal').classList.add('active'); 
   }
@@ -442,133 +493,107 @@
     e.preventDefault();
     const f = new FormData(e.target);
     const category = f.get('category');
+    const qty = Number(f.get('qty')) || 1;
     
-    let newData = {
-      category: category,
-      buy: Number(f.get('buy')), 
-      seller: f.get('seller'),
-      sell: 0, buyer: '', status: 'in'
+    let baseData = { 
+      category, buy: Number(f.get('buy')), seller: f.get('seller'), 
+      sell: 0, buyer: '', status: 'in',
+      location: f.get('location'),
+      shopName: f.get('shopName'),
+      shopPhone: f.get('shopPhone')
     };
 
     if (category === 'iPhone') {
-      let modelName = f.get('iphoneModel');
-      if (modelName === 'Другая') modelName = f.get('customModel') || 'iPhone';
-      
-      newData.model = modelName;
-      newData.storage = f.get('storage');
-      newData.color = f.get('color');
-      newData.sim = f.get('sim');
-      newData.imei = f.get('imei');
+      baseData.model = f.get('iphoneModel');
+      baseData.storage = f.get('storage');
+      baseData.color = f.get('color');
+      baseData.sim = f.get('sim');
+      baseData.imei = f.get('imei');
     } else {
-      newData.model = f.get('otherModel') || category;
-      newData.desc = f.get('otherDesc');
+      baseData.model = f.get('otherModel') || category;
+      baseData.desc = f.get('otherDesc');
     }
 
-    const newDealRef = push(dealsRef);
-    set(newDealRef, newData);
+    for (let i = 0; i < qty; i++) {
+      const newDealRef = push(dealsRef);
+      set(newDealRef, baseData);
+    }
     closeAddModal();
   });
 
   document.getElementById('sellForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
-    const key = f.get('dealKey');
-    update(ref(db, 'deals/' + key), {
+    update(ref(db, 'deals/' + f.get('dealKey')), {
       sell: Number(f.get('sellPrice')),
       buyer: f.get('buyer'),
+      paymentMethod: f.get('paymentMethod'),
       status: 'sold'
     });
     closeSellModal();
   });
 
+  // УМНЫЙ ИМПОРТ
+  window.processImport = function() {
+    const text = document.getElementById('importText').value;
+    if (!text.trim()) return alert('Вставьте текст');
 
-  // ==========================================
-  // ВИТРИНА
-  // ==========================================
-  const storeRef = ref(db, 'store');
-  
-  onValue(storeRef, (snapshot) => {
-    storeItems = snapshot.val();
-    if(!storeItems) {
-      const defaultStore = {
-        item1: { model: "iPhone 18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, oldPrice: 0, active: true },
-        item2: { model: "PlayStation 5", storage: "", sim: "", color: "Slim 1TB", price: 60000, oldPrice: 0, active: true }
-      };
-      set(storeRef, defaultStore);
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    let addedCount = 0;
+
+    lines.forEach(line => {
+      const priceMatch = line.match(/\b\d{4,7}\b/);
+      if (!priceMatch) return; 
+      const price = Number(priceMatch[0]);
+
+      let qty = 1;
+      const qtyMatch = line.match(/(\d+)\s*(шт|шт\.|штук)/i) || line.match(/-\s*(\d+)$/);
+      if (qtyMatch) qty = Number(qtyMatch[1]);
+
+      let model = "iPhone";
+      const modelMatch = line.match(/(iPhone\s*)?(1[5-8]|11|12|13|14)/i);
+      if (modelMatch) {
+        model = `iPhone ${modelMatch[2]}`;
+        if (line.toLowerCase().includes('pro max')) model += ' Pro Max';
+        else if (line.toLowerCase().includes('pro')) model += ' Pro';
+        else if (line.toLowerCase().includes('plus')) model += ' Plus';
+      }
+
+      let storage = "";
+      const storageMatch = line.match(/(64|128|256|512|1024|1TB)/i);
+      if (storageMatch) storage = storageMatch[1].toUpperCase() + (storageMatch[1].toLowerCase() === '1tb' ? '' : 'GB');
+
+      let sim = "eSIM";
+      if (line.toLowerCase().includes('физ') || line.toLowerCase().includes('phys')) sim = "Физ. SIM";
+
+      let color = "";
+      const colorMatch = line.match(/(Burgundy|Titanium|Black|White|Blue|Red|Green|Gold|Silver|Purple)/i);
+      if (colorMatch) color = colorMatch[1];
+
+      for (let i = 0; i < qty; i++) {
+        const newDealRef = push(dealsRef);
+        set(newDealRef, {
+          category: 'iPhone',
+          model: model.trim(),
+          storage: storage,
+          sim: sim,
+          color: color,
+          buy: price,
+          seller: 'Импорт',
+          sell: 0, buyer: '', status: 'in',
+          location: 'У меня (склад)'
+        });
+        addedCount++;
+      }
+    });
+
+    if (addedCount > 0) {
+      alert(`Успешно добавлено товаров: ${addedCount}`);
+      closeImportModal();
+      switchTab('deals');
     } else {
-      renderStoreEditor(); 
-      renderPoster();
+      alert('Не удалось распознать текст. Проверьте, что есть цены.');
     }
-  });
-
-  window.renderStoreEditor = function() {
-    const wrap = document.getElementById('editorList');
-    wrap.innerHTML = Object.keys(storeItems).map((key) => {
-      const item = storeItems[key];
-      return `
-      <div class="item-editor">
-        <div class="item-top">
-          <div class="item-name">${item.model}</div>
-          <div class="toggle-wrap">
-            <div class="toggle ${item.active ? 'on' : ''}" onclick="toggleStoreItem('${key}')"></div>
-            <button style="background:none; border:none; color:#64748b; font-size:16px;" onclick="delStoreItem('${key}')">✕</button>
-          </div>
-        </div>
-        <div class="input-grid">
-          <div class="input-group">
-            <label>Модель</label>
-            <input type="text" value="${item.model}" onchange="updateStoreItem('${key}', 'model', this.value)">
-          </div>
-          <div class="input-group">
-            <label>Характеристика</label>
-            <input type="text" value="${item.storage || item.color || ''}" onchange="updateStoreItem('${key}', 'storage', this.value)">
-          </div>
-          <div class="input-group">
-            <label>Старая цена</label>
-            <input type="number" value="${item.oldPrice || 0}" onchange="updateStoreItem('${key}', 'oldPrice', this.value)">
-          </div>
-          <div class="input-group">
-            <label>Новая цена (₽)</label>
-            <input type="number" value="${item.price}" onchange="updateStoreItem('${key}', 'price', this.value)">
-          </div>
-        </div>
-      </div>
-    `}).join('');
-  }
-
-  window.renderPoster = function() {
-    const activeKeys = Object.keys(storeItems).filter(k => storeItems[k].active);
-    const listWrap = document.getElementById('posterList');
-    
-    listWrap.innerHTML = activeKeys.map(key => {
-      const item = storeItems[key];
-      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
-      const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
-
-      return `
-      <div class="poster-item">
-        <div class="p-info">
-          <h4>${item.model} <span class="p-tag">${item.storage || ''}</span></h4>
-          <p class="p-desc" style="margin:4px 0 0; font-size:11px; color:#8b92a5;">${item.sim || ''} ${item.color || ''}</p>
-        </div>
-        <div class="p-price-wrap">
-          ${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}
-          <div class="p-price" style="${hasDiscount ? 'color: #4ade80;' : ''}">${Number(item.price).toLocaleString('ru-RU')} ₽</div>
-          ${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}
-        </div>
-      </div>
-    `}).join('');
-  }
-
-  window.updateStoreItem = function(key, field, value) {
-    let val = (field === 'price' || field === 'oldPrice') ? Number(value) : value;
-    update(ref(db, 'store/' + key), { [field]: val });
-  }
-  window.toggleStoreItem = function(key) { update(ref(db, 'store/' + key), { active: !storeItems[key].active }); }
-  window.delStoreItem = function(key) { if(confirm('Удалить модель из витрины?')) { remove(ref(db, 'store/' + key)); } }
-  window.addStoreItem = function() {
-    const newItemRef = push(storeRef);
-    set(newItemRef, { model: "Новый товар", storage: "", sim: "", color: "", price: 1000, oldPrice: 0, active: true });
   }
 
   window.downloadImage = function() {
@@ -580,19 +605,14 @@
 
   window.copyText = function() {
     let text = "🔥 *В НАЛИЧИИ*\n\n";
-    Object.keys(storeItems).filter(k => storeItems[k].active).forEach(key => {
-      const item = storeItems[key];
-      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
-      
-      text += `▪️ ${item.model}`;
-      if (item.storage) text += ` (${item.storage})`;
-      if (item.sim) text += ` [${item.sim}]`;
-      text += `\n`;
-      
-      if (hasDiscount) {
-         text += `   Было: ~${Number(item.oldPrice).toLocaleString('ru-RU')} ₽~\n`;
+    Object.keys(deals).forEach(key => {
+      const item = deals[key];
+      if(item.status === 'in' && item.location !== 'В магазине на продажу') {
+        const descText = [item.storage, item.sim, item.color].filter(Boolean).join(', ');
+        text += `▪️ ${item.model}\n`;
+        if (descText) text += `   (${descText})\n`;
+        text += `   Цена: *${Number(item.buy).toLocaleString('ru-RU')} ₽*\n\n`;
       }
-      text += `   Цена: *${Number(item.price).toLocaleString('ru-RU')} ₽*\n\n`;
     });
     text += "💳 Доступна рассрочка!";
     navigator.clipboard.writeText(text).then(() => alert("Текст скопирован! Вставьте в WhatsApp."));
