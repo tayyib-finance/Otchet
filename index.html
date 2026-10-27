@@ -55,7 +55,7 @@
   /* Витрина */
   .preview-container { background: #000; border-radius: 24px; padding: 2px; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px;}
   .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; text-align: center; }
-  .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+  .poster-title { font-size: 24px; font-weight: 900; margin: 0 0 6px; letter-spacing: 1px; }
   .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; margin: 0 0 20px; }
   .poster-list { display: flex; flex-direction: column; gap: 10px; }
   .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
@@ -67,6 +67,11 @@
   .p-price { font-size: 18px; font-weight: 800; }
   .p-old-price { font-size: 12px; color: var(--old-price); text-decoration: line-through; }
   .p-discount { font-size: 10px; background: var(--accent); padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
+  
+  /* Блок рассрочки на витрине */
+  .poster-footer { margin-top: 20px; border: 1px solid #3f2e14; background: rgba(63, 46, 20, 0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .poster-footer-title { font-size: 14px; font-weight: 700; color: #f5c76a; }
+  .poster-footer-sub { font-size: 11px; color: #aaa; }
 
   /* Модалки */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
@@ -124,9 +129,15 @@
   </div>
   <div class="preview-container" id="posterContainer">
     <div class="poster">
-      <h1 class="poster-title">В НАЛИЧИИ</h1>
+      <h1 class="poster-title">FREE ZONE</h1>
       <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
       <div class="poster-list" id="posterList"></div>
+      
+      <!-- НОВЫЙ БЛОК: РАССРОЧКА -->
+      <div class="poster-footer">
+        <div class="poster-footer-title">💳 Доступна рассрочка</div>
+        <div class="poster-footer-sub">Без банков и переплат</div>
+      </div>
     </div>
   </div>
 </div>
@@ -171,7 +182,6 @@
   </div>
 </div>
 
-<!-- НОВАЯ МОДАЛКА: БЭКАП -->
 <div class="modal" id="backupModal">
   <div class="modal-content">
     <h2>Управление базой</h2>
@@ -185,7 +195,6 @@
   </div>
 </div>
 
-<!-- МОДАЛКА: ИМПОРТ ТЕКСТА -->
 <div class="modal" id="importModal">
   <div class="modal-content">
     <h2>📥 Импорт из текста</h2>
@@ -229,7 +238,14 @@
 
     Object.values(expenses).forEach(e => totalExpenses += e.amount);
 
-    Object.keys(deals).forEach((key) => {
+    // Сортировка: iPhone должен быть первым
+    const sortedKeys = Object.keys(deals).sort((a, b) => {
+      const catA = deals[a].category === 'iPhone' ? 1 : 0;
+      const catB = deals[b].category === 'iPhone' ? 1 : 0;
+      return catB - catA; // Сначала те, у кого категория iPhone
+    });
+
+    sortedKeys.forEach((key) => {
       const it = deals[key];
       const profit = (it.sell || 0) - (it.buy || 0);
       
@@ -247,10 +263,13 @@
         let statusBadge = it.status === 'booked' ? '<span class="status st-booked">Забронирован</span>' : '<span class="status st-in">В наличии</span>';
         let bookInfo = it.status === 'booked' ? `<div style="font-size:11px; color:var(--yellow); margin-top:4px;">Бронь: ${it.bookName} (${it.bookPhone})</div>` : '';
 
+        // Показываем цену продажи, если она задана
+        let storePriceHtml = it.storePrice ? `<div style="font-size:12px; color:#4ade80; font-weight:700; margin-top:4px;">На витрине: ${it.storePrice.toLocaleString('ru-RU')} ₽</div>` : '';
+
         categoriesStock[it.category] += `
         <div class="deal-card">
           <div class="deal-header">
-            <div><div class="deal-title">${title}</div><div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}</div>${bookInfo}</div>
+            <div><div class="deal-title">${title}</div><div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}</div>${bookInfo}${storePriceHtml}</div>
             <div class="deal-price"><div class="deal-buy">Закупка</div><div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div></div>
           </div>
           <div class="deal-footer">
@@ -329,7 +348,7 @@
     listWrap.innerHTML = posterHtml || '<p style="color:#aaa; font-size:12px; text-align:center;">Нет товаров</p>';
   }
 
-  // === БЭКАП ===
+  // БЭКАП
   window.openBackupModal = function() { document.getElementById('backupModal').classList.add('active'); }
   window.closeBackupModal = function() { document.getElementById('backupModal').classList.remove('active'); }
 
@@ -363,7 +382,7 @@
     reader.readAsText(file);
   }
 
-  // === ОСТАЛЬНОЕ ===
+  // ОСТАЛЬНОЕ
   window.openEditPayModal = function(key) {
     document.getElementById('editPayKey').value = key;
     const d = deals[key];
