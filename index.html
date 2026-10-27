@@ -590,4 +590,13 @@
       text += `\n`;
       
       if (hasDiscount) {
-         text += `   Было: ~${Number
+         text += `   Было: ~${Number(item.oldPrice).toLocaleString('ru-RU')} ₽~\n`;
+      }
+      text += `   Цена: *${Number(item.price).toLocaleString('ru-RU')} ₽*\n\n`;
+    });
+    text += "💳 Доступна рассрочка!";
+    navigator.clipboard.writeText(text).then(() => alert("Текст скопирован! Вставьте в WhatsApp."));
+  }
+</script>
+</body>
+</html>
