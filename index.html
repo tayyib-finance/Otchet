@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конструктор Прайса для WhatsApp</title>
+<style>
+  :root {
+    --bg-main: #0f111a;
+    --bg-card: #1a1d2d;
+    --text-main: #ffffff;
+    --text-muted: #8b92a5;
+    --accent: #e11d48;
+    --green: #10b981;
+  }
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 16px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* === БЛОК РЕДАКТОРА === */
+  .editor-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .wa-icon { width: 40px; height: 40px; background: linear-gradient(45deg, #25D366, #128C7E); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .editor-title h2 { margin: 0; font-size: 16px; }
+  .editor-title p { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+  
+  .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+  .btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;}
+  .btn-green { background: var(--green); color: #000; }
+  .btn-gray { background: #2a2e42; color: #fff; }
+
+  .catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .catalog-header h3 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .btn-add { background: #1d3557; color: #5ba4f5; border: 1px solid #2a4b73; padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+
+  .filters { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
+  .filter { background: #1a1d2d; border: 1px solid #2a2e42; color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; }
+  .filter.active { background: #064e3b; border-color: #059669; color: #34d399; }
+
+  .item-editor {
+    background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 14px; margin-bottom: 12px;
+  }
+  .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .item-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .badge-max { background: #3f2e14; color: #f5c76a; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+  
+  .toggle-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .toggle { width:; 36px; height: 20px; background: #2a2 backgrounde42; border-radius: 10px; position: relative:; cursor: pointer; transition: 0 rgba.2s; }
+  .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
+  .toggle.on { background: var(--green); }
+  .toggle.on::after { transform: translateX(16px); }
+  .toggle.off { background: #2a2e42; }
+  .btn-del { background: none; border: none; color: #64748b; font-size: 16px; cursor: pointer; padding: 0 4px; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .input-group input, .input-group select {
+    width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 8px 10px; border-radius: 8px; font-size: 14px;
+  }
+  .input-group input[type="number"] { color: #f5c76a; font-weight: 600; }
+
+  /* === БЛОК ПРЕДПРОСМОТРА (КАРТОЧКА) === */
+  .preview-container {
+    background: #000; border-radius: 24px; padding: 2px; position: relative;
+    border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .poster {
+    background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%);
+    border-radius: 22px; padding: 30px 20px; position: relative; overflow: hidden;
+    text-align: center; border: 1px solid #1f1f1f;
+  }
+  /* Декоративные точки на фоне */
+  .poster::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 30px 30px; opacity: 0.05; pointer-events: none;
+  }
+  
+  .poster-instock {
+    display: inline-flex; align-items: center; gap: 6px; border: 1px solid #444; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #ccc; font-weight: 600; letter-spacing: 1px; margin-bottom: 20px; background: rgba(255,255,255,0.02);
+  }
+  .poster-title { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin: 0 0 6px; color: #fff; }
+  .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 2px; margin: 0 0 30px; text-transform: uppercase; }
+
+  .poster-list { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 2; }
+  
+  .poster-item {
+    background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between; text-align: left;
+  }
+  .p-item-left { display: flex; align-items: center; gap: 12px; }
+  .p-badge { background: var(--accent); color: #fff; font-weight: 800; font-size: 11px; padding: 6px 10px; border-radius: 8px; text-transform: uppercase; }
+  .p-info h4 { margin: 0 0 4px; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;}
+  .p-tag { background: #2a2e42; color: #aaa; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+  .p-tag-sim { background: #3f1a20; color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid #5a252c;}
+  .p-desc { margin: 0; font-size: 11px; color: var(--text-muted); }
+  .p-price { font-size: 18px; font-weight: 800; color: #fff; white-space: nowrap; margin-left: 10px;}
+
+  .poster-footer {
+    margin-top: 30px; border: 1px solid #3f2e14(63, 46, 20, 0.3); border-radius: 12px; padding: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 600; color: #f5c76a;
+  }
+</style>
+</head>
+<body>
+
+<!-- РЕДАКТОР -->
+<div>
+  <div class="editor-header">
+    <div class="wa-icon">💬</div>
+    <div class="editor-title">
+      <h2>Конструктор Прайса iPhone</h2>
+      <p>eSIM и Физ. SIM • Все объёмы памяти</p>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD Картинку</button>
+    <button class="btn btn-gray" onclick="copyText()">📋 Текст для WhatsApp</button>
+  </div>
+
+  <div class="catalog-header">
+    <h3>Каталог моделей и SIM-карт</h3>
+    <button class="btn-add" onclick="addNewItem()">+ Добавить</button>
+  </div>
+  <p style="font-size: 11px; color: var(--text-muted); margin-top: -8px; margin-bottom: 16px;">Включайте переключатель только для тех моделей, которые есть в наличии!</p>
+
+  <div class="filters">
+    <div class="filter">Все</div>
+    <div class="filter active">Только в наличии</div>
+    <div class="filter">18 Pro</div>
+    <div class="filter">18 Pro Max</div>
+  </div>
+
+  <div id="editorList">
+    <!-- Сюда будут добавляться карточки редактора -->
+  </div>
+</div>
+
+<!-- ПРЕДПРОСМОТР -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: -5px;">
+  <span style="font-size: 13px; color: #aaa;">📱 Вид для WhatsApp Status</span>
+  <span style="font-size: 12px; color: var(--green); display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: var(--green); border-radius: 50%;"></span> Живой предпросмотр</span>
+</div>
+
+<div class="preview-container" id="posterContainer">
+  <div class="poster" id="poster">
+    <div class="poster-instock">📱 В НАЛИЧИИ • IN STOCK</div>
+    <h1 class="poster-title">IPHONE 18 PRO / MAX</h1>
+    <p class="poster-subtitle" id="posterSubtitle">BURGUNDY & TITANIUM EDITION</p>
+    
+    <div class="poster-list" id="posterList">
+      <!-- Сюда рендерятся элементы витрины -->
+    </div>
+
+    <div class="poster-footer">
+      <span>💳 Доступна рассрочка</span>
+      <span style="font-size: 11px; color: #aaa; font-weight: normal; margin-left: 4px;">Халяль • Без скрытых комиссий</span>
+    </div>
+  </div>
+</div>
+
+<!-- Подключаем библиотеку для скриншотов -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  // Стартовые данные
+  let items = [
+    { id: 1, model: "18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, active: true },
+    { id: 2, model: "18 Pro", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 132000, active: true },
+    { id: 3, model: "18 Pro Max", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 130500, active: true },
+    { id: 4, model: "18 Pro Max", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 152000, active: true }
+  ];
+
+  // Функция отрисовки списка редактора
+  function renderEditor() {
+    const wrap = document.getElementById('editorList');
+    wrap.innerHTML = items.map((item, index) => `
+      <div class="item-editor">
+        <div class="item-top">
+          <div class="item-name">
+            ${item.model.includes('Max') ? '<span class="badge-max">MAX</span>' : ''} 
+            ${item.model} ${item.storage}
+          </div>
+          <div class="toggle-wrap">
+            ${item.active ? '' : 'СКРЫТО'}
+            <div class="toggle ${item.active ? 'on' : 'off'}" onclick="toggleItem(${index})"></div>
+            <button class="btn-del" onclick="deleteItem(${index})">✕</button>
+          </div>
+        </div>
+        <div class="input-grid">
+          <div class="input-group">
+            <label>Сим-карта</label>
+            <select onchange="updateItem(${index}, 'sim', this.value)">
+              <option value="eSIM" ${item.sim === 'eSIM' ? 'selected' : ''}>eSIM</option>
+              <option value="Физ. SIM" ${item.sim === 'Физ. SIM' ? 'selected' : ''}>Физ. SIM</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Цвет / Коммент</label>
+            <input type="text" value="${item.color}" onchange="updateItem(${index}, 'color', this.value)">
+          </div>
+          <div class="input-group">
+            <label>Цена (₽)</label>
+            <input type="number" value="${item.price}" onchange="updateItem(${index}, 'price', this.value)">
+          </div>
+          <div class="input-group">
+            <label>Кол-во</label>
+            <input type="number" value="1">
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Функция отрисовки витрины (предпросмотра)
+  function renderPoster() {
+    const activeItems = items.filter(i => i.active);
+    const listWrap = document.getElementById('posterList');
+    
+    if(activeItems.length === 0) {
+      listWrap.innerHTML = '<p style="color:#aaa; font-size:12px; text-align:center;">Включите переключатели в каталоге, чтобы товары появились здесь.</p>';
+      return;
+    }
+
+    listWrap.innerHTML = activeItems.map(item => `
+      <div class="poster-item">
+        <div class="p-item-left">
+          <div class="p-badge">${item.model.includes('Max') ? 'MAX' : 'PRO'}</div>
+          <div class="p-info">
+            <h4>
+              ${item.model} <span class="p-tag">${item.storage}</span> 
+              <span class="p-tag-sim">${item.sim}</span>
+            </h4>
+            <p class="p-desc">${item.color} • 1 шт</p>
+          </div>
+        </div>
+        <div class="p-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+      </div>
+    `).join('');
+  }
+
+  // Обновление данных
+  function updateItem(index, field, value) {
+    items[index][field] = field === 'price' ? Number(value) : value;
+    renderPoster();
+  }
+
+  // Переключатель наличия
+  function toggleItem(index) {
+    items[index].active = !items[index].active;
+    renderEditor();
+    renderPoster();
+  }
+
+  // Удаление
+  function deleteItem(index) {
+    items.splice(index, 1);
+    renderEditor();
+    renderPoster();
+  }
+
+  // Добавление новой
+  function addNewItem() {
+    items.push({ id: Date.now(), model: "18 Pro", storage: "128GB", sim: "eSIM", color: "Titanium", price: 100000, active: true });
+    renderEditor();
+    renderPoster();
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // Прокрутка вниз к новой
+  }
+
+  // Функции кнопок
+  function downloadImage() {
+    const poster = document.getElementById('posterContainer');
+    html2canvas(poster, { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'iphone-price.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+
+  function copyText() {
+    const activeItems = items.filter(i => i.active);
+    let text = "🔥 *В НАЛИЧИИ IPHONE 18 PRO / MAX*\n\n";
+    activeItems.forEach(item => {
+      text += `▪️ ${item.model} ${item.storage} (${item.sim})\n`;
+      text += `   Цвет: ${item.color}\n`;
+      text += `   Цена: *${item.price.toLocaleString('ru-RU')} ₽*\n\n`;
+    });
+    text += "💳 Доступна рассрочка!";
+    
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Текст скопирован! Вставьте его в WhatsApp.");
+    });
+  }
+
+  // Первый запуск
+  renderEditor();
+  renderPoster();
+</script>
+</body>
+</html>
