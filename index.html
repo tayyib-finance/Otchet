@@ -53,7 +53,7 @@
   .st-sold { background: #14532d; color: #86efac; }
   .st-booked { background: #78350f; color: #fde047; }
 
-  /* Витрина (Контейнер) */
+  /* Витрина */
   .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
   .preview-container { background: #000; border-radius: 24px; padding: 2px; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px; overflow: hidden;}
   
@@ -83,7 +83,7 @@
   .footer-phone { margin-top: 5px; text-align: center; padding-top: 12px; }
   .phone-number { font-size: 18px; font-weight: 800; letter-spacing: 1px; }
 
-  /* Стили для темной темы */
+  /* Стили темной */
   .theme-dark .poster-title { color: #fff; }
   .theme-dark .poster-subtitle { color: #e11d48; }
   .theme-dark .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; }
@@ -99,7 +99,7 @@
   .theme-dark .footer-phone { border-top: 1px dashed #5a4020; }
   .theme-dark .phone-number { color: #4ade80; }
 
-  /* Стили для светлой темы */
+  /* Стили светлой */
   .theme-light .poster-title { color: #111827; }
   .theme-light .poster-subtitle { color: #d97706; }
   .theme-light .poster-item { background: #fff; border: 1px solid #e5e7eb; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -115,7 +115,7 @@
   .theme-light .footer-phone { border-top: 1px dashed #fcd34d; }
   .theme-light .phone-number { color: #059669; }
 
-  /* Стили для неона */
+  /* Стили неон */
   .theme-neon .poster-title { color: #00f2fe; text-shadow: 0 0 10px rgba(0,242,254,0.5); }
   .theme-neon .poster-subtitle { color: #fe0979; }
   .theme-neon .poster-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,254,0.3); backdrop-filter: blur(5px); }
@@ -130,7 +130,6 @@
   .theme-neon .footer-sub { color: #9ca3af; }
   .theme-neon .footer-phone { border-top: 1px dashed #4f46e5; }
   .theme-neon .phone-number { color: #00f2fe; }
-
 
   /* Модалки */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
@@ -184,12 +183,10 @@
 <div id="page-store" class="page">
   <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Витрина</h1>
   
-  <!-- Кнопка скачивания теперь наверху -->
   <div class="action-buttons" style="margin-bottom: 10px;">
     <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать картинку</button>
   </div>
   
-  <!-- Выбор дизайна -->
   <div style="display:flex; gap:8px; margin-bottom: 20px;">
     <button class="btn-sm btn-gray" style="flex:1;" onclick="changeTheme('theme-dark')">Тёмная</button>
     <button class="btn-sm btn-gray" style="flex:1; background:#fff; color:#000;" onclick="changeTheme('theme-light')">Светлая</button>
@@ -197,7 +194,6 @@
   </div>
 
   <div class="preview-container" id="posterContainer">
-    <!-- Начинаем с темной темы -->
     <div class="poster theme-dark" id="posterBody">
       <h1 class="poster-title">FREE ZONE</h1>
       <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
@@ -307,10 +303,8 @@
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  // Смена дизайна
   window.changeTheme = function(themeName) {
-    const poster = document.getElementById('posterBody');
-    poster.className = `poster ${themeName}`;
+    document.getElementById('posterBody').className = `poster ${themeName}`;
   }
 
   onValue(ref(db, 'deals'), (snap) => { deals = snap.val() || {}; renderAll(); });
@@ -417,13 +411,22 @@
     Object.keys(deals).forEach(key => {
       const item = deals[key];
       if (item.status === 'in') {
-        const groupKey = item.model || 'Другой товар';
+        // Создаем уникальный ключ: Модель + Память + Цвет
+        const groupKey = `${item.model}_${item.storage || ''}_${item.color || ''}`;
+        
         const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
         const price = item.storePrice || item.buy;
 
         if (!groupedItems[groupKey]) {
-          groupedItems[groupKey] = { model: item.model, desc: desc || item.category, count: 1, price: price, oldPrice: item.oldPrice || null };
+          groupedItems[groupKey] = { 
+            model: item.model, 
+            desc: desc || item.category, 
+            count: 1, 
+            price: price, 
+            oldPrice: item.oldPrice || null 
+          };
         } else {
+          // Если такой товар уже есть, увеличиваем количество и берем минимальную цену
           groupedItems[groupKey].count++;
           if (price < groupedItems[groupKey].price) groupedItems[groupKey].price = price;
         }
@@ -583,27 +586,15 @@
     if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
   }
 
-  // ОБНОВЛЕННОЕ СКАЧИВАНИЕ
   window.downloadImage = function() {
     const posterElement = document.getElementById('posterContainer');
-    
-    // Добавляем задержку, чтобы стили успели примениться, если только что переключили тему
-    html2canvas(posterElement, { 
-      scale: 2, 
-      backgroundColor: null,
-      useCORS: true 
-    }).then(canvas => {
-      // Конвертируем в картинку
+    html2canvas(posterElement, { scale: 2, backgroundColor: null, useCORS: true }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
-      
-      // Создаем ссылку для скачивания
       const link = document.createElement('a');
       link.download = `free_zone_prajs_${new Date().getDate()}.png`;
       link.href = imgData;
       
-      // Для iOS Safari нужен этот хак, чтобы картинка открылась для сохранения
       if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-         // Открываем картинку в новой вкладке, чтобы пользователь мог зажать и сохранить
          const win = window.open();
          win.document.write('<img src="' + imgData + '" style="width:100%;" />');
       } else {
