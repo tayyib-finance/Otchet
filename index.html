@@ -70,7 +70,7 @@
   
   /* Карточка товара на витрине */
   .poster-item { border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 10px; }
-  .p-info { flex: 1; min-width: 0; /* Чтобы текст не вылезал */ }
+  .p-info { flex: 1; min-width: 0; }
   .p-model { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;}
   .p-qty { font-size: 11px; padding: 2px 6px; border-radius: 4px; white-space: nowrap;}
   .p-desc { font-size: 11px; word-break: break-word;}
@@ -156,7 +156,6 @@
     </div>
   </div>
 
-  <!-- Кнопки для списка -->
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
     <button class="btn btn-blue" onclick="generateSingleListImage()" style="background: #0ea5e9; font-size: 14px; padding: 12px;">🖼 Скачать фото</button>
     <button class="btn btn-green" onclick="copyWhatsAppList()" style="font-size: 14px; padding: 12px;">📋 Текст в WhatsApp</button>
@@ -185,8 +184,15 @@
   <div class="section-title">📦 В наличии и Брони</div>
   <div id="stockList" class="loading">Загрузка...</div>
 
-  <div class="section-title">✅ Проданные</div>
-  <div id="soldList"></div>
+  <!-- СПОЙЛЕР: ПРОДАННЫЕ -->
+  <div style="margin-top: 30px; border-top: 1px solid #334155; padding-top: 15px;">
+    <button class="btn btn-gray" onclick="toggleSold()" style="background: transparent; border: 1px solid #334155; color: #94a3b8;">
+      <span id="soldToggleText">Показать проданные товары</span>
+    </button>
+    <div id="soldWrapper" style="display: none; margin-top: 15px;">
+      <div id="soldList"></div>
+    </div>
+  </div>
 </div>
 
 <div id="page-store" class="page">
@@ -292,6 +298,12 @@
         </div>
       </div>
 
+      <!-- СЕРИЙНЫЙ НОМЕР -->
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Серийный номер (IMEI)</label>
+        <input name="imei" placeholder="Введите IMEI или S/N">
+      </div>
+
       <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
           <input name="buy" type="number" required placeholder="Закупка (₽)">
@@ -333,6 +345,11 @@
       </div>
 
       <div class="input-group" style="margin-bottom:10px;">
+        <label>Серийный номер (IMEI)</label>
+        <input name="imei" id="editImei" placeholder="IMEI или S/N">
+      </div>
+
+      <div class="input-group" style="margin-bottom:10px;">
         <label>Цена закупки (₽)</label>
         <input name="buy" id="editBuy" type="number" required>
       </div>
@@ -352,7 +369,40 @@
 
 <div class="modal" id="priceModal"><div class="modal-content"><h2>Цена на витрину</h2><form id="priceForm"><input type="hidden" name="dealKey" id="priceKey"><div class="input-group" style="margin-bottom:10px;"><input name="storePrice" type="number" required style="color:#4ade80;" placeholder="Ваша цена (₽)"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closePriceModal()">Отмена</button><button type="submit" class="btn btn-green">ОК</button></div></form></div></div>
 
-<div class="modal" id="sellModal"><div class="modal-content"><h2>Продажа</h2><form id="sellForm"><input type="hidden" name="dealKey" id="sellKey"><div class="input-group" style="margin-bottom:10px;"><input name="sellPrice" type="number" required placeholder="Цена (₽)" style="color:#4ade80;"></div><div class="input-group" style="margin-bottom:10px;"><select name="paymentMethod" required id="payMethodSelect"><option value="Наличные">Наличные</option><option value="Перевод">Перевод</option></select></div><div class="input-group" style="margin-bottom:10px;"><input name="buyer" placeholder="Покупатель"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeSellModal()">Отмена</button><button type="submit" class="btn btn-green">Продать</button></div></form></div></div>
+<!-- ОБНОВЛЕННАЯ МОДАЛКА ПРОДАЖИ -->
+<div class="modal" id="sellModal">
+  <div class="modal-content">
+    <h2>Продажа</h2>
+    <form id="sellForm">
+      <input type="hidden" name="dealKey" id="sellKey">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Цена продажи (₽)</label>
+        <input name="sellPrice" type="number" required placeholder="Цена (₽)" style="color:#4ade80; font-size:16px;">
+      </div>
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Способ оплаты</label>
+        <select name="paymentMethod" required id="payMethodSelect"><option value="Наличные">Наличные</option><option value="Перевод">Перевод</option></select>
+      </div>
+      
+      <!-- ИМЯ И ТЕЛЕФОН В ДВЕ КОЛОНКИ -->
+      <div class="input-grid" style="margin-bottom:10px;">
+        <div class="input-group">
+          <label>Имя покупателя</label>
+          <input name="buyerName" placeholder="Имя">
+        </div>
+        <div class="input-group">
+          <label>Телефон</label>
+          <input name="buyerPhone" placeholder="+7...">
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeSellModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">Продать</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <div class="modal" id="editPayModal">
   <div class="modal-content">
@@ -413,12 +463,19 @@
   const db = getDatabase(app);
 
   let deals = {}; let expenses = {}; let customCategories = [];
+  let isSoldVisible = false;
 
   window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + tab).classList.add('active');
     document.getElementById('nav-' + tab).classList.add('active');
+  }
+
+  window.toggleSold = function() {
+    isSoldVisible = !isSoldVisible;
+    document.getElementById('soldWrapper').style.display = isSoldVisible ? 'block' : 'none';
+    document.getElementById('soldToggleText').textContent = isSoldVisible ? 'Скрыть проданные товары' : 'Показать проданные товары';
   }
 
   window.changeTheme = function(themeName) {
@@ -494,6 +551,8 @@
 
       let title = it.model || 'Без названия';
       if (it.category === 'iPhone') title += ` <span style="font-size:12px; color:#aaa;">${it.storage || ''} ${it.color || ''}</span>`;
+      
+      let imeiText = it.imei ? ` • IMEI: ${it.imei}` : '';
 
       if (it.status === 'in' || it.status === 'booked') {
         if (!categoriesStock[it.category]) categoriesStock[it.category] = '';
@@ -504,7 +563,7 @@
         categoriesStock[it.category] += `
         <div class="deal-card">
           <div class="deal-header">
-            <div><div class="deal-title">${title}</div><div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}</div>${bookInfo}${storePriceHtml}</div>
+            <div><div class="deal-title">${title}</div><div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}${imeiText}</div>${bookInfo}${storePriceHtml}</div>
             <div class="deal-price"><div class="deal-buy">Закупка</div><div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div></div>
           </div>
           <div class="deal-footer">
@@ -521,16 +580,21 @@
         let payStatusText = it.paymentMethod;
         if (it.paymentMethod === 'Перевод' && !it.paymentReceived) payStatusText = 'Ждёт перевод';
         
+        let buyerInfo = '';
+        if(it.buyerName) buyerInfo += `Покупатель: ${it.buyerName}`;
+        if(it.buyerPhone) buyerInfo += ` (${it.buyerPhone})`;
+
         soldHtml += `
         <div class="deal-card" style="opacity: 0.8;">
           <div class="deal-header">
-            <div><div class="deal-title">${title}</div><div style="font-size:10px; color:#64748b;">Оплата: ${payStatusText}</div></div>
+            <div><div class="deal-title">${title}</div><div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}${imeiText}</div><div style="font-size:10px; color:#64748b;">Оплата: ${payStatusText}</div></div>
             <div class="deal-price"><div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div><div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div></div>
           </div>
           <div class="deal-footer">
             <div>
               <span class="status st-sold">Продан</span>
               ${it.paymentMethod === 'Перевод' && !it.paymentReceived ? '<span class="status" style="background:#b45309; color:#fde047; margin-left:4px;">Ждёт перевод</span>' : ''}
+              <div style="font-size:10px; color:#64748b; margin-top:4px;">${buyerInfo}</div>
             </div>
             <div class="action-buttons-row">
               <button class="btn-sm btn-blue" onclick="openEditPayModal('${key}')">✏️ Изменить</button>
@@ -649,6 +713,7 @@
     document.getElementById('editModel').value = d.model || '';
     document.getElementById('editStorage').value = d.storage || '';
     document.getElementById('editColor').value = d.color || '';
+    document.getElementById('editImei').value = d.imei || '';
     document.getElementById('editBuy').value = d.buy || 0;
     
     document.getElementById('editModal').classList.add('active');
@@ -664,6 +729,7 @@
       model: f.get('model'),
       storage: f.get('storage'),
       color: f.get('color'),
+      imei: f.get('imei'),
       buy: Number(f.get('buy'))
     });
     
@@ -707,7 +773,10 @@
   document.getElementById('sellForm').addEventListener('submit', function(e) {
     e.preventDefault(); const f = new FormData(e.target);
     update(ref(db, 'deals/' + f.get('dealKey')), {
-      sell: Number(f.get('sellPrice')), buyer: f.get('buyer'), paymentMethod: f.get('paymentMethod'),
+      sell: Number(f.get('sellPrice')), 
+      buyerName: f.get('buyerName'),
+      buyerPhone: f.get('buyerPhone'),
+      paymentMethod: f.get('paymentMethod'),
       paymentReceived: f.get('paymentMethod') === 'Наличные', status: 'sold'
     });
     closeSellModal();
@@ -751,7 +820,7 @@
       }
     }
 
-    let data = { category: cat, buy: Number(f.get('buy')), status: 'in', storePrice: 0 };
+    let data = { category: cat, buy: Number(f.get('buy')), status: 'in', storePrice: 0, imei: f.get('imei') };
     
     if (cat === 'iPhone') {
       data.model = f.get('iphoneModel');
@@ -793,14 +862,13 @@
       if (colorMatch) color = colorMatch[1];
       for (let i = 0; i < qty; i++) {
         const newDealRef = push(ref(db, 'deals'));
-        set(newDealRef, { category: 'iPhone', model: model.trim(), storage: storage, sim: sim, color: color, buy: price, status: 'in', storePrice: 0 });
+        set(newDealRef, { category: 'iPhone', model: model.trim(), storage: storage, sim: sim, color: color, buy: price, status: 'in', storePrice: 0, imei: '' });
         addedCount++;
       }
     });
     if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
   }
 
-  // ГЕНЕРАЦИЯ КАРТИНКИ ДЛЯ ВСЕХ ТОВАРОВ В НАЛИЧИИ
   window.generateSingleListImage = function() {
     const listWrap = document.getElementById('singlePosterList');
     let groupedItems = {};
@@ -859,7 +927,6 @@
     });
   }
 
-  // КОПИРОВАНИЕ ТЕКСТА В WHATSAPP
   window.copyWhatsAppList = function() {
     let groupedItems = {};
     Object.keys(deals).forEach(key => {
