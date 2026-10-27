@@ -8,7 +8,7 @@
   :root {
     --bg-main: #0f111a; --bg-card: #1a1d2d; --text-main: #ffffff;
     --text-muted: #8b92a5; --accent: #e11d48; --green: #10b981;
-    --btn-blue: #3b82f6; --old-price: #64748b;
+    --btn-blue: #3b82f6; --old-price: #64748b; --yellow: #eab308;
   }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
@@ -26,52 +26,50 @@
   .btn-gray { background: #2a2e42; color: #fff; }
   .btn-red { background: #ef4444; color: #fff; }
   .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; border-radius: 6px;}
+  .btn-outline { background: transparent; border: 1px solid var(--btn-blue); color: var(--btn-blue); }
+  .btn-yellow { background: var(--yellow); color: #000; }
 
-  /* Сводка */
-  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; background: var(--bg-card); padding: 12px; border-radius: 12px; margin-bottom: 16px; }
-  .summary .num { font-size: 16px; font-weight: 700; margin-top: 2px; }
+  /* Дашборд (Сводка) */
+  .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .dash-card { background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid #2a2e42; }
+  .dash-title { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .dash-value { font-size: 16px; font-weight: 700; }
   .green-text { color: #4ade80; }
   .red-text { color: #f87171; }
+  .yellow-text { color: var(--yellow); }
   
   /* Карточки склада */
   .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; display: flex; justify-content: space-between;}
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-  .deal-category { font-size: 10px; color: var(--btn-blue); font-weight: 700; text-transform: uppercase; margin-bottom: 2px;}
   .deal-title { font-weight: 700; font-size: 15px; }
   .deal-imei { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
   .deal-price { text-align: right; }
   .deal-buy { font-size: 11px; color: var(--text-muted); }
-  .deal-profit { font-size: 16px; font-weight: 700; }
-  
   .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; }
   .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
   .st-in { background: #1e3a8a; color: #93c5fd; }
   .st-sold { background: #14532d; color: #86efac; }
-  .st-shop { background: #78350f; color: #fde047; }
-
-  /* Локация */
-  .location-info { font-size: 11px; color: #fbbf24; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-  .location-info svg { width: 12px; height: 12px; }
+  .st-booked { background: #78350f; color: #fde047; }
 
   /* Витрина */
-  .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-  .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px;}
+  .preview-container { background: #000; border-radius: 24px; padding: 2px; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px;}
   .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; text-align: center; }
   .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
   .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; margin: 0 0 20px; }
   .poster-list { display: flex; flex-direction: column; gap: 10px; }
-  
-  .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
-  .p-info { display: flex; flex-direction: column; gap: 2px; }
-  .p-model { font-size: 16px; font-weight: 800; color: #fff; }
+  .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+  .p-info { flex: 1; }
+  .p-model { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
+  .p-qty { font-size: 11px; background: #334155; padding: 2px 6px; border-radius: 4px; }
   .p-desc { font-size: 11px; color: #8b92a5; }
-  
-  .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
-  .p-price { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.1; }
+  .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; }
+  .p-price { font-size: 18px; font-weight: 800; }
+  .p-old-price { font-size: 12px; color: var(--old-price); text-decoration: line-through; }
+  .p-discount { font-size: 10px; background: var(--accent); padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
 
-  /* Модалки и Поля */
+  /* Модалки */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
   .modal.active { display: flex; }
   .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
@@ -80,21 +78,30 @@
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
   .input-group input, .input-group select, .input-group textarea { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 10px; border-radius: 8px; font-size: 14px; outline: none;}
-  .input-group input:focus, .input-group textarea:focus { border-color: var(--btn-blue); }
-  
-  .loading { text-align: center; color: var(--text-muted); padding: 20px; }
 </style>
 </head>
 <body>
 
 <!-- СТРАНИЦА 1: СКЛАД -->
 <div id="page-deals" class="page active">
-  <h1 style="font-size: 20px; margin-bottom: 16px;">📱 Мой склад</h1>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <h1 style="font-size: 20px; margin: 0;">📱 Мой склад</h1>
+    <button class="btn-sm btn-gray" onclick="openExpenseModal()">💸 Внести расход</button>
+  </div>
 
-  <div class="summary">
-    <div><div style="font-size: 11px; color: var(--text-muted);">Закупка</div><div class="num" id="sumBuy">0 ₽</div></div>
-    <div><div style="font-size: 11px; color: var(--text-muted);">Продажи</div><div class="num" id="sumSell">0 ₽</div></div>
-    <div><div style="font-size: 11px; color: var(--text-muted);">Прибыль</div><div class="num" id="sumProfit">0 ₽</div></div>
+  <div class="dashboard">
+    <div class="dash-card">
+      <div class="dash-title">Деньги в товаре (Закупка)</div>
+      <div class="dash-value" id="sumBuy">0 ₽</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-title">В кассе (Свободные)</div>
+      <div class="dash-value green-text" id="sumCash">0 ₽</div>
+    </div>
+    <div class="dash-card" style="grid-column: span 2;">
+      <div class="dash-title">Чистая прибыль за всё время (минус расходы)</div>
+      <div class="dash-value green-text" id="sumProfit">0 ₽</div>
+    </div>
   </div>
 
   <div style="display: flex; gap: 10px; margin-bottom: 16px;">
@@ -102,7 +109,7 @@
     <button class="btn btn-green" onclick="openAddModal()" style="flex: 1;">+ Вручную</button>
   </div>
 
-  <div class="section-title">📦 В наличии</div>
+  <div class="section-title">📦 В наличии и Брони</div>
   <div id="stockList" class="loading">Загрузка...</div>
 
   <div class="section-title">✅ Проданные</div>
@@ -124,11 +131,6 @@
       <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
       <div class="poster-list" id="posterList"></div>
     </div>
-  </div>
-  
-  <div class="action-buttons">
-    <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD</button>
-    <button class="btn btn-gray" onclick="copyText()">📋 Текст в WhatsApp</button>
   </div>
 </div>
 
@@ -173,64 +175,23 @@
             <input name="color" placeholder="Burgundy">
           </div>
         </div>
-        <div class="input-grid" style="margin-bottom:10px;">
-          <div class="input-group">
-            <label>Тип SIM</label>
-            <select name="sim">
-              <option value="eSIM">eSIM</option>
-              <option value="Физ. SIM">Физ. SIM</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label>IMEI (если есть)</label>
-            <input name="imei" placeholder="356789...">
-          </div>
-        </div>
       </div>
 
       <div id="otherFields" style="display:none;">
         <div class="input-group" style="margin-bottom:10px;">
           <label>Название</label>
-          <input name="otherModel" placeholder="PlayStation 5 Slim">
-        </div>
-        <div class="input-group" style="margin-bottom:10px;">
-          <label>Описание</label>
-          <input name="otherDesc" placeholder="1TB...">
+          <input name="otherModel" placeholder="PlayStation 5">
         </div>
       </div>
 
       <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
-          <label>Цена закупки (₽)</label>
+          <label>Закупка (₽)</label>
           <input name="buy" type="number" required placeholder="30000">
         </div>
         <div class="input-group">
-          <label>Количество (шт.)</label>
+          <label>Кол-во</label>
           <input name="qty" type="number" value="1" min="1" required>
-        </div>
-      </div>
-
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Контакт продавца</label>
-        <input name="seller" placeholder="Имя / тел.">
-      </div>
-
-      <!-- НОВОЕ: Где находится товар -->
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Где находится товар?</label>
-        <select name="location" id="addLocation" required>
-          <option value="У меня (склад)">У меня (склад)</option>
-          <option value="В магазине на продажу">В магазине на продажу</option>
-        </select>
-      </div>
-      <div id="shopFields" style="display:none; margin-bottom:10px;">
-        <div class="input-group">
-          <label>Название магазина</label>
-          <input name="shopName" placeholder="Например, Магазин на Ленина">
-        </div>
-        <div class="input-group" style="margin-top:10px;">
-          <label>Телефон магазина</label>
-          <input name="shopPhone" placeholder="+7 999 ...">
         </div>
       </div>
 
@@ -242,27 +203,71 @@
   </div>
 </div>
 
-<!-- МОДАЛКА: ИМПОРТ ТЕКСТА -->
-<div class="modal" id="importModal">
+<!-- МОДАЛКА: РАСХОДЫ -->
+<div class="modal" id="expenseModal">
   <div class="modal-content">
-    <h2>📥 Импорт из текста</h2>
-    <p style="font-size: 12px; color: #aaa; margin-top: -10px; margin-bottom: 15px;">Вставьте ваш текст. Программа сама найдет модель, память, цену и количество.</p>
-    
-    <div class="input-group" style="margin-bottom:10px;">
-      <textarea id="importText" rows="6" placeholder="18 Pro 256 Burgundy (eSim) - 106000 - 1 шт&#10;18 Pro Max 512 Burgundy - 148000 - 2 шт"></textarea>
-    </div>
-    
-    <div style="display:flex; gap:10px; margin-top: 20px;">
-      <button type="button" class="btn btn-gray" onclick="closeImportModal()">Отмена</button>
-      <button type="button" class="btn btn-blue" onclick="processImport()" style="background: #8b5cf6;">Распознать</button>
-    </div>
+    <h2>Внести расход</h2>
+    <form id="expenseForm">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Сумма (₽)</label>
+        <input name="amount" type="number" required placeholder="5000">
+      </div>
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>На что потратили?</label>
+        <input name="reason" required placeholder="Аренда, реклама, зарплата...">
+      </div>
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeExpenseModal()">Отмена</button>
+        <button type="submit" class="btn btn-red">Списать</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- МОДАЛКА: БРОНИРОВАНИЕ -->
+<div class="modal" id="bookModal">
+  <div class="modal-content">
+    <h2>Забронировать</h2>
+    <form id="bookForm">
+      <input type="hidden" name="dealKey" id="bookKey">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Имя клиента</label>
+        <input name="clientName" required placeholder="Иван">
+      </div>
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Телефон</label>
+        <input name="clientPhone" required placeholder="+7 999 ...">
+      </div>
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeBookModal()">Отмена</button>
+        <button type="submit" class="btn btn-yellow">Забронировать</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- МОДАЛКА: ВЫСТАВИТЬ ЦЕНУ -->
+<div class="modal" id="priceModal">
+  <div class="modal-content">
+    <h2>Цена на витрину</h2>
+    <form id="priceForm">
+      <input type="hidden" name="dealKey" id="priceKey">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Ваша цена (₽)</label>
+        <input name="storePrice" type="number" required style="font-size:18px; color:#4ade80;">
+      </div>
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closePriceModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">Сохранить</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <!-- МОДАЛКА: ПРОДАТЬ -->
 <div class="modal" id="sellModal">
   <div class="modal-content">
-    <h2>Продажа: <span id="sellModelName" style="color:var(--green)"></span></h2>
+    <h2>Продажа</h2>
     <form id="sellForm">
       <input type="hidden" name="dealKey" id="sellKey">
       
@@ -271,13 +276,24 @@
         <input name="sellPrice" type="number" required placeholder="35000" style="font-size:18px; color:#4ade80;">
       </div>
 
-      <!-- НОВОЕ: Способ оплаты -->
       <div class="input-group" style="margin-bottom:10px;">
         <label>Как оплатил клиент?</label>
-        <select name="paymentMethod" required>
-          <option value="Наличные">Наличные</option>
+        <select name="paymentMethod" required id="payMethodSelect">
+          <option value="Наличные">Наличные (сразу в кассу)</option>
           <option value="Перевод">Перевод (ожидание)</option>
+          <option value="Магазин">Отдал в магазин на продажу</option>
         </select>
+      </div>
+
+      <div id="shopSellFields" style="display:none; margin-bottom:10px;">
+        <div class="input-group">
+          <label>Название магазина</label>
+          <input name="shopName" placeholder="Магазин...">
+        </div>
+        <div class="input-group" style="margin-top:10px;">
+          <label>Телефон магазина</label>
+          <input name="shopPhone" placeholder="+7...">
+        </div>
       </div>
 
       <div class="input-group" style="margin-bottom:10px;">
@@ -302,6 +318,7 @@
   const db = getDatabase(app);
 
   let deals = {};
+  let expenses = {};
 
   window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -310,95 +327,90 @@
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  document.getElementById('addCategory').addEventListener('change', function() {
-    if (this.value === 'iPhone') {
-      document.getElementById('iphoneFields').style.display = 'block';
-      document.getElementById('otherFields').style.display = 'none';
-    } else {
-      document.getElementById('iphoneFields').style.display = 'none';
-      document.getElementById('otherFields').style.display = 'block';
-    }
+  // Загрузка данных
+  onValue(ref(db, 'deals'), (snap) => { deals = snap.val() || {}; renderAll(); });
+  onValue(ref(db, 'expenses'), (snap) => { expenses = snap.val() || {}; renderAll(); });
+
+  document.getElementById('payMethodSelect').addEventListener('change', function() {
+    document.getElementById('shopSellFields').style.display = this.value === 'Магазин' ? 'block' : 'none';
   });
 
-  document.getElementById('addLocation').addEventListener('change', function() {
-    if (this.value === 'В магазине на продажу') {
-      document.getElementById('shopFields').style.display = 'block';
-    } else {
-      document.getElementById('shopFields').style.display = 'none';
-    }
-  });
-
-  // ==========================================
-  // СКЛАД И ВИТРИНА
-  // ==========================================
-  const dealsRef = ref(db, 'deals');
-  
-  onValue(dealsRef, (snapshot) => {
-    deals = snapshot.val() || {};
+  window.renderAll = function() {
     renderDeals();
     renderPoster();
-  });
+  }
 
   window.renderDeals = function() {
-    let sumBuy = 0, sumSell = 0, sumProfit = 0;
+    let sumBuy = 0;     // Деньги в товаре
+    let sumCash = 0;    // Деньги в кассе
+    let totalProfit = 0;// Валовая прибыль
+    let totalExpenses = 0;
+
     let categoriesStock = {};
     let soldHtml = '';
+
+    // Считаем расходы
+    Object.values(expenses).forEach(e => totalExpenses += e.amount);
 
     Object.keys(deals).forEach((key) => {
       const it = deals[key];
       const profit = (it.sell || 0) - (it.buy || 0);
-      sumBuy += it.buy || 0;
       
+      // Если товар на складе или забронирован - считаем его в "Деньги в товаре"
+      if (it.status === 'in' || it.status === 'booked') {
+         sumBuy += it.buy || 0;
+      }
+
+      // Финансы по продажам
+      if (it.status === 'sold') {
+        totalProfit += profit;
+        // В кассу падает только если оплачено наличными или "магазин" и деньги получены
+        if (it.paymentMethod === 'Наличные' || it.paymentReceived) {
+           sumCash += it.sell || 0;
+        }
+      }
+
       let title = it.model || 'Без названия';
-      if (it.category === 'iPhone') {
-        title += ` <span style="font-size:12px; color:#aaa;">${it.storage || ''} ${it.color || ''}</span>`;
-      }
+      if (it.category === 'iPhone') title += ` <span style="font-size:12px; color:#aaa;">${it.storage || ''} ${it.color || ''}</span>`;
 
-      // Локация (где лежит)
-      let locationText = '';
-      if (it.location === 'В магазине на продажу') {
-         locationText = `<div class="location-info">🏬 ${it.shopName || 'Магазин'} (${it.shopPhone || '—'})</div>`;
-      }
-
-      if (it.status === 'in') {
+      if (it.status === 'in' || it.status === 'booked') {
         if (!categoriesStock[it.category]) categoriesStock[it.category] = '';
-        const simInfo = it.category === 'iPhone' ? (it.sim || '') : it.category;
-        const imeiInfo = it.imei ? ' • IMEI: ' + it.imei : '';
+        
+        let statusBadge = it.status === 'booked' ? '<span class="status st-booked">Забронирован</span>' : '<span class="status st-in">В наличии</span>';
+        let bookInfo = it.status === 'booked' ? `<div style="font-size:11px; color:var(--yellow); margin-top:4px;">Бронь: ${it.bookName} (${it.bookPhone})</div>` : '';
 
         categoriesStock[it.category] += `
         <div class="deal-card">
           <div class="deal-header">
             <div>
               <div class="deal-title">${title}</div>
-              <div class="deal-imei">${simInfo}${imeiInfo}</div>
-              ${locationText}
+              <div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}</div>
+              ${bookInfo}
             </div>
             <div class="deal-price">
-              <div class="deal-buy">Куплен за</div>
+              <div class="deal-buy">Закупка</div>
               <div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div>
             </div>
           </div>
           <div class="deal-footer">
-            <div style="font-size:10px; color:#64748b;">${it.seller ? 'Продавец: ' + it.seller : ''}</div>
+            <div>${statusBadge}</div>
             <div style="display:flex; gap:6px;">
+              ${it.status === 'in' ? `<button class="btn-sm btn-yellow" onclick="openBookModal('${key}')">Бронь</button>` : ''}
+              <button class="btn-sm btn-outline" onclick="openPriceModal('${key}')">Цена</button>
               <button class="btn-sm btn-green" onclick="openSellModal('${key}')">Продать</button>
-              <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
             </div>
           </div>
         </div>`;
       } else {
-        sumSell += it.sell || 0;
-        sumProfit += profit;
-        
-        const payText = it.paymentMethod === 'Перевод' ? '<span class="status" style="background:#b45309; color:#fde047; margin-left:4px;">Ждёт перевод</span>' : '';
+        const payText = it.paymentMethod === 'Перевод' && !it.paymentReceived ? 
+          `<button class="btn-sm btn-yellow" onclick="receivePayment('${key}')" style="margin-top:4px;">💸 Получил деньги</button>` : '';
 
         soldHtml += `
         <div class="deal-card" style="opacity: 0.8;">
           <div class="deal-header">
             <div>
-              <div class="deal-category">${it.category}</div>
               <div class="deal-title">${title}</div>
-              ${locationText}
+              <div style="font-size:10px; color:#64748b;">${it.paymentMethod || ''} ${it.shopName ? '| ' + it.shopName : ''}</div>
             </div>
             <div class="deal-price">
               <div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div>
@@ -407,199 +419,184 @@
           </div>
           <div class="deal-footer">
             <div>
-              <span class="status st-sold">Продан</span>
+              ${it.paymentMethod === 'Перевод' && !it.paymentReceived ? '<span class="status" style="background:#b45309; color:#fde047;">Ждёт перевод</span>' : '<span class="status st-sold">Продан</span>'}
               ${payText}
-              <div style="font-size:10px; color:#64748b; margin-top:4px;">${it.buyer ? 'Покупатель: ' + it.buyer : ''}</div>
             </div>
-            <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
           </div>
         </div>`;
       }
     });
 
     let stockHtml = '';
-    let hasStock = false;
     for (let cat in categoriesStock) {
-      hasStock = true;
-      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>`;
-      stockHtml += categoriesStock[cat];
+      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
     }
-
-    if(!hasStock) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
+    if(!stockHtml) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
     if(!soldHtml) soldHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Нет проданных</div>';
 
     document.getElementById('stockList').innerHTML = stockHtml;
     document.getElementById('soldList').innerHTML = soldHtml;
 
     document.getElementById('sumBuy').textContent = sumBuy.toLocaleString('ru-RU') + ' ₽';
-    document.getElementById('sumSell').textContent = sumSell.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('sumCash').textContent = sumCash.toLocaleString('ru-RU') + ' ₽';
+    
+    // Чистая прибыль минус расходы
+    const netProfit = totalProfit - totalExpenses;
     const pEl = document.getElementById('sumProfit');
-    pEl.textContent = (sumProfit >= 0 ? '+' : '') + sumProfit.toLocaleString('ru-RU') + ' ₽';
-    pEl.className = 'num ' + (sumProfit > 0 ? 'green-text' : sumProfit < 0 ? 'red-text' : '');
+    pEl.textContent = (netProfit >= 0 ? '+' : '') + netProfit.toLocaleString('ru-RU') + ' ₽';
+    pEl.className = 'dash-value ' + (netProfit >= 0 ? 'green-text' : 'red-text');
   }
 
   window.renderPoster = function() {
     const listWrap = document.getElementById('posterList');
-    let posterHtml = '';
+    let groupedItems = {};
 
     Object.keys(deals).forEach(key => {
       const item = deals[key];
-      // На витрину берем только то, что в наличии и НЕ В МАГАЗИНЕ (т.к. оно уже выставлено там)
-      if (item.status === 'in' && item.location !== 'В магазине на продажу') {
-        const descText = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
-        posterHtml += `
-        <div class="poster-item">
-          <div class="p-info">
-            <div class="p-model">${item.model || 'Без названия'}</div>
-            <div class="p-desc">${descText || item.desc || item.category}</div>
-          </div>
-          <div class="p-price-wrap">
-            <div class="p-price">${Number(item.buy).toLocaleString('ru-RU')} ₽</div>
-          </div>
-        </div>`;
+      // На витрину берем только то, что В НАЛИЧИИ (не бронь, не продано)
+      if (item.status === 'in') {
+        const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
+        const groupKey = `${item.model}_${desc}`;
+        const currentDisplayPrice = item.storePrice || item.buy;
+
+        if (!groupedItems[groupKey]) {
+          groupedItems[groupKey] = { model: item.model, desc: desc || item.desc || item.category, count: 1, price: currentDisplayPrice, oldPrice: item.oldPrice || null };
+        } else {
+          groupedItems[groupKey].count++;
+        }
       }
     });
 
-    if (!posterHtml) posterHtml = '<p style="color:#aaa; font-size:12px; text-align:center;">Нет товаров на складе</p>';
-    listWrap.innerHTML = posterHtml;
+    let posterHtml = '';
+    for (let key in groupedItems) {
+      const item = groupedItems[key];
+      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
+      const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
+
+      posterHtml += `
+      <div class="poster-item">
+        <div class="p-info">
+          <div class="p-model">${item.model} <span class="p-qty">${item.count} шт</span></div>
+          <div class="p-desc">${item.desc}</div>
+        </div>
+        <div class="p-price-wrap">
+          ${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}
+          <div class="p-price" style="${hasDiscount ? 'color: #4ade80;' : ''}">${Number(item.price).toLocaleString('ru-RU')} ₽</div>
+          ${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}
+        </div>
+      </div>`;
+    }
+    listWrap.innerHTML = posterHtml || '<p style="color:#aaa; font-size:12px; text-align:center;">Нет товаров</p>';
   }
 
-  window.delDeal = function(key) { 
-    const code = prompt('Для удаления товара введите код:');
-    if (code === '0537') remove(ref(db, 'deals/' + key)); 
-    else if (code !== null) alert('Неверный код!');
+  // === ДЕЙСТВИЯ ===
+  window.receivePayment = function(key) {
+    if(confirm('Подтверждаете получение денег на кассу?')) {
+      update(ref(db, 'deals/' + key), { paymentReceived: true });
+    }
   }
 
-  window.openAddModal = function() { 
-    document.getElementById('addModal').classList.add('active'); 
-    document.getElementById('shopFields').style.display = 'none';
+  window.openBookModal = function(key) {
+    document.getElementById('bookKey').value = key;
+    document.getElementById('bookForm').reset();
+    document.getElementById('bookModal').classList.add('active');
   }
-  window.closeAddModal = function() { 
-    document.getElementById('addModal').classList.remove('active'); 
-    document.getElementById('addForm').reset(); 
-  }
-  window.openImportModal = function() { document.getElementById('importModal').classList.add('active'); }
-  window.closeImportModal = function() { document.getElementById('importModal').classList.remove('active'); document.getElementById('importText').value = ''; }
-  
+  window.closeBookModal = function() { document.getElementById('bookModal').classList.remove('active'); }
+
+  document.getElementById('bookForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    update(ref(db, 'deals/' + f.get('dealKey')), {
+      status: 'booked',
+      bookName: f.get('clientName'),
+      bookPhone: f.get('clientPhone')
+    });
+    closeBookModal();
+  });
+
   window.openSellModal = function(key) { 
     document.getElementById('sellKey').value = key;
-    document.getElementById('sellModelName').textContent = deals[key].model;
     document.getElementById('sellForm').reset();
+    document.getElementById('shopSellFields').style.display = 'none';
     document.getElementById('sellModal').classList.add('active'); 
   }
   window.closeSellModal = function() { document.getElementById('sellModal').classList.remove('active'); }
 
-  document.getElementById('addForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    const category = f.get('category');
-    const qty = Number(f.get('qty')) || 1;
-    
-    let baseData = { 
-      category, buy: Number(f.get('buy')), seller: f.get('seller'), 
-      sell: 0, buyer: '', status: 'in',
-      location: f.get('location'),
-      shopName: f.get('shopName'),
-      shopPhone: f.get('shopPhone')
-    };
-
-    if (category === 'iPhone') {
-      baseData.model = f.get('iphoneModel');
-      baseData.storage = f.get('storage');
-      baseData.color = f.get('color');
-      baseData.sim = f.get('sim');
-      baseData.imei = f.get('imei');
-    } else {
-      baseData.model = f.get('otherModel') || category;
-      baseData.desc = f.get('otherDesc');
-    }
-
-    for (let i = 0; i < qty; i++) {
-      const newDealRef = push(dealsRef);
-      set(newDealRef, baseData);
-    }
-    closeAddModal();
-  });
-
   document.getElementById('sellForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
+    const method = f.get('paymentMethod');
+    
     update(ref(db, 'deals/' + f.get('dealKey')), {
       sell: Number(f.get('sellPrice')),
       buyer: f.get('buyer'),
-      paymentMethod: f.get('paymentMethod'),
+      paymentMethod: method,
+      shopName: f.get('shopName'),
+      shopPhone: f.get('shopPhone'),
+      paymentReceived: method === 'Наличные', // Если наличные, сразу в кассу
       status: 'sold'
     });
     closeSellModal();
   });
 
-  // УМНЫЙ ИМПОРТ
-  window.processImport = function() {
-    const text = document.getElementById('importText').value;
-    if (!text.trim()) return alert('Вставьте текст');
-
-    const lines = text.split('\n').filter(line => line.trim() !== '');
-    let addedCount = 0;
-
-    lines.forEach(line => {
-      const priceMatch = line.match(/\b\d{4,7}\b/);
-      if (!priceMatch) return; 
-      const price = Number(priceMatch[0]);
-
-      let qty = 1;
-      const qtyMatch = line.match(/(\d+)\s*(шт|шт\.|штук)/i) || line.match(/-\s*(\d+)$/);
-      if (qtyMatch) qty = Number(qtyMatch[1]);
-
-      let model = "iPhone";
-      const modelMatch = line.match(/(iPhone\s*)?(1[5-8]|11|12|13|14)/i);
-      if (modelMatch) {
-        model = `iPhone ${modelMatch[2]}`;
-        if (line.toLowerCase().includes('pro max')) model += ' Pro Max';
-        else if (line.toLowerCase().includes('pro')) model += ' Pro';
-        else if (line.toLowerCase().includes('plus')) model += ' Plus';
-      }
-
-      let storage = "";
-      const storageMatch = line.match(/(64|128|256|512|1024|1TB)/i);
-      if (storageMatch) storage = storageMatch[1].toUpperCase() + (storageMatch[1].toLowerCase() === '1tb' ? '' : 'GB');
-
-      let sim = "eSIM";
-      if (line.toLowerCase().includes('физ') || line.toLowerCase().includes('phys')) sim = "Физ. SIM";
-
-      let color = "";
-      const colorMatch = line.match(/(Burgundy|Titanium|Black|White|Blue|Red|Green|Gold|Silver|Purple)/i);
-      if (colorMatch) color = colorMatch[1];
-
-      for (let i = 0; i < qty; i++) {
-        const newDealRef = push(dealsRef);
-        set(newDealRef, {
-          category: 'iPhone',
-          model: model.trim(),
-          storage: storage,
-          sim: sim,
-          color: color,
-          buy: price,
-          seller: 'Импорт',
-          sell: 0, buyer: '', status: 'in',
-          location: 'У меня (склад)'
-        });
-        addedCount++;
-      }
-    });
-
-    if (addedCount > 0) {
-      alert(`Успешно добавлено товаров: ${addedCount}`);
-      closeImportModal();
-      switchTab('deals');
-    } else {
-      alert('Не удалось распознать текст. Проверьте, что есть цены.');
-    }
+  window.openPriceModal = function(key) {
+    document.getElementById('priceKey').value = key;
+    document.querySelector('input[name="storePrice"]').value = deals[key].storePrice || Math.round(deals[key].buy * 1.1);
+    document.getElementById('priceModal').classList.add('active');
   }
+  window.closePriceModal = function() { document.getElementById('priceModal').classList.remove('active'); }
+
+  document.getElementById('priceForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const key = document.getElementById('priceKey').value;
+    const newPrice = Number(document.querySelector('input[name="storePrice"]').value);
+    const oldPrice = deals[key].storePrice;
+    let upd = { storePrice: newPrice };
+    if (oldPrice && newPrice < oldPrice) upd.oldPrice = oldPrice;
+    update(ref(db, 'deals/' + key), upd);
+    closePriceModal();
+  });
+
+  // Расходы
+  window.openExpenseModal = function() { document.getElementById('expenseModal').classList.add('active'); }
+  window.closeExpenseModal = function() { document.getElementById('expenseModal').classList.remove('active'); }
+  document.getElementById('expenseForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    push(ref(db, 'expenses'), { amount: Number(f.get('amount')), reason: f.get('reason'), date: Date.now() });
+    closeExpenseModal(); e.target.reset();
+  });
+
+  // Добавление
+  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); }
+  window.closeAddModal = function() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); }
+  
+  document.getElementById('addForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const cat = f.get('category');
+    const qty = Number(f.get('qty')) || 1;
+    
+    let data = { category: cat, buy: Number(f.get('buy')), status: 'in', storePrice: 0 };
+
+    if (cat === 'iPhone') {
+      data.model = f.get('iphoneModel');
+      data.storage = f.get('storage');
+      data.color = f.get('color');
+    } else {
+      data.model = f.get('otherModel') || cat;
+    }
+
+    for (let i = 0; i < qty; i++) {
+      set(push(ref(db, 'deals')), data);
+    }
+    closeAddModal();
+  });
 
   window.downloadImage = function() {
     html2canvas(document.getElementById('posterContainer'), { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
       const link = document.createElement('a');
-      link.download = 'price-list.png'; link.href = canvas.toDataURL('image/png'); link.click();
+      link.download = 'price.png'; link.href = canvas.toDataURL('image/png'); link.click();
     });
   }
 
@@ -607,15 +604,13 @@
     let text = "🔥 *В НАЛИЧИИ*\n\n";
     Object.keys(deals).forEach(key => {
       const item = deals[key];
-      if(item.status === 'in' && item.location !== 'В магазине на продажу') {
-        const descText = [item.storage, item.sim, item.color].filter(Boolean).join(', ');
-        text += `▪️ ${item.model}\n`;
-        if (descText) text += `   (${descText})\n`;
-        text += `   Цена: *${Number(item.buy).toLocaleString('ru-RU')} ₽*\n\n`;
+      if(item.status === 'in') {
+        const desc = [item.storage, item.sim, item.color].filter(Boolean).join(', ');
+        text += `▪️ ${item.model} (${desc})\n   Цена: *${Number(item.storePrice || item.buy).toLocaleString('ru-RU')} ₽*\n\n`;
       }
     });
     text += "💳 Доступна рассрочка!";
-    navigator.clipboard.writeText(text).then(() => alert("Текст скопирован! Вставьте в WhatsApp."));
+    navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
   }
 </script>
 </body>
