@@ -17,12 +17,11 @@
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
   
-  /* Навигация (Нижнее меню) */
+  /* Навигация */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d2d; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); z-index: 100; }
   .nav-item { flex: 1; padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent; }
   .nav-item.active { color: var(--green); border-top-color: var(--green); background: #202436; }
 
-  /* Общие стили */
   .page { padding: 16px; display: none; }
   .page.active { display: block; }
   .btn { padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; width: 100%;}
@@ -32,11 +31,14 @@
   .btn-red { background: #ef4444; color: #fff; }
   .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; border-radius: 6px;}
 
-  /* === СДЕЛКИ === */
+  /* Сводка */
   .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; background: var(--bg-card); padding: 12px; border-radius: 12px; margin-bottom: 16px; }
-  .summary .num { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .summary .num { font-size: 16px; font-weight: 700; margin-top: 2px; }
   .green-text { color: #4ade80; }
   .red-text { color: #f87171; }
+  
+  /* Карточки */
+  .section-title { font-size: 14px; color: var(--text-muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px;}
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
@@ -45,18 +47,19 @@
   .deal-price { text-align: right; }
   .deal-buy { font-size: 11px; color: var(--text-muted); }
   .deal-profit { font-size: 16px; font-weight: 700; }
+  
   .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; }
   .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
   .st-in { background: #1e3a8a; color: #93c5fd; }
   .st-sold { background: #14532d; color: #86efac; }
 
-  /* === ВИТРИНА === */
+  /* Витрина */
   .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
   .catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .item-editor { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
   .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .item-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-  .toggle-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .item-name { font-weight: 700; font-size: 15px; }
+  .toggle-wrap { display: flex; align-items: center; gap: 8px; }
   .toggle { width: 36px; height: 20px; background: #2a2e42; border-radius: 10px; position: relative; cursor: pointer; transition: 0.2s; }
   .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
   .toggle.on { background: var(--green); }
@@ -64,9 +67,11 @@
 
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .input-group input, .input-group select { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 8px 10px; border-radius: 8px; font-size: 14px; }
+  .input-group input, .input-group select { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 10px; border-radius: 8px; font-size: 14px; outline: none;}
+  .input-group input:focus, .input-group select:focus { border-color: var(--btn-blue); }
   .input-group input[type="number"] { color: #f5c76a; font-weight: 600; }
 
+  /* Предпросмотр */
   .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; margin-top: 10px;}
   .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; text-align: center; }
   .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
@@ -78,7 +83,7 @@
   .p-tag-sim { background: #3f1a20; color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
   .p-price { font-size: 18px; font-weight: 800; }
 
-  /* Модальные окна */
+  /* Модалки */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
   .modal.active { display: flex; }
   .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
@@ -87,9 +92,9 @@
 </head>
 <body>
 
-<!-- ================= СТРАНИЦА 1: УЧЕТ СДЕЛОК ================= -->
+<!-- СТРАНИЦА 1: СКЛАД И СДЕЛКИ -->
 <div id="page-deals" class="page active">
-  <h1 style="font-size: 20px; margin-bottom: 16px;">📱 Мои сделки</h1>
+  <h1 style="font-size: 20px; margin-bottom: 16px;">📱 Мой склад</h1>
 
   <div class="summary">
     <div><div style="font-size: 11px; color: var(--text-muted);">Закупка</div><div class="num" id="sumBuy">0 ₽</div></div>
@@ -99,10 +104,14 @@
 
   <button class="btn btn-green" onclick="openAddModal()">+ Добавить телефон на склад</button>
 
-  <div id="dealsList" style="margin-top: 16px;"></div>
+  <div class="section-title">📦 В наличии (на складе)</div>
+  <div id="stockList"></div>
+
+  <div class="section-title">✅ Проданные</div>
+  <div id="soldList"></div>
 </div>
 
-<!-- ================= СТРАНИЦА 2: ВИТРИНА ================= -->
+<!-- СТРАНИЦА 2: ВИТРИНА -->
 <div id="page-store" class="page">
   <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Конструктор Прайса</h1>
   
@@ -127,52 +136,76 @@
   </div>
 </div>
 
-<!-- ================= НИЖНЕЕ МЕНЮ ================= -->
+<!-- МЕНЮ -->
 <div class="bottom-nav">
-  <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Склад и Продажи</div>
-  <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина для WhatsApp</div>
+  <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Склад</div>
+  <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина</div>
 </div>
 
-<!-- ================= МОДАЛЬНОЕ ОКНО: ДОБАВИТЬ НА СКЛАД ================= -->
+<!-- МОДАЛКА: ДОБАВИТЬ НА СКЛАД -->
 <div class="modal" id="addModal">
   <div class="modal-content">
-    <h2>Добавить телефон</h2>
+    <h2>Добавить на склад</h2>
     <form id="addForm">
       <div class="input-group" style="margin-bottom:10px;">
         <label>Модель</label>
-        <select name="model" required style="font-size:16px;">
-          <option value="iPhone 11">iPhone 11</option>
-          <option value="iPhone 11 Pro">iPhone 11 Pro</option>
-          <option value="iPhone 12">iPhone 12</option>
-          <option value="iPhone 12 Pro">iPhone 12 Pro</option>
-          <option value="iPhone 13">iPhone 13</option>
-          <option value="iPhone 13 Pro">iPhone 13 Pro</option>
-          <option value="iPhone 14">iPhone 14</option>
-          <option value="iPhone 14 Pro">iPhone 14 Pro</option>
-          <option value="iPhone 14 Pro Max">iPhone 14 Pro Max</option>
+        <select name="model" required>
+          <option value="" disabled selected>Выберите модель...</option>
           <option value="iPhone 15">iPhone 15</option>
+          <option value="iPhone 15 Plus">iPhone 15 Plus</option>
           <option value="iPhone 15 Pro">iPhone 15 Pro</option>
           <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
-          <option value="Другая модель">Другая модель (напишу ниже)</option>
+          <option value="iPhone 16">iPhone 16</option>
+          <option value="iPhone 16 Plus">iPhone 16 Plus</option>
+          <option value="iPhone 16 Pro">iPhone 16 Pro</option>
+          <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
+          <option value="iPhone 17">iPhone 17</option>
+          <option value="iPhone 17 Plus">iPhone 17 Plus</option>
+          <option value="iPhone 17 Pro">iPhone 17 Pro</option>
+          <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
+          <option value="iPhone 18">iPhone 18</option>
+          <option value="iPhone 18 Plus">iPhone 18 Plus</option>
+          <option value="iPhone 18 Pro">iPhone 18 Pro</option>
+          <option value="iPhone 18 Pro Max">iPhone 18 Pro Max</option>
+          <option value="Другая">Другая модель...</option>
         </select>
       </div>
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Уточнение модели (память/цвет)</label>
-        <input name="detail" placeholder="128GB, Black" required>
+      
+      <div class="input-group" style="margin-bottom:10px; display:none;" id="customModelWrap">
+        <label>Напишите модель</label>
+        <input name="customModel" placeholder="Например, Samsung S24">
       </div>
+
+      <div class="input-grid" style="margin-bottom:10px;">
+        <div class="input-group">
+          <label>Память</label>
+          <select name="storage">
+            <option value="256GB">256GB</option>
+            <option value="512GB">512GB</option>
+            <option value="1TB">1TB</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Цвет</label>
+          <input name="color" placeholder="Black, Titanium...">
+        </div>
+      </div>
+
       <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
           <label>Тип SIM</label>
           <select name="sim">
             <option value="eSIM">eSIM</option>
             <option value="Физ. SIM">Физ. SIM</option>
+            <option value="2 SIM">2 SIM</option>
           </select>
         </div>
         <div class="input-group">
-          <label>IMEI / Серийный</label>
+          <label>IMEI</label>
           <input name="imei" placeholder="356789...">
         </div>
       </div>
+
       <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
           <label>Цена закупки (₽)</label>
@@ -183,23 +216,24 @@
           <input name="seller" placeholder="Имя / тел.">
         </div>
       </div>
+
       <div style="display:flex; gap:10px; margin-top: 20px;">
         <button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button>
-        <button type="submit" class="btn btn-green">На склад</button>
+        <button type="submit" class="btn btn-green">Добавить на склад</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- ================= МОДАЛЬНОЕ ОКНО: ПРОДАТЬ ================= -->
+<!-- МОДАЛКА: ПРОДАТЬ -->
 <div class="modal" id="sellModal">
   <div class="modal-content">
-    <h2>Продать: <span id="sellModelName" style="color:var(--green)"></span></h2>
+    <h2>Продажа: <span id="sellModelName" style="color:var(--green)"></span></h2>
     <form id="sellForm">
       <input type="hidden" name="dealIndex" id="sellIndex">
       <div class="input-group" style="margin-bottom:10px;">
         <label>Цена продажи (₽)</label>
-        <input name="sellPrice" type="number" required placeholder="35000" style="font-size:16px;">
+        <input name="sellPrice" type="number" required placeholder="35000" style="font-size:18px; color:#4ade80;">
       </div>
       <div class="input-group" style="margin-bottom:10px;">
         <label>Контакт покупателя</label>
@@ -207,7 +241,7 @@
       </div>
       <div style="display:flex; gap:10px; margin-top: 20px;">
         <button type="button" class="btn btn-gray" onclick="closeSellModal()">Отмена</button>
-        <button type="submit" class="btn btn-green">Подтвердить продажу</button>
+        <button type="submit" class="btn btn-green">Продать</button>
       </div>
     </form>
   </div>
@@ -215,7 +249,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-  // === НАВИГАЦИЯ ===
   function switchTab(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -224,66 +257,83 @@
   }
 
   // ==========================================
-  // ЛОГИКА 1: СКЛАД И ПРОДАЖИ
+  // ЛОГИКА СКЛАДА
   // ==========================================
-  let deals = JSON.parse(localStorage.getItem('my_deals_v2') || '[]');
+  let deals = JSON.parse(localStorage.getItem('my_deals_v4') || '[]');
+
+  document.querySelector('select[name="model"]').addEventListener('change', function() {
+    const customWrap = document.getElementById('customModelWrap');
+    if (this.value === 'Другая') { customWrap.style.display = 'block'; } 
+    else { customWrap.style.display = 'none'; }
+  });
 
   function saveDeals() {
-    localStorage.setItem('my_deals_v2', JSON.stringify(deals));
+    localStorage.setItem('my_deals_v4', JSON.stringify(deals));
     renderDeals();
   }
 
   function renderDeals() {
-    const wrap = document.getElementById('dealsList');
     let sumBuy = 0, sumSell = 0, sumProfit = 0;
+    let stockHtml = '', soldHtml = '';
 
-    if (deals.length === 0) {
-      wrap.innerHTML = '<div style="text-align:center; color:#64748b; padding: 20px;">Нет телефонов. Нажмите «Добавить».</div>';
-      document.getElementById('sumBuy').textContent = '0 ₽';
-      document.getElementById('sumSell').textContent = '0 ₽';
-      document.getElementById('sumProfit').textContent = '0 ₽';
-      return;
-    }
-
-    // Сортируем: сначала "В наличии", потом "Продан"
-    deals.sort((a, b) => (a.status === 'in' ? -1 : 1));
-
-    let html = '';
     deals.forEach((it, i) => {
       const profit = (it.sell || 0) - (it.buy || 0);
       sumBuy += it.buy || 0;
-      sumSell += it.sell || 0;
-      if (it.status === 'sold') sumProfit += profit;
-
-      html += `
-      <div class="deal-card">
-        <div class="deal-header">
-          <div>
-            <div class="deal-title">${it.model} <span style="font-size:12px; color:#aaa;">${it.detail}</span></div>
-            <div class="deal-imei">${it.sim} • IMEI: ${it.imei || '—'}</div>
-          </div>
-          <div class="deal-price">
-            <div class="deal-buy">Закуп: ${(it.buy).toLocaleString('ru-RU')} ₽</div>
-            ${it.status === 'sold' ? `<div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>` : ''}
-          </div>
-        </div>
-        
-        <div class="deal-footer">
-          <div>
-            <span class="status ${it.status === 'sold' ? 'st-sold' : 'st-in'}">${it.status === 'sold' ? 'Продан за ' + it.sell.toLocaleString('ru-RU') + ' ₽' : 'В наличии'}</span>
-            <div style="font-size:10px; color:#64748b; margin-top:4px;">
-              ${it.seller ? 'Купил у: ' + it.seller : ''}
-              ${it.buyer ? '<br>Продал: ' + it.buyer : ''}
+      
+      const title = `${it.model} <span style="font-size:12px; color:#aaa;">${it.storage} ${it.color}</span>`;
+      
+      if (it.status === 'in') {
+        stockHtml += `
+        <div class="deal-card">
+          <div class="deal-header">
+            <div>
+              <div class="deal-title">${title}</div>
+              <div class="deal-imei">${it.sim} • IMEI: ${it.imei || '—'}</div>
+            </div>
+            <div class="deal-price">
+              <div class="deal-buy">Куплен за</div>
+              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy).toLocaleString('ru-RU')} ₽</div>
             </div>
           </div>
-          <div style="display:flex; gap:6px;">
-            ${it.status === 'in' ? `<button class="btn-sm btn-green" onclick="openSellModal(${i})">Продать</button>` : ''}
+          <div class="deal-footer">
+            <div style="font-size:10px; color:#64748b;">${it.seller ? 'Продавец: ' + it.seller : ''}</div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-sm btn-green" onclick="openSellModal(${i})">Продать</button>
+              <button class="btn-sm btn-red" onclick="delDeal(${i})">Удалить</button>
+            </div>
+          </div>
+        </div>`;
+      } else {
+        sumSell += it.sell || 0;
+        sumProfit += profit;
+        soldHtml += `
+        <div class="deal-card" style="opacity: 0.8;">
+          <div class="deal-header">
+            <div>
+              <div class="deal-title">${title}</div>
+              <div class="deal-imei">${it.sim} • IMEI: ${it.imei || '—'}</div>
+            </div>
+            <div class="deal-price">
+              <div class="deal-buy">Продажа: ${(it.sell).toLocaleString('ru-RU')} ₽</div>
+              <div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>
+            </div>
+          </div>
+          <div class="deal-footer">
+            <div>
+              <span class="status st-sold">Продан</span>
+              <div style="font-size:10px; color:#64748b; margin-top:4px;">${it.buyer ? 'Покупатель: ' + it.buyer : ''}</div>
+            </div>
             <button class="btn-sm btn-red" onclick="delDeal(${i})">Удалить</button>
           </div>
-        </div>
-      </div>`;
+        </div>`;
+      }
     });
-    wrap.innerHTML = html;
+
+    if(!stockHtml) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
+    if(!soldHtml) soldHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Нет проданных</div>';
+
+    document.getElementById('stockList').innerHTML = stockHtml;
+    document.getElementById('soldList').innerHTML = soldHtml;
 
     document.getElementById('sumBuy').textContent = sumBuy.toLocaleString('ru-RU') + ' ₽';
     document.getElementById('sumSell').textContent = sumSell.toLocaleString('ru-RU') + ' ₽';
@@ -297,30 +347,33 @@
   }
 
   function openAddModal() { document.getElementById('addModal').classList.add('active'); }
-  function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
+  function closeAddModal() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); document.getElementById('customModelWrap').style.display = 'none';}
+  
   function openSellModal(index) { 
     document.getElementById('sellIndex').value = index;
-    document.getElementById('sellModelName').textContent = deals[index].model + ' ' + deals[index].detail;
+    const d = deals[index];
+    document.getElementById('sellModelName').textContent = d.model + ' ' + d.storage;
     document.getElementById('sellForm').reset();
     document.getElementById('sellModal').classList.add('active'); 
   }
   function closeSellModal() { document.getElementById('sellModal').classList.remove('active'); }
 
-  // Добавление на склад
   document.getElementById('addForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
+    let modelName = f.get('model');
+    if (modelName === 'Другая') modelName = f.get('customModel') || 'Без названия';
+
     deals.push({
-      model: f.get('model'), detail: f.get('detail'), sim: f.get('sim'), imei: f.get('imei'),
+      model: modelName, storage: f.get('storage'), color: f.get('color'), 
+      sim: f.get('sim'), imei: f.get('imei'),
       buy: Number(f.get('buy')), seller: f.get('seller'),
       sell: 0, buyer: '', status: 'in'
     });
     saveDeals();
-    e.target.reset();
     closeAddModal();
   });
 
-  // Продажа
   document.getElementById('sellForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
@@ -334,18 +387,18 @@
 
 
   // ==========================================
-  // ЛОГИКА 2: ВИТРИНА ДЛЯ WHATSAPP
+  // ЛОГИКА ВИТРИНЫ
   // ==========================================
-  let storeItems = JSON.parse(localStorage.getItem('my_store_v2') || 'null');
+  let storeItems = JSON.parse(localStorage.getItem('my_store_v4') || 'null');
   if (!storeItems) {
     storeItems = [
-      { id: 1, model: "iPhone 15 Pro", storage: "256GB", sim: "eSIM", color: "Titanium", price: 113000, active: true },
-      { id: 2, model: "iPhone 15 Pro Max", storage: "512GB", sim: "eSIM", color: "Black", price: 152000, active: true }
+      { id: 1, model: "iPhone 18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, active: true },
+      { id: 2, model: "iPhone 18 Pro Max", storage: "512GB", sim: "eSIM", color: "Titanium", price: 152000, active: true }
     ];
   }
 
   function saveStore() {
-    localStorage.setItem('my_store_v2', JSON.stringify(storeItems));
+    localStorage.setItem('my_store_v4', JSON.stringify(storeItems));
     renderStoreEditor(); renderPoster();
   }
 
@@ -362,6 +415,14 @@
         </div>
         <div class="input-grid">
           <div class="input-group">
+            <label>Память</label>
+            <select onchange="updateStoreItem(${index}, 'storage', this.value)">
+              <option value="256GB" ${item.storage === '256GB' ? 'selected' : ''}>256GB</option>
+              <option value="512GB" ${item.storage === '512GB' ? 'selected' : ''}>512GB</option>
+              <option value="1TB" ${item.storage === '1TB' ? 'selected' : ''}>1TB</option>
+            </select>
+          </div>
+          <div class="input-group">
             <label>Сим-карта</label>
             <select onchange="updateStoreItem(${index}, 'sim', this.value)">
               <option value="eSIM" ${item.sim === 'eSIM' ? 'selected' : ''}>eSIM</option>
@@ -369,11 +430,11 @@
             </select>
           </div>
           <div class="input-group">
-            <label>Цвет / Память</label>
-            <input type="text" value="${item.storage} ${item.color}" onchange="updateStoreItem(${index}, 'color', this.value.split(' ')[1])">
+            <label>Цвет</label>
+            <input type="text" value="${item.color}" onchange="updateStoreItem(${index}, 'color', this.value)">
           </div>
           <div class="input-group">
-            <label>Цена для клиента (₽)</label>
+            <label>Цена (₽)</label>
             <input type="number" value="${item.price}" onchange="updateStoreItem(${index}, 'price', this.value)">
           </div>
         </div>
@@ -399,14 +460,10 @@
     storeItems[index][field] = field === 'price' ? Number(value) : value;
     saveStore();
   }
-  function toggleStoreItem(index) {
-    storeItems[index].active = !storeItems[index].active; saveStore();
-  }
-  function delStoreItem(index) {
-    if(confirm('Удалить модель из витрины?')) { storeItems.splice(index, 1); saveStore(); }
-  }
+  function toggleStoreItem(index) { storeItems[index].active = !storeItems[index].active; saveStore(); }
+  function delStoreItem(index) { if(confirm('Удалить модель из витрины?')) { storeItems.splice(index, 1); saveStore(); } }
   function addStoreItem() {
-    storeItems.push({ id: Date.now(), model: "iPhone", storage: "128GB", sim: "eSIM", color: "Black", price: 50000, active: true });
+    storeItems.push({ id: Date.now(), model: "iPhone 15 Pro", storage: "256GB", sim: "eSIM", color: "Black", price: 70000, active: true });
     saveStore();
   }
 
