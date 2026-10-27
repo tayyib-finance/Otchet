@@ -43,15 +43,16 @@
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-  .deal-title { font-weight: 700; font-size: 15px; }
+  .deal-title { font-weight: 700; font-size: 15px; word-break: break-word;}
   .deal-imei { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .deal-price { text-align: right; }
+  .deal-price { text-align: right; flex-shrink: 0; margin-left: 10px;}
   .deal-buy { font-size: 11px; color: var(--text-muted); }
-  .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; }
-  .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+  .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; flex-wrap: wrap; gap: 10px;}
+  .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;}
   .st-in { background: #1e3a8a; color: #93c5fd; }
   .st-sold { background: #14532d; color: #86efac; }
   .st-booked { background: #78350f; color: #fde047; }
+  .action-buttons-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;}
 
   /* Витрина */
   .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
@@ -66,15 +67,17 @@
   .poster-title { font-size: 24px; font-weight: 900; margin: 0 0 6px; letter-spacing: 1px; }
   .poster-subtitle { font-size: 11px; font-weight: 700; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 1px;}
   .poster-list { display: flex; flex-direction: column; gap: 10px; }
-  .poster-item { border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
-  .p-info { flex: 1; }
-  .p-model { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
-  .p-qty { font-size: 11px; padding: 2px 6px; border-radius: 4px; }
-  .p-desc { font-size: 11px; }
-  .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; }
-  .p-price { font-size: 18px; font-weight: 800; }
-  .p-old-price { font-size: 12px; text-decoration: line-through; }
-  .p-discount { font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-top: 4px; font-weight: 700; }
+  
+  /* Карточка товара на витрине */
+  .poster-item { border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 10px; }
+  .p-info { flex: 1; min-width: 0; /* Чтобы текст не вылезал */ }
+  .p-model { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;}
+  .p-qty { font-size: 11px; padding: 2px 6px; border-radius: 4px; white-space: nowrap;}
+  .p-desc { font-size: 11px; word-break: break-word;}
+  .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
+  .p-price { font-size: 18px; font-weight: 800; white-space: nowrap;}
+  .p-old-price { font-size: 12px; text-decoration: line-through; white-space: nowrap;}
+  .p-discount { font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-top: 4px; font-weight: 700; white-space: nowrap;}
 
   .poster-footer { margin-top: 20px; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; gap: 10px; text-align: left; }
   .footer-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
@@ -506,7 +509,7 @@
           </div>
           <div class="deal-footer">
             <div>${statusBadge}</div>
-            <div style="display:flex; gap:6px;">
+            <div class="action-buttons-row">
               ${it.status === 'in' ? `<button class="btn-sm btn-yellow" onclick="openBookModal('${key}')">Бронь</button>` : ''}
               <button class="btn-sm btn-gray" onclick="openEditModal('${key}')">✏️ Изменить</button>
               <button class="btn-sm btn-outline" onclick="openPriceModal('${key}')">Цена</button>
@@ -529,7 +532,7 @@
               <span class="status st-sold">Продан</span>
               ${it.paymentMethod === 'Перевод' && !it.paymentReceived ? '<span class="status" style="background:#b45309; color:#fde047; margin-left:4px;">Ждёт перевод</span>' : ''}
             </div>
-            <div style="display:flex; gap:6px;">
+            <div class="action-buttons-row">
               <button class="btn-sm btn-blue" onclick="openEditPayModal('${key}')">✏️ Изменить</button>
               <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
             </div>
@@ -797,7 +800,7 @@
     if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
   }
 
-  // ГЕНЕРАЦИЯ КАРТИНКИ (Скачивание фото)
+  // ГЕНЕРАЦИЯ КАРТИНКИ ДЛЯ ВСЕХ ТОВАРОВ В НАЛИЧИИ
   window.generateSingleListImage = function() {
     const listWrap = document.getElementById('singlePosterList');
     let groupedItems = {};
