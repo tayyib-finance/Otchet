@@ -39,7 +39,7 @@
   .red-text { color: #f87171; }
   
   /* Карточки */
-.on  .section-title { font-size: 13::px; color: #94a3afterb8; margin: 20px 0 10px; text-transform {: uppercase; letter-spacing: 1px; border-bottom transform: 1px solid #334155;: padding-bottom: 6px; display: flex; justify-content: space-between;}
+  .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; display: flex; justify-content: space-between;}
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
@@ -65,7 +65,7 @@
   .toggle { width: 36px; height: 20px; background: #2a2e42; border-radius: 10px; position: relative; cursor: pointer; transition: 0.2s; }
   .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
   .toggle.on { background: var(--green); }
-  .toggle translateX(16px); }
+  .toggle.on::after { transform: translateX(16px); }
 
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
@@ -329,7 +329,6 @@
   window.renderDeals = function() {
     let sumBuy = 0, sumSell = 0, sumProfit = 0;
     
-    // Группируем по категориям
     let categoriesStock = {};
     let soldHtml = '';
 
@@ -340,7 +339,6 @@
       const profit = (it.sell || 0) - (it.buy || 0);
       sumBuy += it.buy || 0;
       
-      // Формируем название (для iPhone с памятью, для остальных просто название)
       let title = it.model;
       if (it.category === 'iPhone') {
         title += ` <span style="font-size:12px; color:#aaa;">${it.storage} ${it.color}</span>`;
@@ -397,7 +395,6 @@
       }
     });
 
-    // Собираем склад по категориям
     let stockHtml = '';
     let hasStock = false;
     for (let cat in categoriesStock) {
@@ -524,7 +521,7 @@
           </div>
           <div class="input-group">
             <label>Характеристика</label>
-            <input type="text" value="${item.storage || item.color}" onchange="updateStoreItem('${key}', 'storage', this.value)">
+            <input type="text" value="${item.storage || item.color || ''}" onchange="updateStoreItem('${key}', 'storage', this.value)">
           </div>
           <div class="input-group">
             <label>Старая цена</label>
@@ -587,4 +584,10 @@
       const item = storeItems[key];
       const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
       
-      text += `▪️ ${item.model
+      text += `▪️ ${item.model}`;
+      if (item.storage) text += ` (${item.storage})`;
+      if (item.sim) text += ` [${item.sim}]`;
+      text += `\n`;
+      
+      if (hasDiscount) {
+         text += `   Было: ~${Number
