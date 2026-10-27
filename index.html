@@ -18,15 +18,11 @@
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
   
   /* Навигация (Нижнее меню) */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d2d; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); z-index: 100;
-  }
-  .nav-item {
-    flex: 1; padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent;
-  }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d2d; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); z-index: 100; }
+  .nav-item { flex: 1; padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent; }
   .nav-item.active { color: var(--green); border-top-color: var(--green); background: #202436; }
 
-  /* Общие стили контента */
+  /* Общие стили */
   .page { padding: 16px; display: none; }
   .page.active { display: block; }
   .btn { padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; width: 100%;}
@@ -36,16 +32,30 @@
   .btn-red { background: #ef4444; color: #fff; }
   .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; border-radius: 6px;}
 
-  /* === ВКЛАДКА: ВИТРИНА === */
+  /* === СДЕЛКИ === */
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; background: var(--bg-card); padding: 12px; border-radius: 12px; margin-bottom: 16px; }
+  .summary .num { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .green-text { color: #4ade80; }
+  .red-text { color: #f87171; }
+  
+  .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .deal-title { font-weight: 700; font-size: 15px; }
+  .deal-imei { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .deal-price { text-align: right; }
+  .deal-buy { font-size: 11px; color: var(--text-muted); }
+  .deal-profit { font-size: 16px; font-weight: 700; }
+  .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; }
+  .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+  .st-in { background: #1e3a8a; color: #93c5fd; }
+  .st-sold { background: #14532d; color: #86efac; }
+
+  /* === ВИТРИНА === */
   .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
   .catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .catalog-header h3 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; }
-  
   .item-editor { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
   .item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .item-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-  .badge-max { background: #3f2e14; color: #f5c76a; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
-  
   .toggle-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
   .toggle { width: 36px; height: 20px; background: #2a2e42; border-radius: 10px; position: relative; cursor: pointer; transition: 0.2s; }
   .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
@@ -57,41 +67,22 @@
   .input-group input, .input-group select { width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 8px 10px; border-radius: 8px; font-size: 14px; }
   .input-group input[type="number"] { color: #f5c76a; font-weight: 600; }
 
-  /* Карточка витрины */
-  .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 10px;}
-  .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; position: relative; overflow: hidden; text-align: center; border: 1px solid #1f1f1f; }
-  .poster-instock { display: inline-flex; border: 1px solid #444; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #ccc; font-weight: 600; margin-bottom: 20px; }
-  .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; color: #fff; }
-  .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; margin: 0 0 30px; text-transform: uppercase; }
+  .preview-container { background: #000; border-radius: 24px; padding: 2px; position: relative; border: 1px solid #333; margin-top: 10px;}
+  .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; text-align: center; }
+  .poster-title { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+  .poster-subtitle { font-size: 11px; color: var(--accent); font-weight: 700; margin: 0 0 20px; }
   .poster-list { display: flex; flex-direction: column; gap: 10px; }
   .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
-  .p-item-left { display: flex; align-items: center; gap: 12px; }
-  .p-badge { background: var(--accent); color: #fff; font-weight: 800; font-size: 11px; padding: 6px 10px; border-radius: 8px; }
-  .p-info h4 { margin: 0 0 4px; font-size: 15px; color: #fff; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;}
+  .p-info h4 { margin: 0 0 4px; font-size: 15px; display: flex; gap: 6px; flex-wrap: wrap;}
   .p-tag { background: #2a2e42; color: #aaa; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
-  .p-tag-sim { background: #3f1a20; color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid #5a252c;}
-  .p-desc { margin: 0; font-size: 11px; color: var(--text-muted); }
-  .p-price { font-size: 18px; font-weight: 800; color: #fff; }
-  .poster-footer { margin-top: 30px; border: 1px solid #3f2e14; background: rgba(63, 46, 20, 0.3); border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #f5c76a; }
+  .p-tag-sim { background: #3f1a20; color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+  .p-price { font-size: 18px; font-weight: 800; }
 
-  /* === ВКЛАДКА: СДЕЛКИ (УЧЕТ) === */
-  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; background: var(--bg-card); padding: 12px; border-radius: 12px; margin-bottom: 16px; }
-  .summary .num { font-size: 18px; font-weight: 700; margin-top: 2px; }
-  .green-text { color: #4ade80; }
-  .red-text { color: #f87171; }
-  
-  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-  th, td { padding: 8px 5px; text-align: left; border-bottom: 1px solid #334155; vertical-align: top; }
-  th { color: var(--text-muted); font-size: 11px; }
-  .status { padding: 2px 6px; border-radius: 5px; font-size: 10px; font-weight: 600; display: inline-block; margin-top:4px;}
-  .st-in { background: #1e3a8a; color: #93c5fd; }
-  .st-sold { background: #14532d; color: #86efac; }
-
-  /* Модальное окно добавления сделки */
-  .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+  /* Модальные окна */
+  .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
   .modal.active { display: flex; }
   .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
-  .modal-content h2 { margin-top: 0; font-size: 18px; }
+  .modal-content h2 { margin-top: 0; font-size: 18px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -101,23 +92,14 @@
   <h1 style="font-size: 20px; margin-bottom: 16px;">📱 Мои сделки</h1>
 
   <div class="summary">
-    <div>
-      <div style="font-size: 11px; color: var(--text-muted);">Закупка</div>
-      <div class="num" id="sumBuy">0 ₽</div>
-    </div>
-    <div>
-      <div style="font-size: 11px; color: var(--text-muted);">Продажи</div>
-      <div class="num" id="sumSell">0 ₽</div>
-    </div>
-    <div>
-      <div style="font-size: 11px; color: var(--text-muted);">Прибыль</div>
-      <div class="num" id="sumProfit">0 ₽</div>
-    </div>
+    <div><div style="font-size: 11px; color: var(--text-muted);">Закупка</div><div class="num" id="sumBuy">0 ₽</div></div>
+    <div><div style="font-size: 11px; color: var(--text-muted);">Продажи</div><div class="num" id="sumSell">0 ₽</div></div>
+    <div><div style="font-size: 11px; color: var(--text-muted);">Прибыль</div><div class="num" id="sumProfit">0 ₽</div></div>
   </div>
 
-  <button class="btn btn-green" onclick="openModal()">+ Добавить сделку</button>
+  <button class="btn btn-green" onclick="openAddModal()">+ Добавить телефон на склад</button>
 
-  <div id="dealsTableWrap"></div>
+  <div id="dealsList" style="margin-top: 16px;"></div>
 </div>
 
 <!-- ================= СТРАНИЦА 2: ВИТРИНА ================= -->
@@ -130,88 +112,107 @@
   </div>
 
   <div class="catalog-header">
-    <h3>Каталог моделей</h3>
-    <button class="btn-sm btn-blue" onclick="addNewItem()">+ Добавить</button>
+    <h3>Настройка витрины</h3>
+    <button class="btn-sm btn-blue" onclick="addStoreItem()">+ Добавить</button>
   </div>
 
   <div id="editorList"></div>
 
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 5px;">
-    <span style="font-size: 13px; color: #aaa;">📱 Предпросмотр витрины</span>
-  </div>
-
   <div class="preview-container" id="posterContainer">
-    <div class="poster" id="poster">
-      <div class="poster-instock">📱 В НАЛИЧИИ • IN STOCK</div>
+    <div class="poster">
       <h1 class="poster-title">IPHONE</h1>
       <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
-      
       <div class="poster-list" id="posterList"></div>
-
-      <div class="poster-footer">
-        💳 Доступна рассрочка
-      </div>
     </div>
   </div>
 </div>
 
 <!-- ================= НИЖНЕЕ МЕНЮ ================= -->
 <div class="bottom-nav">
-  <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Учет и Прибыль</div>
+  <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Склад и Продажи</div>
   <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина для WhatsApp</div>
 </div>
 
-<!-- ================= МОДАЛЬНОЕ ОКНО ДЛЯ ДОБАВЛЕНИЯ СДЕЛКИ ================= -->
-<div class="modal" id="dealModal">
+<!-- ================= МОДАЛЬНОЕ ОКНО: ДОБАВИТЬ НА СКЛАД ================= -->
+<div class="modal" id="addModal">
   <div class="modal-content">
-    <h2>Новая сделка</h2>
-    <form id="dealForm">
-      <div class="input-grid">
+    <h2>Добавить телефон</h2>
+    <form id="addForm">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Модель</label>
+        <select name="model" required style="font-size:16px;">
+          <option value="iPhone 11">iPhone 11</option>
+          <option value="iPhone 11 Pro">iPhone 11 Pro</option>
+          <option value="iPhone 12">iPhone 12</option>
+          <option value="iPhone 12 Pro">iPhone 12 Pro</option>
+          <option value="iPhone 13">iPhone 13</option>
+          <option value="iPhone 13 Pro">iPhone 13 Pro</option>
+          <option value="iPhone 14">iPhone 14</option>
+          <option value="iPhone 14 Pro">iPhone 14 Pro</option>
+          <option value="iPhone 14 Pro Max">iPhone 14 Pro Max</option>
+          <option value="iPhone 15">iPhone 15</option>
+          <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+          <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
+          <option value="Другая модель">Другая модель (напишу ниже)</option>
+        </select>
+      </div>
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Уточнение модели (память/цвет)</label>
+        <input name="detail" placeholder="128GB, Black" required>
+      </div>
+      <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
-          <label>Модель</label>
-          <input name="model" placeholder="iPhone 13 128GB" required>
+          <label>Тип SIM</label>
+          <select name="sim">
+            <option value="eSIM">eSIM</option>
+            <option value="Физ. SIM">Физ. SIM</option>
+          </select>
         </div>
         <div class="input-group">
-          <label>Серийный / IMEI</label>
+          <label>IMEI / Серийный</label>
           <input name="imei" placeholder="356789...">
         </div>
       </div>
-      <div class="input-grid" style="margin-top:10px">
+      <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
           <label>Цена закупки (₽)</label>
-          <input name="buy" type="number" placeholder="30000" required>
+          <input name="buy" type="number" required placeholder="30000">
         </div>
-        <div class="input-group">
-          <label>Цена продажи (₽)</label>
-          <input name="sell" type="number" placeholder="0">
-        </div>
-      </div>
-      <div class="input-group" style="margin-top:10px">
-        <label>Статус</label>
-        <select name="status">
-          <option value="in">В наличии</option>
-          <option value="sold">Продан</option>
-        </select>
-      </div>
-      <div class="input-grid" style="margin-top:10px">
         <div class="input-group">
           <label>Контакт продавца</label>
           <input name="seller" placeholder="Имя / тел.">
         </div>
-        <div class="input-group">
-          <label>Контакт покупателя</label>
-          <input name="buyer" placeholder="Имя / тел.">
-        </div>
       </div>
       <div style="display:flex; gap:10px; margin-top: 20px;">
-        <button type="button" class="btn btn-gray" onclick="closeModal()">Отмена</button>
-        <button type="submit" class="btn btn-green">Сохранить</button>
+        <button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">На склад</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Подключаем библиотеку для скриншотов -->
+<!-- ================= МОДАЛЬНОЕ ОКНО: ПРОДАТЬ ================= -->
+<div class="modal" id="sellModal">
+  <div class="modal-content">
+    <h2>Продать: <span id="sellModelName" style="color:var(--green)"></span></h2>
+    <form id="sellForm">
+      <input type="hidden" name="dealIndex" id="sellIndex">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Цена продажи (₽)</label>
+        <input name="sellPrice" type="number" required placeholder="35000" style="font-size:16px;">
+      </div>
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Контакт покупателя</label>
+        <input name="buyer" placeholder="Имя / тел.">
+      </div>
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeSellModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">Подтвердить продажу</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
   // === НАВИГАЦИЯ ===
@@ -223,103 +224,129 @@
   }
 
   // ==========================================
-  // ЛОГИКА 1: УЧЕТ СДЕЛОК (Прибыль)
+  // ЛОГИКА 1: СКЛАД И ПРОДАЖИ
   // ==========================================
-  let deals = JSON.parse(localStorage.getItem('my_deals') || '[]');
+  let deals = JSON.parse(localStorage.getItem('my_deals_v2') || '[]');
 
   function saveDeals() {
-    localStorage.setItem('my_deals', JSON.stringify(deals));
+    localStorage.setItem('my_deals_v2', JSON.stringify(deals));
     renderDeals();
   }
 
   function renderDeals() {
-    const wrap = document.getElementById('dealsTableWrap');
+    const wrap = document.getElementById('dealsList');
     let sumBuy = 0, sumSell = 0, sumProfit = 0;
 
     if (deals.length === 0) {
-      wrap.innerHTML = '<div style="text-align:center; color:#64748b; padding: 20px; font-size:14px;">Пока нет сделок. Нажмите «Добавить».</div>';
+      wrap.innerHTML = '<div style="text-align:center; color:#64748b; padding: 20px;">Нет телефонов. Нажмите «Добавить».</div>';
       document.getElementById('sumBuy').textContent = '0 ₽';
       document.getElementById('sumSell').textContent = '0 ₽';
       document.getElementById('sumProfit').textContent = '0 ₽';
       return;
     }
 
-    let html = `<table>
-      <tr><th>Модель / Инфо</th><th>Закуп</th><th>Продажа</th><th>Прибыль</th><th></th></tr>`;
+    // Сортируем: сначала "В наличии", потом "Продан"
+    deals.sort((a, b) => (a.status === 'in' ? -1 : 1));
 
+    let html = '';
     deals.forEach((it, i) => {
       const profit = (it.sell || 0) - (it.buy || 0);
       sumBuy += it.buy || 0;
       sumSell += it.sell || 0;
       if (it.status === 'sold') sumProfit += profit;
 
-      html += `<tr>
-        <td>
-          <b>${it.model}</b><br>
-          <span style="font-size:10px;color:#64748b">${it.imei || '—'}</span><br>
-          <span class="status ${it.status === 'sold' ? 'st-sold' : 'st-in'}">${it.status === 'sold' ? 'Продан' : 'В наличии'}</span>
-        </td>
-        <td>${(it.buy || 0).toLocaleString('ru-RU')} ₽</td>
-        <td>${it.sell ? (it.sell).toLocaleString('ru-RU') + ' ₽' : '—'}</td>
-        <td class="${profit > 0 ? 'green-text' : (profit < 0 ? 'red-text' : '')}">
-          ${it.status === 'sold' ? (profit >= 0 ? '+' : '') + profit.toLocaleString('ru-RU') + ' ₽' : '—'}
-        </td>
-        <td style="text-align:right;">
-          <button class="btn-sm btn-red" onclick="delDeal(${i})">✕</button>
-        </td>
-      </tr>`;
+      html += `
+      <div class="deal-card">
+        <div class="deal-header">
+          <div>
+            <div class="deal-title">${it.model} <span style="font-size:12px; color:#aaa;">${it.detail}</span></div>
+            <div class="deal-imei">${it.sim} • IMEI: ${it.imei || '—'}</div>
+          </div>
+          <div class="deal-price">
+            <div class="deal-buy">Закуп: ${(it.buy).toLocaleString('ru-RU')} ₽</div>
+            ${it.status === 'sold' ? `<div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>` : ''}
+          </div>
+        </div>
+        
+        <div class="deal-footer">
+          <div>
+            <span class="status ${it.status === 'sold' ? 'st-sold' : 'st-in'}">${it.status === 'sold' ? 'Продан за ' + it.sell.toLocaleString('ru-RU') + ' ₽' : 'В наличии'}</span>
+            <div style="font-size:10px; color:#64748b; margin-top:4px;">
+              ${it.seller ? 'Купил у: ' + it.seller : ''}
+              ${it.buyer ? '<br>Продал: ' + it.buyer : ''}
+            </div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            ${it.status === 'in' ? `<button class="btn-sm btn-green" onclick="openSellModal(${i})">Продать</button>` : ''}
+            <button class="btn-sm btn-red" onclick="delDeal(${i})">Удалить</button>
+          </div>
+        </div>
+      </div>`;
     });
-    html += '</table>';
     wrap.innerHTML = html;
 
     document.getElementById('sumBuy').textContent = sumBuy.toLocaleString('ru-RU') + ' ₽';
     document.getElementById('sumSell').textContent = sumSell.toLocaleString('ru-RU') + ' ₽';
-    
     const pEl = document.getElementById('sumProfit');
     pEl.textContent = (sumProfit >= 0 ? '+' : '') + sumProfit.toLocaleString('ru-RU') + ' ₽';
     pEl.className = 'num ' + (sumProfit > 0 ? 'green-text' : sumProfit < 0 ? 'red-text' : '');
   }
 
   function delDeal(i) {
-    if (confirm('Удалить эту запись?')) {
-      deals.splice(i, 1);
-      saveDeals();
-    }
+    if (confirm('Удалить эту запись?')) { deals.splice(i, 1); saveDeals(); }
   }
 
-  function openModal() { document.getElementById('dealModal').classList.add('active'); }
-  function closeModal() { document.getElementById('dealModal').classList.remove('active'); }
+  function openAddModal() { document.getElementById('addModal').classList.add('active'); }
+  function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
+  function openSellModal(index) { 
+    document.getElementById('sellIndex').value = index;
+    document.getElementById('sellModelName').textContent = deals[index].model + ' ' + deals[index].detail;
+    document.getElementById('sellForm').reset();
+    document.getElementById('sellModal').classList.add('active'); 
+  }
+  function closeSellModal() { document.getElementById('sellModal').classList.remove('active'); }
 
-  document.getElementById('dealForm').addEventListener('submit', function(e) {
+  // Добавление на склад
+  document.getElementById('addForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
     deals.push({
-      model: f.get('model'), imei: f.get('imei'), buy: Number(f.get('buy')) || 0,
-      sell: Number(f.get('sell')) || 0, status: f.get('status'),
-      seller: f.get('seller'), buyer: f.get('buyer')
+      model: f.get('model'), detail: f.get('detail'), sim: f.get('sim'), imei: f.get('imei'),
+      buy: Number(f.get('buy')), seller: f.get('seller'),
+      sell: 0, buyer: '', status: 'in'
     });
     saveDeals();
     e.target.reset();
-    closeModal();
+    closeAddModal();
   });
+
+  // Продажа
+  document.getElementById('sellForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const index = f.get('dealIndex');
+    deals[index].sell = Number(f.get('sellPrice'));
+    deals[index].buyer = f.get('buyer');
+    deals[index].status = 'sold';
+    saveDeals();
+    closeSellModal();
+  });
+
 
   // ==========================================
   // ЛОГИКА 2: ВИТРИНА ДЛЯ WHATSAPP
   // ==========================================
-  let storeItems = JSON.parse(localStorage.getItem('my_store_items') || 'null');
+  let storeItems = JSON.parse(localStorage.getItem('my_store_v2') || 'null');
   if (!storeItems) {
     storeItems = [
-      { id: 1, model: "18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, active: true },
-      { id: 2, model: "18 Pro", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 132000, active: true },
-      { id: 3, model: "18 Pro Max", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 130500, active: true },
-      { id: 4, model: "18 Pro Max", storage: "512GB", sim: "eSIM", color: "Burgundy", price: 152000, active: true }
+      { id: 1, model: "iPhone 15 Pro", storage: "256GB", sim: "eSIM", color: "Titanium", price: 113000, active: true },
+      { id: 2, model: "iPhone 15 Pro Max", storage: "512GB", sim: "eSIM", color: "Black", price: 152000, active: true }
     ];
   }
 
   function saveStore() {
-    localStorage.setItem('my_store_items', JSON.stringify(storeItems));
-    renderStoreEditor();
-    renderPoster();
+    localStorage.setItem('my_store_v2', JSON.stringify(storeItems));
+    renderStoreEditor(); renderPoster();
   }
 
   function renderStoreEditor() {
@@ -327,10 +354,7 @@
     wrap.innerHTML = storeItems.map((item, index) => `
       <div class="item-editor">
         <div class="item-top">
-          <div class="item-name">
-            ${item.model.includes('Max') ? '<span class="badge-max">MAX</span>' : ''} 
-            ${item.model} ${item.storage}
-          </div>
+          <div class="item-name">${item.model}</div>
           <div class="toggle-wrap">
             <div class="toggle ${item.active ? 'on' : ''}" onclick="toggleStoreItem(${index})"></div>
             <button style="background:none; border:none; color:#64748b; font-size:16px;" onclick="delStoreItem(${index})">✕</button>
@@ -345,16 +369,12 @@
             </select>
           </div>
           <div class="input-group">
-            <label>Цвет / Коммент</label>
-            <input type="text" value="${item.color}" onchange="updateStoreItem(${index}, 'color', this.value)">
+            <label>Цвет / Память</label>
+            <input type="text" value="${item.storage} ${item.color}" onchange="updateStoreItem(${index}, 'color', this.value.split(' ')[1])">
           </div>
           <div class="input-group">
-            <label>Цена (₽)</label>
+            <label>Цена для клиента (₽)</label>
             <input type="number" value="${item.price}" onchange="updateStoreItem(${index}, 'price', this.value)">
-          </div>
-          <div class="input-group">
-            <label>Память (ГБ)</label>
-            <input type="text" value="${item.storage}" onchange="updateStoreItem(${index}, 'storage', this.value)">
           </div>
         </div>
       </div>
@@ -364,18 +384,11 @@
   function renderPoster() {
     const activeItems = storeItems.filter(i => i.active);
     const listWrap = document.getElementById('posterList');
-    if(activeItems.length === 0) {
-      listWrap.innerHTML = '<p style="color:#aaa; font-size:12px;">Нет товаров в наличии.</p>';
-      return;
-    }
     listWrap.innerHTML = activeItems.map(item => `
       <div class="poster-item">
-        <div class="p-item-left">
-          <div class="p-badge">${item.model.includes('Max') ? 'MAX' : 'PRO'}</div>
-          <div class="p-info">
-            <h4>${item.model} <span class="p-tag">${item.storage}</span> <span class="p-tag-sim">${item.sim}</span></h4>
-            <p class="p-desc">${item.color} • 1 шт</p>
-          </div>
+        <div class="p-info">
+          <h4>${item.model} <span class="p-tag">${item.storage}</span> <span class="p-tag-sim">${item.sim}</span></h4>
+          <p class="p-desc" style="margin:4px 0 0; font-size:11px; color:#8b92a5;">${item.color}</p>
         </div>
         <div class="p-price">${item.price.toLocaleString('ru-RU')} ₽</div>
       </div>
@@ -387,49 +400,36 @@
     saveStore();
   }
   function toggleStoreItem(index) {
-    storeItems[index].active = !storeItems[index].active;
-    saveStore();
+    storeItems[index].active = !storeItems[index].active; saveStore();
   }
   function delStoreItem(index) {
-    if(confirm('Удалить модель?')) {
-      storeItems.splice(index, 1);
-      saveStore();
-    }
+    if(confirm('Удалить модель из витрины?')) { storeItems.splice(index, 1); saveStore(); }
   }
-  function addNewItem() {
+  function addStoreItem() {
     storeItems.push({ id: Date.now(), model: "iPhone", storage: "128GB", sim: "eSIM", color: "Black", price: 50000, active: true });
     saveStore();
   }
 
-  // Скачивание картинки
   function downloadImage() {
-    const poster = document.getElementById('posterContainer');
-    html2canvas(poster, { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
+    html2canvas(document.getElementById('posterContainer'), { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
       const link = document.createElement('a');
-      link.download = 'price-list.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      link.download = 'price-list.png'; link.href = canvas.toDataURL('image/png'); link.click();
     });
   }
 
-  // Копирование текста
   function copyText() {
-    const activeItems = storeItems.filter(i => i.active);
     let text = "🔥 *В НАЛИЧИИ*\n\n";
-    activeItems.forEach(item => {
+    storeItems.filter(i => i.active).forEach(item => {
       text += `▪️ ${item.model} ${item.storage} (${item.sim})\n   Цвет: ${item.color}\n   Цена: *${item.price.toLocaleString('ru-RU')} ₽*\n\n`;
     });
     text += "💳 Доступна рассрочка!";
-    navigator.clipboard.writeText(text).then(() => {
-      alert("Текст скопирован! Вставьте его в WhatsApp.");
-    });
+    navigator.clipboard.writeText(text).then(() => alert("Текст скопирован! Вставьте в WhatsApp."));
   }
 
-  // Запуск при загрузке
+  // Запуск
   renderDeals();
   renderStoreEditor();
   renderPoster();
-
 </script>
 </body>
 </html>
