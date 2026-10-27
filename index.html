@@ -13,6 +13,7 @@
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
   
+  /* Навигация */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d2d; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); z-index: 100; }
   .nav-item { flex: 1; padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent; }
   .nav-item.active { color: var(--green); border-top-color: var(--green); background: #202436; }
@@ -28,6 +29,7 @@
   .btn-outline { background: transparent; border: 1px solid var(--btn-blue); color: var(--btn-blue); }
   .btn-yellow { background: var(--yellow); color: #000; }
 
+  /* Дашборд */
   .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .dash-card { background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid #2a2e42; }
   .dash-title { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
@@ -35,6 +37,7 @@
   .green-text { color: #4ade80; }
   .red-text { color: #f87171; }
   
+  /* Карточки склада */
   .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; display: flex; justify-content: space-between;}
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
@@ -49,6 +52,7 @@
   .st-sold { background: #14532d; color: #86efac; }
   .st-booked { background: #78350f; color: #fde047; }
 
+  /* Витрина */
   .preview-container { background: #000; border-radius: 24px; padding: 2px; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px;}
   .poster { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); border-radius: 22px; padding: 30px 20px; text-align: center; }
   .poster-title { font-size: 24px; font-weight: 900; margin: 0 0 6px; letter-spacing: 1px; }
@@ -71,6 +75,7 @@
   .footer-phone { margin-top: 5px; text-align: center; border-top: 1px dashed #5a4020; padding-top: 12px; }
   .phone-number { font-size: 18px; font-weight: 800; color: #4ade80; letter-spacing: 1px; }
 
+  /* Модалки */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
   .modal.active { display: flex; }
   .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
@@ -220,6 +225,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
   const firebaseConfig = { databaseURL: "https://iphone-sklad-default-rtdb.firebaseio.com/" };
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
@@ -244,6 +250,7 @@
 
     Object.values(expenses).forEach(e => totalExpenses += e.amount);
 
+    // Сортировка: iPhone всегда первый в очереди
     const sortedKeys = Object.keys(deals).sort((a, b) => {
       const catA = deals[a].category === 'iPhone' ? 1 : 0;
       const catB = deals[b].category === 'iPhone' ? 1 : 0;
@@ -309,7 +316,14 @@
     });
 
     let stockHtml = '';
-    for (let cat in categoriesStock) stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
+    // Жесткая сортировка категорий для вывода
+    const catOrder = ['iPhone', 'PlayStation', 'Ноутбук', 'Телевизор', 'Другое'];
+    catOrder.forEach(cat => {
+      if (categoriesStock[cat]) {
+        stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
+      }
+    });
+
     if(!stockHtml) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
     if(!soldHtml) soldHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Нет проданных</div>';
 
@@ -337,8 +351,16 @@
         else groupedItems[groupKey].count++;
       }
     });
+    
+    // Сортировка для витрины: iPhone сначала
     let posterHtml = '';
-    for (let key in groupedItems) {
+    let keys = Object.keys(groupedItems).sort((a, b) => {
+      const isA = groupedItems[a].model.includes('iPhone') ? 1 : 0;
+      const isB = groupedItems[b].model.includes('iPhone') ? 1 : 0;
+      return isB - isA;
+    });
+
+    keys.forEach(key => {
       const item = groupedItems[key];
       const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
       const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
@@ -347,10 +369,11 @@
         <div class="p-info"><div class="p-model">${item.model} <span class="p-qty">${item.count} шт</span></div><div class="p-desc">${item.desc}</div></div>
         <div class="p-price-wrap">${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}<div class="p-price" style="${hasDiscount ? 'color: #4ade80;' : ''}">${Number(item.price).toLocaleString('ru-RU')} ₽</div>${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}</div>
       </div>`;
-    }
+    });
     listWrap.innerHTML = posterHtml || '<p style="color:#aaa; font-size:12px; text-align:center;">Нет товаров</p>';
   }
 
+  // БЭКАП
   window.openBackupModal = function() { document.getElementById('backupModal').classList.add('active'); }
   window.closeBackupModal = function() { document.getElementById('backupModal').classList.remove('active'); }
 
@@ -378,6 +401,7 @@
     reader.readAsText(file);
   }
 
+  // ОСТАЛЬНОЕ
   window.openEditPayModal = function(key) {
     document.getElementById('editPayKey').value = key;
     const d = deals[key];
