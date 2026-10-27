@@ -29,14 +29,13 @@
   .btn-outline { background: transparent; border: 1px solid var(--btn-blue); color: var(--btn-blue); }
   .btn-yellow { background: var(--yellow); color: #000; }
 
-  /* Дашборд (Сводка) */
+  /* Дашборд */
   .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .dash-card { background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid #2a2e42; }
   .dash-title { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
   .dash-value { font-size: 16px; font-weight: 700; }
   .green-text { color: #4ade80; }
   .red-text { color: #f87171; }
-  .yellow-text { color: var(--yellow); }
   
   /* Карточки склада */
   .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; display: flex; justify-content: space-between;}
@@ -82,30 +81,32 @@
 </head>
 <body>
 
-<!-- СТРАНИЦА 1: СКЛАД -->
 <div id="page-deals" class="page active">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
     <h1 style="font-size: 20px; margin: 0;">📱 Мой склад</h1>
-    <button class="btn-sm btn-gray" onclick="openExpenseModal()">💸 Внести расход</button>
+    <div style="display:flex; gap:6px;">
+      <button class="btn-sm btn-gray" onclick="openBackupModal()">⚙️ База</button>
+      <button class="btn-sm btn-gray" onclick="openExpenseModal()">💸 Расход</button>
+    </div>
   </div>
 
   <div class="dashboard">
     <div class="dash-card">
-      <div class="dash-title">Деньги в товаре (Закупка)</div>
+      <div class="dash-title">Деньги в товаре</div>
       <div class="dash-value" id="sumBuy">0 ₽</div>
     </div>
     <div class="dash-card">
-      <div class="dash-title">В кассе (Свободные)</div>
+      <div class="dash-title">В кассе (Наличка)</div>
       <div class="dash-value green-text" id="sumCash">0 ₽</div>
     </div>
     <div class="dash-card" style="grid-column: span 2;">
-      <div class="dash-title">Чистая прибыль за всё время (минус расходы)</div>
+      <div class="dash-title">Чистая прибыль (минус расходы)</div>
       <div class="dash-value green-text" id="sumProfit">0 ₽</div>
     </div>
   </div>
 
   <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-    <button class="btn btn-blue" onclick="openImportModal()" style="flex: 1; background: #8b5cf6;">📥 Импорт</button>
+    <button class="btn btn-blue" onclick="openImportModal()" style="flex: 1; background: #8b5cf6;">📥 Импорт текста</button>
     <button class="btn btn-green" onclick="openAddModal()" style="flex: 1;">+ Вручную</button>
   </div>
 
@@ -116,15 +117,11 @@
   <div id="soldList"></div>
 </div>
 
-<!-- СТРАНИЦА 2: ВИТРИНА -->
 <div id="page-store" class="page">
   <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Витрина</h1>
-  
-  <div class="action-buttons">
+  <div class="action-buttons" style="display:flex; gap:10px; margin-bottom:20px;">
     <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать HD</button>
-    <button class="btn btn-gray" onclick="copyText()">📋 Текст в WhatsApp</button>
   </div>
-
   <div class="preview-container" id="posterContainer">
     <div class="poster">
       <h1 class="poster-title">В НАЛИЧИИ</h1>
@@ -134,177 +131,72 @@
   </div>
 </div>
 
-<!-- МЕНЮ -->
 <div class="bottom-nav">
   <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Склад</div>
   <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина</div>
 </div>
 
-<!-- МОДАЛКА: ДОБАВИТЬ ВРУЧНУЮ -->
-<div class="modal" id="addModal">
+<!-- МОДАЛКИ -->
+<div class="modal" id="addModal"><div class="modal-content"><h2>Добавить</h2><form id="addForm"><div class="input-group" style="margin-bottom:10px;"><select name="category" id="addCategory"><option value="iPhone">iPhone</option><option value="PlayStation">PlayStation</option><option value="Другое">Другое</option></select></div><div id="iphoneFields"><div class="input-group" style="margin-bottom:10px;"><input name="iphoneModel" placeholder="Модель" required></div></div><div id="otherFields" style="display:none;"><div class="input-group" style="margin-bottom:10px;"><input name="otherModel" placeholder="Название"></div></div><div class="input-grid" style="margin-bottom:10px;"><div class="input-group"><input name="buy" type="number" required placeholder="Закупка (₽)"></div><div class="input-group"><input name="qty" type="number" value="1" required placeholder="Кол-во"></div></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button><button type="submit" class="btn btn-green">ОК</button></div></form></div></div>
+
+<div class="modal" id="expenseModal"><div class="modal-content"><h2>Расход</h2><form id="expenseForm"><div class="input-group" style="margin-bottom:10px;"><input name="amount" type="number" required placeholder="Сумма (₽)"></div><div class="input-group" style="margin-bottom:10px;"><input name="reason" required placeholder="На что?"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeExpenseModal()">Отмена</button><button type="submit" class="btn btn-red">Списать</button></div></form></div></div>
+
+<div class="modal" id="bookModal"><div class="modal-content"><h2>Бронь</h2><form id="bookForm"><input type="hidden" name="dealKey" id="bookKey"><div class="input-group" style="margin-bottom:10px;"><input name="clientName" required placeholder="Имя"></div><div class="input-group" style="margin-bottom:10px;"><input name="clientPhone" required placeholder="Телефон"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeBookModal()">Отмена</button><button type="submit" class="btn btn-yellow">Забронировать</button></div></form></div></div>
+
+<div class="modal" id="priceModal"><div class="modal-content"><h2>Цена на витрину</h2><form id="priceForm"><input type="hidden" name="dealKey" id="priceKey"><div class="input-group" style="margin-bottom:10px;"><input name="storePrice" type="number" required style="color:#4ade80;" placeholder="Ваша цена (₽)"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closePriceModal()">Отмена</button><button type="submit" class="btn btn-green">ОК</button></div></form></div></div>
+
+<div class="modal" id="sellModal"><div class="modal-content"><h2>Продажа</h2><form id="sellForm"><input type="hidden" name="dealKey" id="sellKey"><div class="input-group" style="margin-bottom:10px;"><input name="sellPrice" type="number" required placeholder="Цена (₽)" style="color:#4ade80;"></div><div class="input-group" style="margin-bottom:10px;"><select name="paymentMethod" required id="payMethodSelect"><option value="Наличные">Наличные</option><option value="Перевод">Перевод</option></select></div><div class="input-group" style="margin-bottom:10px;"><input name="buyer" placeholder="Покупатель"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeSellModal()">Отмена</button><button type="submit" class="btn btn-green">Продать</button></div></form></div></div>
+
+<div class="modal" id="editPayModal">
   <div class="modal-content">
-    <h2>Добавить вручную</h2>
-    <form id="addForm">
+    <h2>Изменить оплату</h2>
+    <form id="editPayForm">
+      <input type="hidden" name="dealKey" id="editPayKey">
       <div class="input-group" style="margin-bottom:10px;">
-        <label>Категория</label>
-        <select name="category" id="addCategory" required>
-          <option value="iPhone">iPhone</option>
-          <option value="PlayStation">PlayStation</option>
-          <option value="Ноутбук">Ноутбук</option>
-          <option value="Телевизор">Телевизор</option>
-          <option value="Другое">Другое</option>
+        <label>Способ оплаты</label>
+        <select name="newPayMethod" id="editPaySelect">
+          <option value="Наличные">Наличные</option>
+          <option value="Перевод">Перевод</option>
         </select>
       </div>
-
-      <div id="iphoneFields">
-        <div class="input-group" style="margin-bottom:10px;">
-          <label>Модель</label>
-          <input name="iphoneModel" placeholder="iPhone 18 Pro" required>
-        </div>
-        <div class="input-grid" style="margin-bottom:10px;">
-          <div class="input-group">
-            <label>Память</label>
-            <select name="storage">
-              <option value="256GB">256GB</option>
-              <option value="512GB">512GB</option>
-              <option value="1TB">1TB</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label>Цвет</label>
-            <input name="color" placeholder="Burgundy">
-          </div>
-        </div>
+      <div class="input-group" style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+        <input type="checkbox" name="moneyReceived" id="editPayReceived" style="width:20px; height:20px;">
+        <label for="editPayReceived" style="margin:0; font-size:14px; color:#fff;">Деньги уже в кассе</label>
       </div>
-
-      <div id="otherFields" style="display:none;">
-        <div class="input-group" style="margin-bottom:10px;">
-          <label>Название</label>
-          <input name="otherModel" placeholder="PlayStation 5">
-        </div>
-      </div>
-
-      <div class="input-grid" style="margin-bottom:10px;">
-        <div class="input-group">
-          <label>Закупка (₽)</label>
-          <input name="buy" type="number" required placeholder="30000">
-        </div>
-        <div class="input-group">
-          <label>Кол-во</label>
-          <input name="qty" type="number" value="1" min="1" required>
-        </div>
-      </div>
-
-      <div style="display:flex; gap:10px; margin-top: 20px;">
-        <button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button>
-        <button type="submit" class="btn btn-green">Добавить</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- МОДАЛКА: РАСХОДЫ -->
-<div class="modal" id="expenseModal">
-  <div class="modal-content">
-    <h2>Внести расход</h2>
-    <form id="expenseForm">
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Сумма (₽)</label>
-        <input name="amount" type="number" required placeholder="5000">
-      </div>
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>На что потратили?</label>
-        <input name="reason" required placeholder="Аренда, реклама, зарплата...">
-      </div>
-      <div style="display:flex; gap:10px; margin-top: 20px;">
-        <button type="button" class="btn btn-gray" onclick="closeExpenseModal()">Отмена</button>
-        <button type="submit" class="btn btn-red">Списать</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- МОДАЛКА: БРОНИРОВАНИЕ -->
-<div class="modal" id="bookModal">
-  <div class="modal-content">
-    <h2>Забронировать</h2>
-    <form id="bookForm">
-      <input type="hidden" name="dealKey" id="bookKey">
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Имя клиента</label>
-        <input name="clientName" required placeholder="Иван">
-      </div>
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Телефон</label>
-        <input name="clientPhone" required placeholder="+7 999 ...">
-      </div>
-      <div style="display:flex; gap:10px; margin-top: 20px;">
-        <button type="button" class="btn btn-gray" onclick="closeBookModal()">Отмена</button>
-        <button type="submit" class="btn btn-yellow">Забронировать</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- МОДАЛКА: ВЫСТАВИТЬ ЦЕНУ -->
-<div class="modal" id="priceModal">
-  <div class="modal-content">
-    <h2>Цена на витрину</h2>
-    <form id="priceForm">
-      <input type="hidden" name="dealKey" id="priceKey">
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Ваша цена (₽)</label>
-        <input name="storePrice" type="number" required style="font-size:18px; color:#4ade80;">
-      </div>
-      <div style="display:flex; gap:10px; margin-top: 20px;">
-        <button type="button" class="btn btn-gray" onclick="closePriceModal()">Отмена</button>
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button type="button" class="btn btn-gray" onclick="closeEditPayModal()">Отмена</button>
         <button type="submit" class="btn btn-green">Сохранить</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- МОДАЛКА: ПРОДАТЬ -->
-<div class="modal" id="sellModal">
+<!-- НОВАЯ МОДАЛКА: БЭКАП -->
+<div class="modal" id="backupModal">
   <div class="modal-content">
-    <h2>Продажа</h2>
-    <form id="sellForm">
-      <input type="hidden" name="dealKey" id="sellKey">
-      
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Цена продажи (₽)</label>
-        <input name="sellPrice" type="number" required placeholder="35000" style="font-size:18px; color:#4ade80;">
-      </div>
+    <h2>Управление базой</h2>
+    <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Скачайте файл, чтобы сохранить все данные (склад, продажи, расходы). Если что-то случится, вы сможете загрузить его обратно.</p>
+    
+    <button class="btn btn-green" onclick="downloadBackup()" style="margin-bottom:10px;">⬇️ Скачать базу (JSON)</button>
+    <button class="btn btn-blue" onclick="document.getElementById('fileInput').click()">⬆️ Загрузить базу</button>
+    <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="uploadBackup(event)">
+    
+    <button class="btn btn-gray" onclick="closeBackupModal()" style="margin-top:20px;">Закрыть</button>
+  </div>
+</div>
 
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Как оплатил клиент?</label>
-        <select name="paymentMethod" required id="payMethodSelect">
-          <option value="Наличные">Наличные (сразу в кассу)</option>
-          <option value="Перевод">Перевод (ожидание)</option>
-          <option value="Магазин">Отдал в магазин на продажу</option>
-        </select>
-      </div>
-
-      <div id="shopSellFields" style="display:none; margin-bottom:10px;">
-        <div class="input-group">
-          <label>Название магазина</label>
-          <input name="shopName" placeholder="Магазин...">
-        </div>
-        <div class="input-group" style="margin-top:10px;">
-          <label>Телефон магазина</label>
-          <input name="shopPhone" placeholder="+7...">
-        </div>
-      </div>
-
-      <div class="input-group" style="margin-bottom:10px;">
-        <label>Контакт покупателя</label>
-        <input name="buyer" placeholder="Имя / тел.">
-      </div>
-      <div style="display:flex; gap:10px; margin-top: 20px;">
-        <button type="button" class="btn btn-gray" onclick="closeSellModal()">Отмена</button>
-        <button type="submit" class="btn btn-green">Продать</button>
-      </div>
-    </form>
+<!-- МОДАЛКА: ИМПОРТ ТЕКСТА -->
+<div class="modal" id="importModal">
+  <div class="modal-content">
+    <h2>📥 Импорт из текста</h2>
+    <p style="font-size: 12px; color: #aaa; margin-bottom: 10px;">Вставьте текст, программа сама найдет модель, память и цену.</p>
+    <div class="input-group" style="margin-bottom:10px;">
+      <textarea id="importText" rows="6" placeholder="18 Pro 256 Burgundy - 106000 - 1 шт"></textarea>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button type="button" class="btn btn-gray" onclick="closeImportModal()">Отмена</button>
+      <button type="button" class="btn btn-blue" onclick="processImport()" style="background: #8b5cf6;">Распознать</button>
+    </div>
   </div>
 </div>
 
@@ -317,8 +209,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  let deals = {};
-  let expenses = {};
+  let deals = {}; let expenses = {};
 
   window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -327,47 +218,25 @@
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  // Загрузка данных
   onValue(ref(db, 'deals'), (snap) => { deals = snap.val() || {}; renderAll(); });
   onValue(ref(db, 'expenses'), (snap) => { expenses = snap.val() || {}; renderAll(); });
 
-  document.getElementById('payMethodSelect').addEventListener('change', function() {
-    document.getElementById('shopSellFields').style.display = this.value === 'Магазин' ? 'block' : 'none';
-  });
-
-  window.renderAll = function() {
-    renderDeals();
-    renderPoster();
-  }
+  window.renderAll = function() { renderDeals(); renderPoster(); }
 
   window.renderDeals = function() {
-    let sumBuy = 0;     // Деньги в товаре
-    let sumCash = 0;    // Деньги в кассе
-    let totalProfit = 0;// Валовая прибыль
-    let totalExpenses = 0;
+    let sumBuy = 0, sumCash = 0, totalProfit = 0, totalExpenses = 0;
+    let categoriesStock = {}, soldHtml = '';
 
-    let categoriesStock = {};
-    let soldHtml = '';
-
-    // Считаем расходы
     Object.values(expenses).forEach(e => totalExpenses += e.amount);
 
     Object.keys(deals).forEach((key) => {
       const it = deals[key];
       const profit = (it.sell || 0) - (it.buy || 0);
       
-      // Если товар на складе или забронирован - считаем его в "Деньги в товаре"
-      if (it.status === 'in' || it.status === 'booked') {
-         sumBuy += it.buy || 0;
-      }
-
-      // Финансы по продажам
+      if (it.status === 'in' || it.status === 'booked') sumBuy += it.buy || 0;
       if (it.status === 'sold') {
         totalProfit += profit;
-        // В кассу падает только если оплачено наличными или "магазин" и деньги получены
-        if (it.paymentMethod === 'Наличные' || it.paymentReceived) {
-           sumCash += it.sell || 0;
-        }
+        if (it.paymentMethod === 'Наличные' || it.paymentReceived) sumCash += it.sell || 0;
       }
 
       let title = it.model || 'Без названия';
@@ -375,22 +244,14 @@
 
       if (it.status === 'in' || it.status === 'booked') {
         if (!categoriesStock[it.category]) categoriesStock[it.category] = '';
-        
         let statusBadge = it.status === 'booked' ? '<span class="status st-booked">Забронирован</span>' : '<span class="status st-in">В наличии</span>';
         let bookInfo = it.status === 'booked' ? `<div style="font-size:11px; color:var(--yellow); margin-top:4px;">Бронь: ${it.bookName} (${it.bookPhone})</div>` : '';
 
         categoriesStock[it.category] += `
         <div class="deal-card">
           <div class="deal-header">
-            <div>
-              <div class="deal-title">${title}</div>
-              <div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}</div>
-              ${bookInfo}
-            </div>
-            <div class="deal-price">
-              <div class="deal-buy">Закупка</div>
-              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div>
-            </div>
+            <div><div class="deal-title">${title}</div><div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}</div>${bookInfo}</div>
+            <div class="deal-price"><div class="deal-buy">Закупка</div><div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div></div>
           </div>
           <div class="deal-footer">
             <div>${statusBadge}</div>
@@ -402,25 +263,23 @@
           </div>
         </div>`;
       } else {
-        const payText = it.paymentMethod === 'Перевод' && !it.paymentReceived ? 
-          `<button class="btn-sm btn-yellow" onclick="receivePayment('${key}')" style="margin-top:4px;">💸 Получил деньги</button>` : '';
-
+        let payStatusText = it.paymentMethod;
+        if (it.paymentMethod === 'Перевод' && !it.paymentReceived) payStatusText = 'Ждёт перевод';
+        
         soldHtml += `
         <div class="deal-card" style="opacity: 0.8;">
           <div class="deal-header">
-            <div>
-              <div class="deal-title">${title}</div>
-              <div style="font-size:10px; color:#64748b;">${it.paymentMethod || ''} ${it.shopName ? '| ' + it.shopName : ''}</div>
-            </div>
-            <div class="deal-price">
-              <div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div>
-              <div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>
-            </div>
+            <div><div class="deal-title">${title}</div><div style="font-size:10px; color:#64748b;">Оплата: ${payStatusText}</div></div>
+            <div class="deal-price"><div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div><div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div></div>
           </div>
           <div class="deal-footer">
             <div>
-              ${it.paymentMethod === 'Перевод' && !it.paymentReceived ? '<span class="status" style="background:#b45309; color:#fde047;">Ждёт перевод</span>' : '<span class="status st-sold">Продан</span>'}
-              ${payText}
+              <span class="status st-sold">Продан</span>
+              ${it.paymentMethod === 'Перевод' && !it.paymentReceived ? '<span class="status" style="background:#b45309; color:#fde047; margin-left:4px;">Ждёт перевод</span>' : ''}
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-sm btn-blue" onclick="openEditPayModal('${key}')">✏️ Изменить</button>
+              <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
             </div>
           </div>
         </div>`;
@@ -428,19 +287,15 @@
     });
 
     let stockHtml = '';
-    for (let cat in categoriesStock) {
-      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
-    }
+    for (let cat in categoriesStock) stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
     if(!stockHtml) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
     if(!soldHtml) soldHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Нет проданных</div>';
 
     document.getElementById('stockList').innerHTML = stockHtml;
     document.getElementById('soldList').innerHTML = soldHtml;
-
     document.getElementById('sumBuy').textContent = sumBuy.toLocaleString('ru-RU') + ' ₽';
     document.getElementById('sumCash').textContent = sumCash.toLocaleString('ru-RU') + ' ₽';
     
-    // Чистая прибыль минус расходы
     const netProfit = totalProfit - totalExpenses;
     const pEl = document.getElementById('sumProfit');
     pEl.textContent = (netProfit >= 0 ? '+' : '') + netProfit.toLocaleString('ru-RU') + ' ₽';
@@ -450,167 +305,173 @@
   window.renderPoster = function() {
     const listWrap = document.getElementById('posterList');
     let groupedItems = {};
-
     Object.keys(deals).forEach(key => {
       const item = deals[key];
-      // На витрину берем только то, что В НАЛИЧИИ (не бронь, не продано)
       if (item.status === 'in') {
         const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
         const groupKey = `${item.model}_${desc}`;
-        const currentDisplayPrice = item.storePrice || item.buy;
-
-        if (!groupedItems[groupKey]) {
-          groupedItems[groupKey] = { model: item.model, desc: desc || item.desc || item.category, count: 1, price: currentDisplayPrice, oldPrice: item.oldPrice || null };
-        } else {
-          groupedItems[groupKey].count++;
-        }
+        const price = item.storePrice || item.buy;
+        if (!groupedItems[groupKey]) groupedItems[groupKey] = { model: item.model, desc: desc || item.category, count: 1, price: price, oldPrice: item.oldPrice || null };
+        else groupedItems[groupKey].count++;
       }
     });
-
     let posterHtml = '';
     for (let key in groupedItems) {
       const item = groupedItems[key];
       const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
       const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
-
       posterHtml += `
       <div class="poster-item">
-        <div class="p-info">
-          <div class="p-model">${item.model} <span class="p-qty">${item.count} шт</span></div>
-          <div class="p-desc">${item.desc}</div>
-        </div>
-        <div class="p-price-wrap">
-          ${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}
-          <div class="p-price" style="${hasDiscount ? 'color: #4ade80;' : ''}">${Number(item.price).toLocaleString('ru-RU')} ₽</div>
-          ${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}
-        </div>
+        <div class="p-info"><div class="p-model">${item.model} <span class="p-qty">${item.count} шт</span></div><div class="p-desc">${item.desc}</div></div>
+        <div class="p-price-wrap">${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}<div class="p-price" style="${hasDiscount ? 'color: #4ade80;' : ''}">${Number(item.price).toLocaleString('ru-RU')} ₽</div>${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}</div>
       </div>`;
     }
     listWrap.innerHTML = posterHtml || '<p style="color:#aaa; font-size:12px; text-align:center;">Нет товаров</p>';
   }
 
-  // === ДЕЙСТВИЯ ===
-  window.receivePayment = function(key) {
-    if(confirm('Подтверждаете получение денег на кассу?')) {
-      update(ref(db, 'deals/' + key), { paymentReceived: true });
-    }
+  // === БЭКАП ===
+  window.openBackupModal = function() { document.getElementById('backupModal').classList.add('active'); }
+  window.closeBackupModal = function() { document.getElementById('backupModal').classList.remove('active'); }
+
+  window.downloadBackup = function() {
+    const data = { deals, expenses };
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `backup_sklad_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
-  window.openBookModal = function(key) {
-    document.getElementById('bookKey').value = key;
-    document.getElementById('bookForm').reset();
-    document.getElementById('bookModal').classList.add('active');
+  window.uploadBackup = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.deals) set(ref(db, 'deals'), data.deals);
+        if (data.expenses) set(ref(db, 'expenses'), data.expenses);
+        alert('База успешно восстановлена!');
+        closeBackupModal();
+      } catch (err) {
+        alert('Ошибка чтения файла. Возможно, он поврежден.');
+      }
+    };
+    reader.readAsText(file);
   }
-  window.closeBookModal = function() { document.getElementById('bookModal').classList.remove('active'); }
 
-  document.getElementById('bookForm').addEventListener('submit', function(e) {
+  // === ОСТАЛЬНОЕ ===
+  window.openEditPayModal = function(key) {
+    document.getElementById('editPayKey').value = key;
+    const d = deals[key];
+    document.getElementById('editPaySelect').value = d.paymentMethod || 'Наличные';
+    document.getElementById('editPayReceived').checked = d.paymentReceived || false;
+    document.getElementById('editPayModal').classList.add('active');
+  }
+  window.closeEditPayModal = function() { document.getElementById('editPayModal').classList.remove('active'); }
+  document.getElementById('editPayForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const f = new FormData(e.target);
-    update(ref(db, 'deals/' + f.get('dealKey')), {
-      status: 'booked',
-      bookName: f.get('clientName'),
-      bookPhone: f.get('clientPhone')
-    });
+    const key = document.getElementById('editPayKey').value;
+    const newPay = document.getElementById('editPaySelect').value;
+    const isReceived = document.getElementById('editPayReceived').checked;
+    update(ref(db, 'deals/' + key), { paymentMethod: newPay, paymentReceived: isReceived });
+    closeEditPayModal();
+  });
+
+  window.delDeal = function(key) { 
+    const code = prompt('Введите код для удаления (0537):');
+    if (code === '0537') remove(ref(db, 'deals/' + key)); 
+    else if (code !== null) alert('Неверный код!');
+  }
+
+  window.openBookModal = function(key) { document.getElementById('bookKey').value = key; document.getElementById('bookForm').reset(); document.getElementById('bookModal').classList.add('active'); }
+  window.closeBookModal = function() { document.getElementById('bookModal').classList.remove('active'); }
+  document.getElementById('bookForm').addEventListener('submit', function(e) {
+    e.preventDefault(); const f = new FormData(e.target);
+    update(ref(db, 'deals/' + f.get('dealKey')), { status: 'booked', bookName: f.get('clientName'), bookPhone: f.get('clientPhone') });
     closeBookModal();
   });
 
-  window.openSellModal = function(key) { 
-    document.getElementById('sellKey').value = key;
-    document.getElementById('sellForm').reset();
-    document.getElementById('shopSellFields').style.display = 'none';
-    document.getElementById('sellModal').classList.add('active'); 
-  }
+  window.openSellModal = function(key) { document.getElementById('sellKey').value = key; document.getElementById('sellForm').reset(); document.getElementById('sellModal').classList.add('active'); }
   window.closeSellModal = function() { document.getElementById('sellModal').classList.remove('active'); }
-
   document.getElementById('sellForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    const method = f.get('paymentMethod');
-    
+    e.preventDefault(); const f = new FormData(e.target);
     update(ref(db, 'deals/' + f.get('dealKey')), {
-      sell: Number(f.get('sellPrice')),
-      buyer: f.get('buyer'),
-      paymentMethod: method,
-      shopName: f.get('shopName'),
-      shopPhone: f.get('shopPhone'),
-      paymentReceived: method === 'Наличные', // Если наличные, сразу в кассу
-      status: 'sold'
+      sell: Number(f.get('sellPrice')), buyer: f.get('buyer'), paymentMethod: f.get('paymentMethod'),
+      paymentReceived: f.get('paymentMethod') === 'Наличные', status: 'sold'
     });
     closeSellModal();
   });
 
-  window.openPriceModal = function(key) {
-    document.getElementById('priceKey').value = key;
-    document.querySelector('input[name="storePrice"]').value = deals[key].storePrice || Math.round(deals[key].buy * 1.1);
-    document.getElementById('priceModal').classList.add('active');
-  }
+  window.openPriceModal = function(key) { document.getElementById('priceKey').value = key; document.querySelector('input[name="storePrice"]').value = deals[key].storePrice || Math.round(deals[key].buy * 1.1); document.getElementById('priceModal').classList.add('active'); }
   window.closePriceModal = function() { document.getElementById('priceModal').classList.remove('active'); }
-
   document.getElementById('priceForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const key = document.getElementById('priceKey').value;
+    e.preventDefault(); const key = document.getElementById('priceKey').value;
     const newPrice = Number(document.querySelector('input[name="storePrice"]').value);
-    const oldPrice = deals[key].storePrice;
-    let upd = { storePrice: newPrice };
+    const oldPrice = deals[key].storePrice; let upd = { storePrice: newPrice };
     if (oldPrice && newPrice < oldPrice) upd.oldPrice = oldPrice;
-    update(ref(db, 'deals/' + key), upd);
-    closePriceModal();
+    update(ref(db, 'deals/' + key), upd); closePriceModal();
   });
 
-  // Расходы
   window.openExpenseModal = function() { document.getElementById('expenseModal').classList.add('active'); }
   window.closeExpenseModal = function() { document.getElementById('expenseModal').classList.remove('active'); }
   document.getElementById('expenseForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    push(ref(db, 'expenses'), { amount: Number(f.get('amount')), reason: f.get('reason'), date: Date.now() });
-    closeExpenseModal(); e.target.reset();
+    e.preventDefault(); const f = new FormData(e.target);
+    push(ref(db, 'expenses'), { amount: Number(f.get('amount')), reason: f.get('reason') }); closeExpenseModal(); e.target.reset();
   });
 
-  // Добавление
   window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); }
   window.closeAddModal = function() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); }
-  
   document.getElementById('addForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const f = new FormData(e.target);
-    const cat = f.get('category');
-    const qty = Number(f.get('qty')) || 1;
-    
+    e.preventDefault(); const f = new FormData(e.target);
+    const cat = f.get('category'); const qty = Number(f.get('qty')) || 1;
     let data = { category: cat, buy: Number(f.get('buy')), status: 'in', storePrice: 0 };
-
-    if (cat === 'iPhone') {
-      data.model = f.get('iphoneModel');
-      data.storage = f.get('storage');
-      data.color = f.get('color');
-    } else {
-      data.model = f.get('otherModel') || cat;
-    }
-
-    for (let i = 0; i < qty; i++) {
-      set(push(ref(db, 'deals')), data);
-    }
+    if (cat === 'iPhone') { data.model = f.get('iphoneModel'); data.storage = f.get('storage'); data.color = f.get('color'); } else { data.model = f.get('otherModel') || cat; }
+    for (let i = 0; i < qty; i++) set(push(ref(db, 'deals')), data);
     closeAddModal();
   });
 
-  window.downloadImage = function() {
-    html2canvas(document.getElementById('posterContainer'), { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'price.png'; link.href = canvas.toDataURL('image/png'); link.click();
-    });
-  }
-
-  window.copyText = function() {
-    let text = "🔥 *В НАЛИЧИИ*\n\n";
-    Object.keys(deals).forEach(key => {
-      const item = deals[key];
-      if(item.status === 'in') {
-        const desc = [item.storage, item.sim, item.color].filter(Boolean).join(', ');
-        text += `▪️ ${item.model} (${desc})\n   Цена: *${Number(item.storePrice || item.buy).toLocaleString('ru-RU')} ₽*\n\n`;
+  window.openImportModal = function() { document.getElementById('importModal').classList.add('active'); }
+  window.closeImportModal = function() { document.getElementById('importModal').classList.remove('active'); document.getElementById('importText').value = ''; }
+  window.processImport = function() {
+    const text = document.getElementById('importText').value;
+    if (!text.trim()) return alert('Вставьте текст');
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    let addedCount = 0;
+    lines.forEach(line => {
+      const priceMatch = line.match(/\b\d{4,7}\b/);
+      if (!priceMatch) return; 
+      const price = Number(priceMatch[0]);
+      let qty = 1; const qtyMatch = line.match(/(\d+)\s*(шт|шт\.|штук)/i) || line.match(/-\s*(\d+)$/);
+      if (qtyMatch) qty = Number(qtyMatch[1]);
+      let model = "iPhone"; const modelMatch = line.match(/(iPhone\s*)?(1[5-8]|11|12|13|14)/i);
+      if (modelMatch) {
+        model = `iPhone ${modelMatch[2]}`;
+        if (line.toLowerCase().includes('pro max')) model += ' Pro Max';
+        else if (line.toLowerCase().includes('pro')) model += ' Pro';
+        else if (line.toLowerCase().includes('plus')) model += ' Plus';
+      }
+      let storage = ""; const storageMatch = line.match(/(64|128|256|512|1024|1TB)/i);
+      if (storageMatch) storage = storageMatch[1].toUpperCase() + (storageMatch[1].toLowerCase() === '1tb' ? '' : 'GB');
+      let sim = "eSIM"; if (line.toLowerCase().includes('физ') || line.toLowerCase().includes('phys')) sim = "Физ. SIM";
+      let color = ""; const colorMatch = line.match(/(Burgundy|Titanium|Black|White|Blue|Red|Green|Gold|Silver|Purple)/i);
+      if (colorMatch) color = colorMatch[1];
+      for (let i = 0; i < qty; i++) {
+        const newDealRef = push(ref(db, 'deals'));
+        set(newDealRef, { category: 'iPhone', model: model.trim(), storage: storage, sim: sim, color: color, buy: price, status: 'in', storePrice: 0 });
+        addedCount++;
       }
     });
-    text += "💳 Доступна рассрочка!";
-    navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
+    if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
+  }
+
+  window.downloadImage = function() {
+    html2canvas(document.getElementById('posterContainer'), { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
+      const link = document.createElement('a'); link.download = 'price.png'; link.href = canvas.toDataURL('image/png'); link.click();
+    });
   }
 </script>
 </body>
