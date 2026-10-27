@@ -13,6 +13,7 @@
     --accent: #e11d48;
     --green: #10b981;
     --btn-blue: #3b82f6;
+    --old-price: #64748b;
   }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
@@ -38,10 +39,11 @@
   .red-text { color: #f87171; }
   
   /* Карточки */
-  .section-title { font-size: 14px; color: var(--text-muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px;}
+.on  .section-title { font-size: 13::px; color: #94a3afterb8; margin: 20px 0 10px; text-transform {: uppercase; letter-spacing: 1px; border-bottom transform: 1px solid #334155;: padding-bottom: 6px; display: flex; justify-content: space-between;}
   
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .deal-category { font-size: 10px; color: var(--btn-blue); font-weight: 700; text-transform: uppercase; margin-bottom: 2px;}
   .deal-title { font-weight: 700; font-size: 15px; }
   .deal-imei { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
   .deal-price { text-align: right; }
@@ -63,7 +65,7 @@
   .toggle { width: 36px; height: 20px; background: #2a2e42; border-radius: 10px; position: relative; cursor: pointer; transition: 0.2s; }
   .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.2s; }
   .toggle.on { background: var(--green); }
-  .toggle.on::after { transform: translateX(16px); }
+  .toggle translateX(16px); }
 
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .input-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
@@ -80,14 +82,19 @@
   .poster-item { background: rgba(30, 15, 20, 0.7); border: 1px solid #4a202a; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
   .p-info h4 { margin: 0 0 4px; font-size: 15px; display: flex; gap: 6px; flex-wrap: wrap;}
   .p-tag { background: #2a2e42; color: #aaa; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
-  .p-tag-sim { background: #3f1a20; color: #f87171; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
-  .p-price { font-size: 18px; font-weight: 800; }
+  
+  .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
+  .p-price { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.1; }
+  .p-old-price { font-size: 13px; color: var(--old-price); text-decoration: line-through; margin-bottom: 2px; }
+  .p-discount { font-size: 10px; background: var(--accent); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-top: 4px; }
 
   /* Модалки */
   .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
   .modal.active { display: flex; }
   .modal-content { background: var(--bg-card); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
   .modal-content h2 { margin-top: 0; font-size: 18px; margin-bottom: 16px; }
+  
+  .loading { text-align: center; color: var(--text-muted); padding: 20px; }
 </style>
 </head>
 <body>
@@ -102,10 +109,10 @@
     <div><div style="font-size: 11px; color: var(--text-muted);">Прибыль</div><div class="num" id="sumProfit">0 ₽</div></div>
   </div>
 
-  <button class="btn btn-green" onclick="openAddModal()">+ Добавить телефон на склад</button>
+  <button class="btn btn-green" onclick="openAddModal()">+ Добавить товар на склад</button>
 
-  <div class="section-title">📦 В наличии (на складе)</div>
-  <div id="stockList"></div>
+  <div class="section-title">📦 В наличии</div>
+  <div id="stockList" class="loading">Загрузка...</div>
 
   <div class="section-title">✅ Проданные</div>
   <div id="soldList"></div>
@@ -125,11 +132,11 @@
     <button class="btn-sm btn-blue" onclick="addStoreItem()">+ Добавить</button>
   </div>
 
-  <div id="editorList"></div>
+  <div id="editorList" class="loading">Загрузка...</div>
 
   <div class="preview-container" id="posterContainer">
     <div class="poster">
-      <h1 class="poster-title">IPHONE</h1>
+      <h1 class="poster-title">В НАЛИЧИИ</h1>
       <p class="poster-subtitle">ЛУЧШИЕ ЦЕНЫ</p>
       <div class="poster-list" id="posterList"></div>
     </div>
@@ -145,67 +152,90 @@
 <!-- МОДАЛКА: ДОБАВИТЬ НА СКЛАД -->
 <div class="modal" id="addModal">
   <div class="modal-content">
-    <h2>Добавить на склад</h2>
+    <h2>Добавить товар</h2>
     <form id="addForm">
+      
       <div class="input-group" style="margin-bottom:10px;">
-        <label>Модель</label>
-        <select name="model" required>
-          <option value="" disabled selected>Выберите модель...</option>
-          <option value="iPhone 15">iPhone 15</option>
-          <option value="iPhone 15 Plus">iPhone 15 Plus</option>
-          <option value="iPhone 15 Pro">iPhone 15 Pro</option>
-          <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
-          <option value="iPhone 16">iPhone 16</option>
-          <option value="iPhone 16 Plus">iPhone 16 Plus</option>
-          <option value="iPhone 16 Pro">iPhone 16 Pro</option>
-          <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
-          <option value="iPhone 17">iPhone 17</option>
-          <option value="iPhone 17 Plus">iPhone 17 Plus</option>
-          <option value="iPhone 17 Pro">iPhone 17 Pro</option>
-          <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
-          <option value="iPhone 18">iPhone 18</option>
-          <option value="iPhone 18 Plus">iPhone 18 Plus</option>
-          <option value="iPhone 18 Pro">iPhone 18 Pro</option>
-          <option value="iPhone 18 Pro Max">iPhone 18 Pro Max</option>
-          <option value="Другая">Другая модель...</option>
+        <label>Категория</label>
+        <select name="category" id="addCategory" required>
+          <option value="iPhone">iPhone</option>
+          <option value="PlayStation">PlayStation</option>
+          <option value="Ноутбук">Ноутбук</option>
+          <option value="Телевизор">Телевизор</option>
+          <option value="Другое">Другое</option>
         </select>
       </div>
-      
-      <div class="input-group" style="margin-bottom:10px; display:none;" id="customModelWrap">
-        <label>Напишите модель</label>
-        <input name="customModel" placeholder="Например, Samsung S24">
-      </div>
 
-      <div class="input-grid" style="margin-bottom:10px;">
-        <div class="input-group">
-          <label>Память</label>
-          <select name="storage">
-            <option value="256GB">256GB</option>
-            <option value="512GB">512GB</option>
-            <option value="1TB">1TB</option>
+      <!-- Блок для iPhone -->
+      <div id="iphoneFields">
+        <div class="input-group" style="margin-bottom:10px;">
+          <label>Модель iPhone</label>
+          <select name="iphoneModel">
+            <option value="" disabled selected>Выберите модель...</option>
+            <option value="iPhone 15">iPhone 15</option>
+            <option value="iPhone 15 Plus">iPhone 15 Plus</option>
+            <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+            <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
+            <option value="iPhone 16">iPhone 16</option>
+            <option value="iPhone 16 Plus">iPhone 16 Plus</option>
+            <option value="iPhone 16 Pro">iPhone 16 Pro</option>
+            <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
+            <option value="iPhone 17">iPhone 17</option>
+            <option value="iPhone 17 Pro">iPhone 17 Pro</option>
+            <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
+            <option value="iPhone 18">iPhone 18</option>
+            <option value="iPhone 18 Pro">iPhone 18 Pro</option>
+            <option value="iPhone 18 Pro Max">iPhone 18 Pro Max</option>
+            <option value="Другая">Другая модель...</option>
           </select>
         </div>
-        <div class="input-group">
-          <label>Цвет</label>
-          <input name="color" placeholder="Black, Titanium...">
+        <div class="input-group" style="margin-bottom:10px; display:none;" id="customModelWrap">
+          <label>Напишите модель</label>
+          <input name="customModel" placeholder="iPhone ...">
+        </div>
+        <div class="input-grid" style="margin-bottom:10px;">
+          <div class="input-group">
+            <label>Память</label>
+            <select name="storage">
+              <option value="256GB">256GB</option>
+              <option value="512GB">512GB</option>
+              <option value="1TB">1TB</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Цвет</label>
+            <input name="color" placeholder="Black...">
+          </div>
+        </div>
+        <div class="input-grid" style="margin-bottom:10px;">
+          <div class="input-group">
+            <label>Тип SIM</label>
+            <select name="sim">
+              <option value="eSIM">eSIM</option>
+              <option value="Физ. SIM">Физ. SIM</option>
+              <option value="2 SIM">2 SIM</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>IMEI</label>
+            <input name="imei" placeholder="356789...">
+          </div>
         </div>
       </div>
 
-      <div class="input-grid" style="margin-bottom:10px;">
-        <div class="input-group">
-          <label>Тип SIM</label>
-          <select name="sim">
-            <option value="eSIM">eSIM</option>
-            <option value="Физ. SIM">Физ. SIM</option>
-            <option value="2 SIM">2 SIM</option>
-          </select>
+      <!-- Блок для других товаров -->
+      <div id="otherFields" style="display:none;">
+        <div class="input-group" style="margin-bottom:10px;">
+          <label>Название / Модель</label>
+          <input name="otherModel" placeholder="Например, PlayStation 5 Slim или Samsung 55 TV">
         </div>
-        <div class="input-group">
-          <label>IMEI</label>
-          <input name="imei" placeholder="356789...">
+        <div class="input-group" style="margin-bottom:10px;">
+          <label>Описание / Характеристики (необязательно)</label>
+          <input name="otherDesc" placeholder="1TB, Black, 120Hz">
         </div>
       </div>
 
+      <!-- Общие поля (цена, контакты) -->
       <div class="input-grid" style="margin-bottom:10px;">
         <div class="input-group">
           <label>Цена закупки (₽)</label>
@@ -219,7 +249,7 @@
 
       <div style="display:flex; gap:10px; margin-top: 20px;">
         <button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button>
-        <button type="submit" class="btn btn-green">Добавить на склад</button>
+        <button type="submit" class="btn btn-green">Добавить</button>
       </div>
     </form>
   </div>
@@ -230,7 +260,7 @@
   <div class="modal-content">
     <h2>Продажа: <span id="sellModelName" style="color:var(--green)"></span></h2>
     <form id="sellForm">
-      <input type="hidden" name="dealIndex" id="sellIndex">
+      <input type="hidden" name="dealKey" id="sellKey">
       <div class="input-group" style="margin-bottom:10px;">
         <label>Цена продажи (₽)</label>
         <input name="sellPrice" type="number" required placeholder="35000" style="font-size:18px; color:#4ade80;">
@@ -248,47 +278,85 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-  function switchTab(tab) {
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+  const firebaseConfig = {
+    databaseURL: "https://iphone-sklad-default-rtdb.firebaseio.com/"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let deals = {};
+  let storeItems = {};
+
+  window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + tab).classList.add('active');
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  // ==========================================
-  // ЛОГИКА СКЛАДА
-  // ==========================================
-  let deals = JSON.parse(localStorage.getItem('my_deals_v4') || '[]');
+  // Смена полей при выборе категории
+  document.getElementById('addCategory').addEventListener('change', function() {
+    if (this.value === 'iPhone') {
+      document.getElementById('iphoneFields').style.display = 'block';
+      document.getElementById('otherFields').style.display = 'none';
+    } else {
+      document.getElementById('iphoneFields').style.display = 'none';
+      document.getElementById('otherFields').style.display = 'block';
+    }
+  });
 
-  document.querySelector('select[name="model"]').addEventListener('change', function() {
+  document.querySelector('select[name="iphoneModel"]').addEventListener('change', function() {
     const customWrap = document.getElementById('customModelWrap');
     if (this.value === 'Другая') { customWrap.style.display = 'block'; } 
     else { customWrap.style.display = 'none'; }
   });
 
-  function saveDeals() {
-    localStorage.setItem('my_deals_v4', JSON.stringify(deals));
+  // ==========================================
+  // СКЛАД
+  // ==========================================
+  const dealsRef = ref(db, 'deals');
+  
+  onValue(dealsRef, (snapshot) => {
+    deals = snapshot.val() || {};
     renderDeals();
-  }
+  });
 
-  function renderDeals() {
+  window.renderDeals = function() {
     let sumBuy = 0, sumSell = 0, sumProfit = 0;
-    let stockHtml = '', soldHtml = '';
+    
+    // Группируем по категориям
+    let categoriesStock = {};
+    let soldHtml = '';
 
-    deals.forEach((it, i) => {
+    const dealKeys = Object.keys(deals);
+
+    dealKeys.forEach((key) => {
+      const it = deals[key];
       const profit = (it.sell || 0) - (it.buy || 0);
       sumBuy += it.buy || 0;
       
-      const title = `${it.model} <span style="font-size:12px; color:#aaa;">${it.storage} ${it.color}</span>`;
-      
+      // Формируем название (для iPhone с памятью, для остальных просто название)
+      let title = it.model;
+      if (it.category === 'iPhone') {
+        title += ` <span style="font-size:12px; color:#aaa;">${it.storage} ${it.color}</span>`;
+      } else if (it.desc) {
+        title += ` <span style="font-size:12px; color:#aaa;">${it.desc}</span>`;
+      }
+
       if (it.status === 'in') {
-        stockHtml += `
+        if (!categoriesStock[it.category]) categoriesStock[it.category] = '';
+        
+        categoriesStock[it.category] += `
         <div class="deal-card">
           <div class="deal-header">
             <div>
               <div class="deal-title">${title}</div>
-              <div class="deal-imei">${it.sim} • IMEI: ${it.imei || '—'}</div>
+              <div class="deal-imei">${it.category === 'iPhone' ? it.sim + ' • IMEI: ' + (it.imei || '—') : it.category}</div>
             </div>
             <div class="deal-price">
               <div class="deal-buy">Куплен за</div>
@@ -298,8 +366,8 @@
           <div class="deal-footer">
             <div style="font-size:10px; color:#64748b;">${it.seller ? 'Продавец: ' + it.seller : ''}</div>
             <div style="display:flex; gap:6px;">
-              <button class="btn-sm btn-green" onclick="openSellModal(${i})">Продать</button>
-              <button class="btn-sm btn-red" onclick="delDeal(${i})">Удалить</button>
+              <button class="btn-sm btn-green" onclick="openSellModal('${key}')">Продать</button>
+              <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
             </div>
           </div>
         </div>`;
@@ -310,8 +378,8 @@
         <div class="deal-card" style="opacity: 0.8;">
           <div class="deal-header">
             <div>
+              <div class="deal-category">${it.category}</div>
               <div class="deal-title">${title}</div>
-              <div class="deal-imei">${it.sim} • IMEI: ${it.imei || '—'}</div>
             </div>
             <div class="deal-price">
               <div class="deal-buy">Продажа: ${(it.sell).toLocaleString('ru-RU')} ₽</div>
@@ -323,13 +391,22 @@
               <span class="status st-sold">Продан</span>
               <div style="font-size:10px; color:#64748b; margin-top:4px;">${it.buyer ? 'Покупатель: ' + it.buyer : ''}</div>
             </div>
-            <button class="btn-sm btn-red" onclick="delDeal(${i})">Удалить</button>
+            <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
           </div>
         </div>`;
       }
     });
 
-    if(!stockHtml) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
+    // Собираем склад по категориям
+    let stockHtml = '';
+    let hasStock = false;
+    for (let cat in categoriesStock) {
+      hasStock = true;
+      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>`;
+      stockHtml += categoriesStock[cat];
+    }
+
+    if(!hasStock) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
     if(!soldHtml) soldHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Нет проданных</div>';
 
     document.getElementById('stockList').innerHTML = stockHtml;
@@ -342,151 +419,172 @@
     pEl.className = 'num ' + (sumProfit > 0 ? 'green-text' : sumProfit < 0 ? 'red-text' : '');
   }
 
-  function delDeal(i) {
-    if (confirm('Удалить эту запись?')) { deals.splice(i, 1); saveDeals(); }
+  window.delDeal = function(key) {
+    if (confirm('Удалить эту запись?')) { remove(ref(db, 'deals/' + key)); }
   }
 
-  function openAddModal() { document.getElementById('addModal').classList.add('active'); }
-  function closeAddModal() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); document.getElementById('customModelWrap').style.display = 'none';}
+  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); }
+  window.closeAddModal = function() { 
+    document.getElementById('addModal').classList.remove('active'); 
+    document.getElementById('addForm').reset(); 
+    document.getElementById('customModelWrap').style.display = 'none';
+    document.getElementById('iphoneFields').style.display = 'block';
+    document.getElementById('otherFields').style.display = 'none';
+  }
   
-  function openSellModal(index) { 
-    document.getElementById('sellIndex').value = index;
-    const d = deals[index];
-    document.getElementById('sellModelName').textContent = d.model + ' ' + d.storage;
+  window.openSellModal = function(key) { 
+    document.getElementById('sellKey').value = key;
+    const d = deals[key];
+    document.getElementById('sellModelName').textContent = d.model;
     document.getElementById('sellForm').reset();
     document.getElementById('sellModal').classList.add('active'); 
   }
-  function closeSellModal() { document.getElementById('sellModal').classList.remove('active'); }
+  window.closeSellModal = function() { document.getElementById('sellModal').classList.remove('active'); }
 
   document.getElementById('addForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
-    let modelName = f.get('model');
-    if (modelName === 'Другая') modelName = f.get('customModel') || 'Без названия';
-
-    deals.push({
-      model: modelName, storage: f.get('storage'), color: f.get('color'), 
-      sim: f.get('sim'), imei: f.get('imei'),
-      buy: Number(f.get('buy')), seller: f.get('seller'),
+    const category = f.get('category');
+    
+    let newData = {
+      category: category,
+      buy: Number(f.get('buy')), 
+      seller: f.get('seller'),
       sell: 0, buyer: '', status: 'in'
-    });
-    saveDeals();
+    };
+
+    if (category === 'iPhone') {
+      let modelName = f.get('iphoneModel');
+      if (modelName === 'Другая') modelName = f.get('customModel') || 'iPhone';
+      
+      newData.model = modelName;
+      newData.storage = f.get('storage');
+      newData.color = f.get('color');
+      newData.sim = f.get('sim');
+      newData.imei = f.get('imei');
+    } else {
+      newData.model = f.get('otherModel') || category;
+      newData.desc = f.get('otherDesc');
+    }
+
+    const newDealRef = push(dealsRef);
+    set(newDealRef, newData);
     closeAddModal();
   });
 
   document.getElementById('sellForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const f = new FormData(e.target);
-    const index = f.get('dealIndex');
-    deals[index].sell = Number(f.get('sellPrice'));
-    deals[index].buyer = f.get('buyer');
-    deals[index].status = 'sold';
-    saveDeals();
+    const key = f.get('dealKey');
+    update(ref(db, 'deals/' + key), {
+      sell: Number(f.get('sellPrice')),
+      buyer: f.get('buyer'),
+      status: 'sold'
+    });
     closeSellModal();
   });
 
 
   // ==========================================
-  // ЛОГИКА ВИТРИНЫ
+  // ВИТРИНА
   // ==========================================
-  let storeItems = JSON.parse(localStorage.getItem('my_store_v4') || 'null');
-  if (!storeItems) {
-    storeItems = [
-      { id: 1, model: "iPhone 18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, active: true },
-      { id: 2, model: "iPhone 18 Pro Max", storage: "512GB", sim: "eSIM", color: "Titanium", price: 152000, active: true }
-    ];
-  }
+  const storeRef = ref(db, 'store');
+  
+  onValue(storeRef, (snapshot) => {
+    storeItems = snapshot.val();
+    if(!storeItems) {
+      const defaultStore = {
+        item1: { model: "iPhone 18 Pro", storage: "256GB", sim: "eSIM", color: "Burgundy", price: 113000, oldPrice: 0, active: true },
+        item2: { model: "PlayStation 5", storage: "", sim: "", color: "Slim 1TB", price: 60000, oldPrice: 0, active: true }
+      };
+      set(storeRef, defaultStore);
+    } else {
+      renderStoreEditor(); 
+      renderPoster();
+    }
+  });
 
-  function saveStore() {
-    localStorage.setItem('my_store_v4', JSON.stringify(storeItems));
-    renderStoreEditor(); renderPoster();
-  }
-
-  function renderStoreEditor() {
+  window.renderStoreEditor = function() {
     const wrap = document.getElementById('editorList');
-    wrap.innerHTML = storeItems.map((item, index) => `
+    wrap.innerHTML = Object.keys(storeItems).map((key) => {
+      const item = storeItems[key];
+      return `
       <div class="item-editor">
         <div class="item-top">
           <div class="item-name">${item.model}</div>
           <div class="toggle-wrap">
-            <div class="toggle ${item.active ? 'on' : ''}" onclick="toggleStoreItem(${index})"></div>
-            <button style="background:none; border:none; color:#64748b; font-size:16px;" onclick="delStoreItem(${index})">✕</button>
+            <div class="toggle ${item.active ? 'on' : ''}" onclick="toggleStoreItem('${key}')"></div>
+            <button style="background:none; border:none; color:#64748b; font-size:16px;" onclick="delStoreItem('${key}')">✕</button>
           </div>
         </div>
         <div class="input-grid">
           <div class="input-group">
-            <label>Память</label>
-            <select onchange="updateStoreItem(${index}, 'storage', this.value)">
-              <option value="256GB" ${item.storage === '256GB' ? 'selected' : ''}>256GB</option>
-              <option value="512GB" ${item.storage === '512GB' ? 'selected' : ''}>512GB</option>
-              <option value="1TB" ${item.storage === '1TB' ? 'selected' : ''}>1TB</option>
-            </select>
+            <label>Модель</label>
+            <input type="text" value="${item.model}" onchange="updateStoreItem('${key}', 'model', this.value)">
           </div>
           <div class="input-group">
-            <label>Сим-карта</label>
-            <select onchange="updateStoreItem(${index}, 'sim', this.value)">
-              <option value="eSIM" ${item.sim === 'eSIM' ? 'selected' : ''}>eSIM</option>
-              <option value="Физ. SIM" ${item.sim === 'Физ. SIM' ? 'selected' : ''}>Физ. SIM</option>
-            </select>
+            <label>Характеристика</label>
+            <input type="text" value="${item.storage || item.color}" onchange="updateStoreItem('${key}', 'storage', this.value)">
           </div>
           <div class="input-group">
-            <label>Цвет</label>
-            <input type="text" value="${item.color}" onchange="updateStoreItem(${index}, 'color', this.value)">
+            <label>Старая цена</label>
+            <input type="number" value="${item.oldPrice || 0}" onchange="updateStoreItem('${key}', 'oldPrice', this.value)">
           </div>
           <div class="input-group">
-            <label>Цена (₽)</label>
-            <input type="number" value="${item.price}" onchange="updateStoreItem(${index}, 'price', this.value)">
+            <label>Новая цена (₽)</label>
+            <input type="number" value="${item.price}" onchange="updateStoreItem('${key}', 'price', this.value)">
           </div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
-  function renderPoster() {
-    const activeItems = storeItems.filter(i => i.active);
+  window.renderPoster = function() {
+    const activeKeys = Object.keys(storeItems).filter(k => storeItems[k].active);
     const listWrap = document.getElementById('posterList');
-    listWrap.innerHTML = activeItems.map(item => `
+    
+    listWrap.innerHTML = activeKeys.map(key => {
+      const item = storeItems[key];
+      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
+      const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
+
+      return `
       <div class="poster-item">
         <div class="p-info">
-          <h4>${item.model} <span class="p-tag">${item.storage}</span> <span class="p-tag-sim">${item.sim}</span></h4>
-          <p class="p-desc" style="margin:4px 0 0; font-size:11px; color:#8b92a5;">${item.color}</p>
+          <h4>${item.model} <span class="p-tag">${item.storage || ''}</span></h4>
+          <p class="p-desc" style="margin:4px 0 0; font-size:11px; color:#8b92a5;">${item.sim || ''} ${item.color || ''}</p>
         </div>
-        <div class="p-price">${item.price.toLocaleString('ru-RU')} ₽</div>
+        <div class="p-price-wrap">
+          ${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}
+          <div class="p-price" style="${hasDiscount ? 'color: #4ade80;' : ''}">${Number(item.price).toLocaleString('ru-RU')} ₽</div>
+          ${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}
+        </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
-  function updateStoreItem(index, field, value) {
-    storeItems[index][field] = field === 'price' ? Number(value) : value;
-    saveStore();
+  window.updateStoreItem = function(key, field, value) {
+    let val = (field === 'price' || field === 'oldPrice') ? Number(value) : value;
+    update(ref(db, 'store/' + key), { [field]: val });
   }
-  function toggleStoreItem(index) { storeItems[index].active = !storeItems[index].active; saveStore(); }
-  function delStoreItem(index) { if(confirm('Удалить модель из витрины?')) { storeItems.splice(index, 1); saveStore(); } }
-  function addStoreItem() {
-    storeItems.push({ id: Date.now(), model: "iPhone 15 Pro", storage: "256GB", sim: "eSIM", color: "Black", price: 70000, active: true });
-    saveStore();
+  window.toggleStoreItem = function(key) { update(ref(db, 'store/' + key), { active: !storeItems[key].active }); }
+  window.delStoreItem = function(key) { if(confirm('Удалить модель из витрины?')) { remove(ref(db, 'store/' + key)); } }
+  window.addStoreItem = function() {
+    const newItemRef = push(storeRef);
+    set(newItemRef, { model: "Новый товар", storage: "", sim: "", color: "", price: 1000, oldPrice: 0, active: true });
   }
 
-  function downloadImage() {
+  window.downloadImage = function() {
     html2canvas(document.getElementById('posterContainer'), { scale: 2, backgroundColor: '#0f111a' }).then(canvas => {
       const link = document.createElement('a');
       link.download = 'price-list.png'; link.href = canvas.toDataURL('image/png'); link.click();
     });
   }
 
-  function copyText() {
+  window.copyText = function() {
     let text = "🔥 *В НАЛИЧИИ*\n\n";
-    storeItems.filter(i => i.active).forEach(item => {
-      text += `▪️ ${item.model} ${item.storage} (${item.sim})\n   Цвет: ${item.color}\n   Цена: *${item.price.toLocaleString('ru-RU')} ₽*\n\n`;
-    });
-    text += "💳 Доступна рассрочка!";
-    navigator.clipboard.writeText(text).then(() => alert("Текст скопирован! Вставьте в WhatsApp."));
-  }
-
-  // Запуск
-  renderDeals();
-  renderStoreEditor();
-  renderPoster();
-</script>
-</body>
-</html>
+    Object.keys(storeItems).filter(k => storeItems[k].active).forEach(key => {
+      const item = storeItems[key];
+      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
+      
+      text += `▪️ ${item.model
