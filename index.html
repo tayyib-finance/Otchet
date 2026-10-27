@@ -153,8 +153,10 @@
     </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px;">
-    <button class="btn btn-blue" onclick="generateSingleListImage()" style="background: #0ea5e9; font-size: 15px; padding: 12px;">📋 Отправить список (В наличии)</button>
+  <!-- Кнопки для списка -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+    <button class="btn btn-blue" onclick="generateSingleListImage()" style="background: #0ea5e9; font-size: 14px; padding: 12px;">🖼 Скачать фото</button>
+    <button class="btn btn-green" onclick="copyWhatsAppList()" style="font-size: 14px; padding: 12px;">📋 Текст в WhatsApp</button>
   </div>
 
   <div class="dashboard">
@@ -795,6 +797,7 @@
     if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
   }
 
+  // ГЕНЕРАЦИЯ КАРТИНКИ (Скачивание фото)
   window.generateSingleListImage = function() {
     const listWrap = document.getElementById('singlePosterList');
     let groupedItems = {};
@@ -850,6 +853,44 @@
          link.href = imgData;
          link.click();
       }
+    });
+  }
+
+  // КОПИРОВАНИЕ ТЕКСТА В WHATSAPP
+  window.copyWhatsAppList = function() {
+    let groupedItems = {};
+    Object.keys(deals).forEach(key => {
+      const item = deals[key];
+      if (item.status === 'in') {
+        const groupKey = `${item.model}_${item.storage || ''}_${item.color || ''}`;
+        const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
+        const price = item.storePrice || item.buy;
+        if (!groupedItems[groupKey]) {
+          groupedItems[groupKey] = { model: item.model, desc: desc || item.category, price: price };
+        }
+      }
+    });
+    
+    let text = "🔥 *FREE ZONE (В наличии)*\n\n";
+    let keys = Object.keys(groupedItems).sort((a, b) => {
+      const isA = groupedItems[a].model.includes('iPhone') ? 1 : 0;
+      const isB = groupedItems[b].model.includes('iPhone') ? 1 : 0;
+      return isB - isA;
+    });
+
+    keys.forEach(key => {
+      const item = groupedItems[key];
+      text += `▪️ ${item.model} ${item.desc ? '(' + item.desc + ')' : ''}\n   Цена: *${Number(item.price).toLocaleString('ru-RU')} ₽*\n\n`;
+    });
+
+    text += "💳 Доступна рассрочка\n";
+    text += "🔥 Предзаказ ВЫГОДНЕЕ (аванс 3000 ₽)\n\n";
+    text += "📞 Заказ: +7 988 783-66-77";
+
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Текст списка скопирован! Откройте WhatsApp и вставьте его в чат.");
+    }).catch(err => {
+      prompt("Не удалось скопировать автоматически. Скопируйте текст вручную:", text);
     });
   }
 
