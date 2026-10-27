@@ -225,9 +225,60 @@
   <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина</div>
 </div>
 
-<!-- МОДАЛКИ -->
-<div class="modal" id="addModal"><div class="modal-content"><h2>Добавить</h2><form id="addForm"><div class="input-group" style="margin-bottom:10px;"><select name="category" id="addCategory"><option value="iPhone">iPhone</option><option value="PlayStation">PlayStation</option><option value="Другое">Другое</option></select></div><div id="iphoneFields"><div class="input-group" style="margin-bottom:10px;"><input name="iphoneModel" placeholder="Модель" required></div></div><div id="otherFields" style="display:none;"><div class="input-group" style="margin-bottom:10px;"><input name="otherModel" placeholder="Название"></div></div><div class="input-grid" style="margin-bottom:10px;"><div class="input-group"><input name="buy" type="number" required placeholder="Закупка (₽)"></div><div class="input-group"><input name="qty" type="number" value="1" required placeholder="Кол-во"></div></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button><button type="submit" class="btn btn-green">ОК</button></div></form></div></div>
+<!-- МОДАЛКА: ДОБАВИТЬ -->
+<div class="modal" id="addModal">
+  <div class="modal-content">
+    <h2>Добавить товар</h2>
+    <form id="addForm">
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Категория</label>
+        <select name="category" id="addCategory" required>
+          <!-- Сюда будут добавляться сохраненные категории -->
+          <option value="iPhone">iPhone</option>
+          <option value="PlayStation">PlayStation</option>
+          <option value="Ноутбук">Ноутбук</option>
+          <option value="Телевизор">Телевизор</option>
+          <option value="NEW">+ Создать новую категорию...</option>
+        </select>
+      </div>
 
+      <!-- Поле для новой категории (появляется при выборе NEW) -->
+      <div class="input-group" style="margin-bottom:10px; display:none;" id="newCategoryField">
+        <input name="newCategoryName" placeholder="Название (Наушники, ПК, Часы)" required>
+      </div>
+
+      <!-- Поля для iPhone -->
+      <div id="iphoneFields">
+        <div class="input-group" style="margin-bottom:10px;">
+          <input name="iphoneModel" placeholder="Модель iPhone" required>
+        </div>
+      </div>
+
+      <!-- Поля для Другого -->
+      <div id="otherFields" style="display:none;">
+        <div class="input-group" style="margin-bottom:10px;">
+          <input name="otherModel" placeholder="Модель / Название товара" required>
+        </div>
+      </div>
+
+      <div class="input-grid" style="margin-bottom:10px;">
+        <div class="input-group">
+          <input name="buy" type="number" required placeholder="Закупка (₽)">
+        </div>
+        <div class="input-group">
+          <input name="qty" type="number" value="1" required placeholder="Кол-во">
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ОСТАЛЬНЫЕ МОДАЛКИ -->
 <div class="modal" id="expenseModal"><div class="modal-content"><h2>Расход</h2><form id="expenseForm"><div class="input-group" style="margin-bottom:10px;"><input name="amount" type="number" required placeholder="Сумма (₽)"></div><div class="input-group" style="margin-bottom:10px;"><input name="reason" required placeholder="На что?"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeExpenseModal()">Отмена</button><button type="submit" class="btn btn-red">Списать</button></div></form></div></div>
 
 <div class="modal" id="bookModal"><div class="modal-content"><h2>Бронь</h2><form id="bookForm"><input type="hidden" name="dealKey" id="bookKey"><div class="input-group" style="margin-bottom:10px;"><input name="clientName" required placeholder="Имя"></div><div class="input-group" style="margin-bottom:10px;"><input name="clientPhone" required placeholder="Телефон"></div><div style="display:flex; gap:10px;"><button type="button" class="btn btn-gray" onclick="closeBookModal()">Отмена</button><button type="submit" class="btn btn-yellow">Забронировать</button></div></form></div></div>
@@ -294,7 +345,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  let deals = {}; let expenses = {};
+  let deals = {}; let expenses = {}; let customCategories = [];
 
   window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -307,10 +358,54 @@
     document.getElementById('posterBody').className = `poster ${themeName}`;
   }
 
+  // Загрузка данных (включая сохраненные категории)
   onValue(ref(db, 'deals'), (snap) => { deals = snap.val() || {}; renderAll(); });
   onValue(ref(db, 'expenses'), (snap) => { expenses = snap.val() || {}; renderAll(); });
+  onValue(ref(db, 'customCategories'), (snap) => { 
+    customCategories = snap.val() || []; 
+    updateCategoryList();
+  });
 
   window.renderAll = function() { renderDeals(); renderPoster(); }
+
+  // Обновление выпадающего списка категорий
+  window.updateCategoryList = function() {
+    const select = document.getElementById('addCategory');
+    // Очищаем все, кроме базовых
+    select.innerHTML = `
+      <option value="iPhone">iPhone</option>
+      <option value="PlayStation">PlayStation</option>
+      <option value="Ноутбук">Ноутбук</option>
+      <option value="Телевизор">Телевизор</option>
+    `;
+    // Добавляем сохраненные пользователем
+    if (Array.isArray(customCategories)) {
+      customCategories.forEach(cat => {
+        if(cat) select.innerHTML += `<option value="${cat}">${cat}</option>`;
+      });
+    }
+    select.innerHTML += `<option value="NEW">+ Создать новую категорию...</option>`;
+  }
+
+  document.getElementById('addCategory').addEventListener('change', function() {
+    const newCatField = document.getElementById('newCategoryField');
+    const iphoneFields = document.getElementById('iphoneFields');
+    const otherFields = document.getElementById('otherFields');
+
+    if (this.value === 'NEW') {
+      newCatField.style.display = 'block';
+      iphoneFields.style.display = 'none';
+      otherFields.style.display = 'block';
+    } else if (this.value === 'iPhone') {
+      newCatField.style.display = 'none';
+      iphoneFields.style.display = 'block';
+      otherFields.style.display = 'none';
+    } else {
+      newCatField.style.display = 'none';
+      iphoneFields.style.display = 'none';
+      otherFields.style.display = 'block';
+    }
+  });
 
   window.renderDeals = function() {
     let sumBuy = 0, sumCash = 0, totalProfit = 0, totalExpenses = 0;
@@ -383,12 +478,18 @@
     });
 
     let stockHtml = '';
-    const catOrder = ['iPhone', 'PlayStation', 'Ноутбук', 'Телевизор', 'Другое'];
+    const catOrder = ['iPhone', 'PlayStation', 'Ноутбук', 'Телевизор'];
+    // Сначала выводим базовые
     catOrder.forEach(cat => {
       if (categoriesStock[cat]) {
         stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
+        delete categoriesStock[cat]; // Удаляем, чтобы не вывести дважды
       }
     });
+    // Выводим все остальные (пользовательские)
+    for (let cat in categoriesStock) {
+      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
+    }
 
     if(!stockHtml) stockHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
     if(!soldHtml) soldHtml = '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Нет проданных</div>';
@@ -411,22 +512,13 @@
     Object.keys(deals).forEach(key => {
       const item = deals[key];
       if (item.status === 'in') {
-        // Создаем уникальный ключ: Модель + Память + Цвет
         const groupKey = `${item.model}_${item.storage || ''}_${item.color || ''}`;
-        
         const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
         const price = item.storePrice || item.buy;
 
         if (!groupedItems[groupKey]) {
-          groupedItems[groupKey] = { 
-            model: item.model, 
-            desc: desc || item.category, 
-            count: 1, 
-            price: price, 
-            oldPrice: item.oldPrice || null 
-          };
+          groupedItems[groupKey] = { model: item.model, desc: desc || item.category, count: 1, price: price, oldPrice: item.oldPrice || null };
         } else {
-          // Если такой товар уже есть, увеличиваем количество и берем минимальную цену
           groupedItems[groupKey].count++;
           if (price < groupedItems[groupKey].price) groupedItems[groupKey].price = price;
         }
@@ -458,7 +550,7 @@
   window.closeBackupModal = function() { document.getElementById('backupModal').classList.remove('active'); }
 
   window.downloadBackup = function() {
-    const data = { deals, expenses };
+    const data = { deals, expenses, customCategories };
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -475,13 +567,14 @@
         const data = JSON.parse(e.target.result);
         if (data.deals) set(ref(db, 'deals'), data.deals);
         if (data.expenses) set(ref(db, 'expenses'), data.expenses);
+        if (data.customCategories) set(ref(db, 'customCategories'), data.customCategories);
         alert('База успешно восстановлена!'); closeBackupModal();
       } catch (err) { alert('Ошибка чтения файла.'); }
     };
     reader.readAsText(file);
   }
 
-  // ОСТАЛЬНОЕ
+  // ОСТАЛЬНЫЕ ФУНКЦИИ
   window.openEditPayModal = function(key) {
     document.getElementById('editPayKey').value = key;
     const d = deals[key];
@@ -541,19 +634,47 @@
     push(ref(db, 'expenses'), { amount: Number(f.get('amount')), reason: f.get('reason') }); closeExpenseModal(); e.target.reset();
   });
 
-  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); }
+  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); document.getElementById('addCategory').value = 'iPhone'; document.getElementById('addCategory').dispatchEvent(new Event('change')); }
   window.closeAddModal = function() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); }
+  
+  // ДОБАВЛЕНИЕ ТОВАРА
   document.getElementById('addForm').addEventListener('submit', function(e) {
     e.preventDefault(); const f = new FormData(e.target);
-    const cat = f.get('category'); const qty = Number(f.get('qty')) || 1;
+    let cat = f.get('category'); const qty = Number(f.get('qty')) || 1;
+    
+    // Если выбрали новую категорию
+    if (cat === 'NEW') {
+      const newName = f.get('newCategoryName').trim();
+      if (newName) {
+        cat = newName;
+        // Сохраняем новую категорию в базу, если ее еще нет
+        let currentCats = Array.isArray(customCategories) ? customCategories : [];
+        if (!currentCats.includes(newName)) {
+          currentCats.push(newName);
+          set(ref(db, 'customCategories'), currentCats);
+        }
+      } else {
+        cat = 'Другое';
+      }
+    }
+
     let data = { category: cat, buy: Number(f.get('buy')), status: 'in', storePrice: 0 };
-    if (cat === 'iPhone') { data.model = f.get('iphoneModel'); data.storage = f.get('storage'); data.color = f.get('color'); } else { data.model = f.get('otherModel') || cat; }
+    
+    if (cat === 'iPhone') {
+      data.model = f.get('iphoneModel');
+      data.storage = f.get('storage');
+      data.color = f.get('color');
+    } else {
+      data.model = f.get('otherModel') || cat;
+    }
+    
     for (let i = 0; i < qty; i++) set(push(ref(db, 'deals')), data);
     closeAddModal();
   });
 
   window.openImportModal = function() { document.getElementById('importModal').classList.add('active'); }
   window.closeImportModal = function() { document.getElementById('importModal').classList.remove('active'); document.getElementById('importText').value = ''; }
+  
   window.processImport = function() {
     const text = document.getElementById('importText').value;
     if (!text.trim()) return alert('Вставьте текст');
