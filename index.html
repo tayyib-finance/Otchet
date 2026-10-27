@@ -153,6 +153,10 @@
     </div>
   </div>
 
+  <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px;">
+    <button class="btn btn-blue" onclick="generateSingleListImage()" style="background: #0ea5e9; font-size: 15px; padding: 12px;">📋 Отправить список (В наличии)</button>
+  </div>
+
   <div class="dashboard">
     <div class="dash-card">
       <div class="dash-title">Деньги в товаре</div>
@@ -184,7 +188,7 @@
   <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Витрина</h1>
   
   <div class="action-buttons" style="margin-bottom: 10px;">
-    <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать картинку</button>
+    <button class="btn btn-green" onclick="downloadImage('full')">⬇️ Скачать ВСЮ витрину</button>
   </div>
   
   <div style="display:flex; gap:8px; margin-bottom: 20px;">
@@ -220,6 +224,32 @@
   </div>
 </div>
 
+<!-- СКРЫТЫЙ БЛОК ДЛЯ ГЕНЕРАЦИИ СПИСКА БЕЗ КОЛИЧЕСТВА -->
+<div id="singleItemContainer" style="position: absolute; left: -9999px; top: 0;">
+  <div class="poster theme-dark" id="singlePosterBody">
+    <h1 class="poster-title">FREE ZONE</h1>
+    <p class="poster-subtitle">АКТУАЛЬНОЕ НАЛИЧИЕ</p>
+    <div class="poster-list" id="singlePosterList"></div>
+    
+    <div class="poster-footer">
+      <div class="footer-row">
+        <span class="icon">💳</span> Доступна рассрочка
+      </div>
+      <div class="footer-sub">Без банков и переплат</div>
+      
+      <div class="footer-row" style="margin-top: 5px;">
+        <span class="icon">🔥</span> Предзаказ ВЫГОДНЕЕ!
+      </div>
+      <div class="footer-sub">Аванс всего 3000 ₽. Экономьте!</div>
+
+      <div class="footer-phone">
+        <div style="font-size: 11px; margin-bottom: 4px; opacity: 0.8;">Заказ по телефону / WhatsApp:</div>
+        <div class="phone-number">+7 988 783-66-77</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="bottom-nav">
   <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Склад</div>
   <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина</div>
@@ -233,7 +263,6 @@
       <div class="input-group" style="margin-bottom:10px;">
         <label>Категория</label>
         <select name="category" id="addCategory" required>
-          <!-- Сюда будут добавляться сохраненные категории -->
           <option value="iPhone">iPhone</option>
           <option value="PlayStation">PlayStation</option>
           <option value="Ноутбук">Ноутбук</option>
@@ -242,19 +271,16 @@
         </select>
       </div>
 
-      <!-- Поле для новой категории (появляется при выборе NEW) -->
       <div class="input-group" style="margin-bottom:10px; display:none;" id="newCategoryField">
         <input name="newCategoryName" placeholder="Название (Наушники, ПК, Часы)" required>
       </div>
 
-      <!-- Поля для iPhone -->
       <div id="iphoneFields">
         <div class="input-group" style="margin-bottom:10px;">
           <input name="iphoneModel" placeholder="Модель iPhone" required>
         </div>
       </div>
 
-      <!-- Поля для Другого -->
       <div id="otherFields" style="display:none;">
         <div class="input-group" style="margin-bottom:10px;">
           <input name="otherModel" placeholder="Модель / Название товара" required>
@@ -273,6 +299,42 @@
       <div style="display:flex; gap:10px; margin-top: 20px;">
         <button type="button" class="btn btn-gray" onclick="closeAddModal()">Отмена</button>
         <button type="submit" class="btn btn-green">Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- МОДАЛКА: РЕДАКТИРОВАТЬ ТОВАР -->
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h2>Редактировать</h2>
+    <form id="editForm">
+      <input type="hidden" name="dealKey" id="editKey">
+      
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Название / Модель</label>
+        <input name="model" id="editModel" required>
+      </div>
+
+      <div class="input-grid" style="margin-bottom:10px;">
+        <div class="input-group">
+          <label>Память (если есть)</label>
+          <input name="storage" id="editStorage">
+        </div>
+        <div class="input-group">
+          <label>Цвет (если есть)</label>
+          <input name="color" id="editColor">
+        </div>
+      </div>
+
+      <div class="input-group" style="margin-bottom:10px;">
+        <label>Цена закупки (₽)</label>
+        <input name="buy" id="editBuy" type="number" required>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 20px;">
+        <button type="button" class="btn btn-gray" onclick="closeEditModal()">Отмена</button>
+        <button type="submit" class="btn btn-green">Сохранить</button>
       </div>
     </form>
   </div>
@@ -358,7 +420,6 @@
     document.getElementById('posterBody').className = `poster ${themeName}`;
   }
 
-  // Загрузка данных (включая сохраненные категории)
   onValue(ref(db, 'deals'), (snap) => { deals = snap.val() || {}; renderAll(); });
   onValue(ref(db, 'expenses'), (snap) => { expenses = snap.val() || {}; renderAll(); });
   onValue(ref(db, 'customCategories'), (snap) => { 
@@ -368,17 +429,14 @@
 
   window.renderAll = function() { renderDeals(); renderPoster(); }
 
-  // Обновление выпадающего списка категорий
   window.updateCategoryList = function() {
     const select = document.getElementById('addCategory');
-    // Очищаем все, кроме базовых
     select.innerHTML = `
       <option value="iPhone">iPhone</option>
       <option value="PlayStation">PlayStation</option>
       <option value="Ноутбук">Ноутбук</option>
       <option value="Телевизор">Телевизор</option>
     `;
-    // Добавляем сохраненные пользователем
     if (Array.isArray(customCategories)) {
       customCategories.forEach(cat => {
         if(cat) select.innerHTML += `<option value="${cat}">${cat}</option>`;
@@ -448,6 +506,7 @@
             <div>${statusBadge}</div>
             <div style="display:flex; gap:6px;">
               ${it.status === 'in' ? `<button class="btn-sm btn-yellow" onclick="openBookModal('${key}')">Бронь</button>` : ''}
+              <button class="btn-sm btn-gray" onclick="openEditModal('${key}')">✏️ Изменить</button>
               <button class="btn-sm btn-outline" onclick="openPriceModal('${key}')">Цена</button>
               <button class="btn-sm btn-green" onclick="openSellModal('${key}')">Продать</button>
             </div>
@@ -479,14 +538,12 @@
 
     let stockHtml = '';
     const catOrder = ['iPhone', 'PlayStation', 'Ноутбук', 'Телевизор'];
-    // Сначала выводим базовые
     catOrder.forEach(cat => {
       if (categoriesStock[cat]) {
         stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
-        delete categoriesStock[cat]; // Удаляем, чтобы не вывести дважды
+        delete categoriesStock[cat];
       }
     });
-    // Выводим все остальные (пользовательские)
     for (let cat in categoriesStock) {
       stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
     }
@@ -574,6 +631,40 @@
     reader.readAsText(file);
   }
 
+  // РЕДАКТИРОВАНИЕ ТОВАРА
+  window.openEditModal = function(key) {
+    const code = prompt('Введите пароль для изменения:');
+    if (code !== '0537') {
+      if (code !== null) alert('Неверный пароль!');
+      return;
+    }
+    
+    const d = deals[key];
+    document.getElementById('editKey').value = key;
+    document.getElementById('editModel').value = d.model || '';
+    document.getElementById('editStorage').value = d.storage || '';
+    document.getElementById('editColor').value = d.color || '';
+    document.getElementById('editBuy').value = d.buy || 0;
+    
+    document.getElementById('editModal').classList.add('active');
+  }
+  window.closeEditModal = function() { document.getElementById('editModal').classList.remove('active'); }
+  
+  document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const key = f.get('dealKey');
+    
+    update(ref(db, 'deals/' + key), {
+      model: f.get('model'),
+      storage: f.get('storage'),
+      color: f.get('color'),
+      buy: Number(f.get('buy'))
+    });
+    
+    closeEditModal();
+  });
+
   // ОСТАЛЬНЫЕ ФУНКЦИИ
   window.openEditPayModal = function(key) {
     document.getElementById('editPayKey').value = key;
@@ -637,17 +728,14 @@
   window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); document.getElementById('addCategory').value = 'iPhone'; document.getElementById('addCategory').dispatchEvent(new Event('change')); }
   window.closeAddModal = function() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); }
   
-  // ДОБАВЛЕНИЕ ТОВАРА
   document.getElementById('addForm').addEventListener('submit', function(e) {
     e.preventDefault(); const f = new FormData(e.target);
     let cat = f.get('category'); const qty = Number(f.get('qty')) || 1;
     
-    // Если выбрали новую категорию
     if (cat === 'NEW') {
       const newName = f.get('newCategoryName').trim();
       if (newName) {
         cat = newName;
-        // Сохраняем новую категорию в базу, если ее еще нет
         let currentCats = Array.isArray(customCategories) ? customCategories : [];
         if (!currentCats.includes(newName)) {
           currentCats.push(newName);
@@ -707,12 +795,70 @@
     if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
   }
 
-  window.downloadImage = function() {
+  window.generateSingleListImage = function() {
+    const listWrap = document.getElementById('singlePosterList');
+    let groupedItems = {};
+    
+    Object.keys(deals).forEach(key => {
+      const item = deals[key];
+      if (item.status === 'in') {
+        const groupKey = `${item.model}_${item.storage || ''}_${item.color || ''}`;
+        const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
+        const price = item.storePrice || item.buy;
+
+        if (!groupedItems[groupKey]) {
+          groupedItems[groupKey] = { model: item.model, desc: desc || item.category, price: price, oldPrice: item.oldPrice || null };
+        }
+      }
+    });
+    
+    let html = '';
+    let keys = Object.keys(groupedItems).sort((a, b) => {
+      const isA = groupedItems[a].model.includes('iPhone') ? 1 : 0;
+      const isB = groupedItems[b].model.includes('iPhone') ? 1 : 0;
+      return isB - isA;
+    });
+
+    keys.forEach(key => {
+      const item = groupedItems[key];
+      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
+      const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
+      
+      html += `
+      <div class="poster-item">
+        <div class="p-info"><div class="p-model">${item.model}</div><div class="p-desc">${item.desc}</div></div>
+        <div class="p-price-wrap">
+          ${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}
+          <div class="p-price">${Number(item.price).toLocaleString('ru-RU')} ₽</div>
+          ${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}
+        </div>
+      </div>`;
+    });
+    
+    listWrap.innerHTML = html || '<p style="font-size:12px; text-align:center; opacity:0.6;">Нет товаров</p>';
+
+    const posterElement = document.getElementById('singleItemContainer');
+    html2canvas(posterElement, { scale: 2, backgroundColor: null, useCORS: true }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      
+      if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+         const win = window.open();
+         win.document.write('<img src="' + imgData + '" style="width:100%;" />');
+      } else {
+         const link = document.createElement('a');
+         link.download = `spisok_nalichiya.png`;
+         link.href = imgData;
+         link.click();
+      }
+    });
+  }
+
+  window.downloadImage = function(mode) {
     const posterElement = document.getElementById('posterContainer');
     html2canvas(posterElement, { scale: 2, backgroundColor: null, useCORS: true }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const link = document.createElement('a');
-      link.download = `free_zone_prajs_${new Date().getDate()}.png`;
+      link.download = `free_zone_full_prajs_${new Date().getDate()}.png`;
       link.href = imgData;
       
       if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
