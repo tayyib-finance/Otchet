@@ -51,7 +51,6 @@
   .st-sold { background: #14532d; color: #86efac; }
   .st-booked { background: #78350f; color: #fde047; }
   .action-buttons-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-  .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
   .preview-container { background: #000; border-radius: 24px; padding: 2px; border: 1px solid #333; margin-top: 10px; margin-bottom: 20px; overflow: hidden; }
   .theme-dark { background: radial-gradient(circle at top, #2a0e14 0%, #0f111a 60%); }
   .theme-light { background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%); color: #1f2937; }
@@ -213,7 +212,7 @@
   </div>
 </div>
 
-<!-- Скрытый контейнер для одиночного списка (кнопка "Скачать фото") -->
+<!-- Скрытый контейнер для одиночного списка -->
 <div id="singleItemContainer" style="position: absolute; left: -9999px; top: 0;">
   <div class="poster theme-dark" id="singlePosterBody">
     <h1 class="poster-title">FREE ZONE</h1>
@@ -495,6 +494,7 @@
   let expenses = {};
   let customCategories = [];
   let isSoldVisible = false;
+  let dataLoaded = false;
 
   // ========== НАВИГАЦИЯ ==========
   window.switchTab = function(tab) {
@@ -515,9 +515,41 @@
   };
 
   // ========== ПОДПИСКИ НА ДАННЫЕ ==========
-  onValue(ref(db, 'deals'), (snap) => { deals = snap.val() || {}; renderAll(); });
-  onValue(ref(db, 'expenses'), (snap) => { expenses = snap.val() || {}; renderAll(); });
-  onValue(ref(db, 'customCategories'), (snap) => { customCategories = snap.val() || []; updateCategoryList(); });
+  onValue(ref(db, 'deals'), (snap) => {
+    deals = snap.val() || {};
+    dataLoaded = true;
+    renderAll();
+  }, (error) => {
+    console.error('Firebase deals error:', error);
+    document.getElementById('stockList').innerHTML = '<div style="text-align:center; color:#f87171; padding:20px;">Ошибка загрузки данных.<br>Проверьте правила Firebase (Rules → .read = true)</div>';
+  });
+
+  onValue(ref(db, 'expenses'), (snap) => {
+    expenses = snap.val() || {};
+    renderAll();
+  });
+
+  onValue(ref(db, 'customCategories'), (snap) => {
+    customCategories = snap.val() || [];
+    updateCategoryList();
+  });
+
+  // Если за 6 секунд данные не пришли — показываем сообщение
+  setTimeout(() => {
+    if (!dataLoaded) {
+      document.getElementById('stockList').innerHTML = `
+        <div style="text-align:center; color:#f87171; padding:20px; line-height:1.5;">
+          Не удалось загрузить данные из Firebase.<br><br>
+          <b>Что проверить:</b><br>
+          1. Правила базы (Rules) должны быть:<br>
+          <code style="font-size:11px; background:#2a2e42; padding:4px 8px; border-radius:4px; display:inline-block; margin:6px 0;">
+            { "rules": { ".read": true, ".write": true } }
+          </code><br>
+          2. Есть ли интернет<br>
+          3. Правильный ли URL базы
+        </div>`;
+    }
+  }, 6000);
 
   window.renderAll = function() {
     renderDeals();
