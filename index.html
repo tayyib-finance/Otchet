@@ -710,3 +710,188 @@
   window.closePriceModal = function() { document.getElementById('priceModal').classList.remove('active'); }
   document.getElementById('priceForm').addEventListener('submit', function(e) {
     e.preventDefault(); const key = document.getElementById('priceKey').value; const newPrice = Number(document.querySelector('input[name="storePrice"]').value); const oldPrice = deals[key].storePrice; let upd = { storePrice: newPrice };
+    if (oldPrice && newPrice < oldPrice) upd.oldPrice = oldPrice; update(ref(db, 'deals/' + key), upd); closePriceModal();
+  });
+
+  window.openExpenseListModal = function() {
+    let html = '';
+    const sortedExpenses = Object.entries(expenses).sort((a, b) => b[0] - a[0]);
+    if (sortedExpenses.length === 0) html = '<div style="text-align:center; color:#64748b; padding:10px;">Расходов пока нет</div>';
+    else {
+      sortedExpenses.forEach(([key, e]) => {
+        html += `<div style="background:#0f111a; padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;"><div><div style="font-size:14px; font-weight:bold;">${e.reason}</div><button onclick="deleteExpense('${key}')" style="background:none; border:none; color:#ef4444; font-size:11px; padding:0; margin-top:4px; cursor:pointer; text-decoration:underline;">Удалить</button></div><div style="color:#f87171; font-weight:bold; font-size:16px;">-${e.amount.toLocaleString('ru-RU')} ₽</div></div>`;
+      });
+    }
+    document.getElementById('expensesListHtml').innerHTML = html;
+    document.getElementById('expenseListModal').classList.add('active');
+  }
+  window.closeExpenseListModal = function() { document.getElementById('expenseListModal').classList.remove('active'); }
+  window.openAddExpenseModal = function() { document.getElementById('expenseListModal').classList.remove('active'); document.getElementById('expenseModal').classList.add('active'); }
+  window.closeExpenseModal = function() { document.getElementById('expenseModal').classList.remove('active'); }
+  window.deleteExpense = function(key) {
+    const code = prompt('Введите код для удаления (0537):');
+    if (code === '0537') { remove(ref(db, 'expenses/' + key)); setTimeout(() => { if(document.getElementById('expenseListModal').classList.contains('active')) openExpenseListModal(); }, 200); } 
+    else if (code !== null) alert('Неверный код!');
+  }
+  document.getElementById('expenseForm').addEventListener('submit', function(e) {
+    e.preventDefault(); const f = new FormData(e.target);
+    push(ref(db, 'expenses'), { amount: Number(f.get('amount')), reason: f.get('reason') }).then(() => { closeExpenseModal(); e.target.reset(); setTimeout(() => { openExpenseListModal(); }, 300); });
+  });
+
+  window.openAddModal = function() { document.getElementById('addModal').classList.add('active'); document.getElementById('addCategory').value = 'iPhone'; document.getElementById('addCategory').dispatchEvent(new Event('change')); }
+  window.closeAddModal = function() { document.getElementById('addModal').classList.remove('active'); document.getElementById('addForm').reset(); }
+  
+  document.getElementById('addForm').addEventListener('submit', function(e) {
+    e.preventDefault(); const f = new FormData(e.target); let cat = f.get('category'); const qty = Number(f.get('qty')) || 1;
+    if (cat === 'NEW') {
+      const newName = f.get('newCategoryName'); if (!newName || newName.trim() === '') return alert('Введите название новой категории!');
+      cat = newName.trim(); let currentCats = Array.isArray(customCategories) ? customCategories : [];
+      if (!currentCats.includes(cat)) { currentCats.push(cat); set(ref(db, 'customCategories'), currentCats); }
+    }
+    let modelName = (cat === 'iPhone') ? f.get('iphoneModel') : f.get('otherModel');
+    if (!modelName || modelName.trim() === '') return alert('Пожалуйста, введите название модели!');
+    let data = { category: cat, buy:;
+ Number(f.get('buy')), status: 'in', storePrice: 0, imei: f.get('imei') || '' };
+    if (cat === 'iPhone') { data.model = modelName; data.storage = f.get('storage') || ''; data.color = f.get('color') || ''; } 
+    else { data.model = modelName; }
+    for (let i = 0; i < qty; i++) { set(push(ref(db, 'deals')), data); }
+    closeAddModal();
+  });
+
+  window.openImportModal = function() { document.getElementById('importModal').classList.add('active'); }
+  window.closeImportModal = function() { document.getElementById('importModal').classList.remove('active'); document.getElementById('importText').value = ''; }
+  
+  window.processImport = function() {
+    const text = document.getElementById('importText').value;
+    if (!text.trim()) return alert('Вставьте текст');
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    let addedCount = 0;
+    lines.forEach(line => {
+      const priceMatch = line.match(/\b\d{4,7}\b/);
+      if (!priceMatch) return; 
+      const price = Number(priceMatch[0]);
+      let qty = 1; const qtyMatch = line.match(/(\d+)\s*(шт|шт\.|штук)/i) || line.match(/-\s*(\d+)$/);
+      if (qtyMatch) qty = Number(qtyMatch[1]);
+      let model = "iPhone"; const modelMatch = line.match(/(iPhone\s*)?(1[5-8]|11|12|13|14)/i);
+      if (modelMatch) {
+        model = `iPhone ${modelMatch[2]}`;
+        if (line.toLowerCase().includes('pro max')) model += ' Pro Max';
+        else if (line.toLowerCase().includes('pro')) model += ' Pro';
+        else if (line.toLowerCase().includes('plus')) model += ' Plus';
+      }
+      let storage = ""; const storageMatch = line.match(/(64|128|256|512|1024|1TB)/i);
+      if (storageMatch) storage = storageMatch[1].toUpperCase() + (storageMatch[1].toLowerCase() === '1tb' ? '' : 'GB');
+      let sim = "eSIM"; if (line.toLowerCase().includes('физ') || line.toLowerCase().includes('phys')) sim = "Физ. SIM";
+      let color = ""; const colorMatch = line.match(/(Burgundy|Titanium|Black|White|Blue|Red|Green|Gold|Silver|Purple)/i);
+      if (colorMatch) color = colorMatch[1];
+      for (let i = 0; i < qty; i++) {
+        const newDealRef = push(ref(db, 'deals'));
+        set(newDealRef, { category: 'iPhone', model: model.trim(), storage: storage, sim: sim, color: color, buy: price, status: 'in', storePrice: 0, imei: '' });
+        addedCount++;
+      }
+    });
+    if (addedCount > 0) { alert(`Добавлено: ${addedCount}`); closeImportModal(); switchTab('deals'); } else alert('Не распознано.');
+  }
+
+  window.generateSingleListImage = function() {
+    const listWrap = document.getElementById('singlePosterList');
+    let groupedItems = {};
+    Object.keys(deals).forEach(key => {
+      const item = deals[key];
+      if (item.status    === const 'in') {
+        const groupKey = `${item.model input}_${item.storage || ''}_${item.colorAmount || ''}`;
+        const desc = [item.st =orage, item.sim, item.color].filter(Boolean).join(' • ');
+        const price = item.storePrice || item.buy;
+        if (!groupedItems[groupKey]) groupedItems[groupKey] = { model: item.model, desc: desc || item.category, price: price, oldPrice: item.oldPrice || null };
+      }
+    });
+    let html = '';
+    let keys = Object.keys(groupedItems).sort((a, b) => (groupedItems[b].model.includes('iPhone') ? 1 : 0) - (groupedItems[a].model.includes('iPhone') ? 1 : 0));
+    keys.forEach(key => {
+      const item = groupedItems[key];
+      const hasDiscount = item.oldPrice && Number(item.oldPrice) > Number(item.price);
+      const discountPercent = hasDiscount ? Math.round((1 - (Number(item.price) / Number(item.oldPrice))) * 100) : 0;
+      html += `<div class="poster-item"><div class="p-info"><div class="p-model">${item.model}</div><div class="p-desc">${item.desc}</div></div><div class="p-price-wrap">${hasDiscount ? `<div class="p-old-price">${Number(item.oldPrice).toLocaleString('ru-RU')} ₽</div>` : ''}<div class="p-price">${Number(item.price).toLocaleString('ru-RU')} ₽</div>${hasDiscount ? `<div class="p-discount">-${discountPercent}%</div>` : ''}</div></div>`;
+    });
+    listWrap.innerHTML = html || '<p style="font-size:12px; text-align:center; opacity:0.6;">Нет товаров</p>';
+    const posterElement = document.getElementById('singleItemContainer');
+    html2canvas(posterElement, { scale: 2, backgroundColor: null, useCORS: true }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) { const win = window.open(); win.document.write('<img src="' + imgData + '" style="width:100%;" />'); } 
+      else { const link = document.createElement('a'); link.download = `spisok_nalichiya.png`; link.href = imgData; link.click(); }
+    });
+  }
+
+  window.copyWhatsAppList = function() {
+    let groupedItems = {};
+    Object.keys(deals).forEach(key => {
+      const item = deals[key];
+      if (item.status === 'in') {
+        const groupKey = `${item.model}_${item.storage || ''}_${item.color || ''}`;
+        const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
+        const price = item.storePrice || item.buy;
+        if (!groupedItems[groupKey]) groupedItems[groupKey] = { model: item.model, desc: desc || item.category, price: price };
+      }
+    });
+    let text = "🔥 *FREE ZONE (В наличии)*\n\n";
+    let keys = Object.keys(groupedItems).sort((a, b) => (groupedItems[b].model.includes('iPhone') ? 1 : 0) - (groupedItems[a].model.includes('iPhone') ? 1 : 0));
+    keys.forEach(key => {
+      const item = groupedItems[key];
+      text += `▪️ ${item.model} ${item.desc ? '(' + item.desc + ')' : ''}\n   Цена: *${Number(item.price).toLocaleString('ru-RU')} ₽*\n\n`;
+    });
+    text += "💳 Доступна рассрочка\n🔥 Предзаказ ВЫГОДНЕЕ (аванс 3000 ₽)\n\n📞 Заказ: +7 988 783-66-77";
+    navigator.clipboard.writeText(text).then(() => { alert("Текст списка скопирован! Откройте WhatsApp и вставьте его в чат."); }).catch(err => { prompt("Не удалось скопировать автоматически. Скопируйте текст вручную:", text); });
+  }
+
+  window.downloadImage = function(mode) {
+    const posterElement = document.getElementById('posterContainer');
+    html2canvas(posterElement, { scale: 2, backgroundColor: null, useCORS: true }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `free_zone_full_prajs_${new Date().getDate()}.png`; link.href = imgData;
+      if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) { const win = window.open(); win.document.write('<img src="' + imgData + '" style="width:100%;" />'); } 
+      else { link.click(); }
+    });
+  }
+
+  // ЛОГИКА ЧАСТИЧНОЙ ОПЛАТЫ
+  window.openPartialPayModal = function(key) {
+    const d = deals[key];
+    const paid = d.partialPaid || 0;
+    const total = d.sell || 0;
+    const remaining = total - paid;
+    
+    document.getElementById('partialPayKey').value = key;
+    document.getElementById('partialPayInfo').innerHTML = `Нужно получить: <b>${remaining.toLocaleString('ru-RU')} ₽</b> из ${total.toLocaleString('ru-RU')} ₽`;
+    
+    const input = document.querySelector('#partialPayForm input[name="payAmount"]');
+    input.value = remaining;
+    
+    document.getElementById('partialPayModal').classList.add('active');
+  }
+  
+  window.closePartialPayModal = function() { 
+    document.getElementById('partialPayModal').classList.remove('active'); 
+  }
+
+  document.getElementById('partialPayForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const key = document.getElementById('partialPayKey').value Number(document.querySelector('#partialPayForm input[name="payAmount"]').value);
+    
+    const d = deals[key];
+    const currentPaid = d.partialPaid || 0;
+    const total = d.sell || 0;
+    const newPaid = currentPaid + inputAmount;
+    
+    if (newPaid >= total) {
+      update(ref(db, 'deals/' + key), { paymentReceived: true, partialPaid: newPaid });
+      alert('Сумма полностью оплачена! Деньги добавлены в кассу.');
+    } else {
+      update(ref(db, 'deals/' + key), { partialPaid: newPaid });
+      alert(`Внесено: ${inputAmount.toLocaleString('ru-RU')} ₽\nОсталось получить: ${(total - newPaid).toLocaleString('ru-RU')} ₽`);
+    }
+    closePartialPayModal();
+  });
+</script>
+</body>
+</html>
