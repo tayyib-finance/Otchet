@@ -876,7 +876,8 @@
 
   document.getElementById('partialPayForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const key = document.getElementById('partialPayKey').value Number(document.querySelector('#partialPayForm input[name="payAmount"]').value);
+    const key = document.getElementById('partialPayKey').value;
+    const inputAmount = Number(document.querySelector('#partialPayForm input[name="payAmount"]').value);
     
     const d = deals[key];
     const currentPaid = d.partialPaid || 0;
