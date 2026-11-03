@@ -19,7 +19,7 @@
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1d2d; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); z-index: 100; }
-  .nav-item { flex: 1; padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent; }
+  .nav-item { flex: 1; padding: 12px 0; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; border-top: 2px solid transparent; }
   .nav-item.active { color: var(--green); border-top-color: var(--green); background: #202436; }
   .page { padding: 16px; display: none; }
   .page.active { display: block; }
@@ -32,20 +32,21 @@
   .btn-outline { background: transparent; border: 1px solid var(--btn-blue); color: var(--btn-blue); }
   .btn-yellow { background: var(--yellow); color: #000; }
   .btn-purple { background: #8b5cf6; color: #fff; }
+  .btn-whatsapp { background: #25D366; color: #fff; }
   .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .dash-card { background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid #2a2e42; }
   .dash-title { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
   .dash-value { font-size: 16px; font-weight: 700; }
   .green-text { color: #4ade80; }
   .red-text { color: #f87171; }
-  .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; display: flex; justify-content: space-between; }
+  .section-title { font-size: 13px; color: #94a3b8; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 6px; }
   .deal-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
   .deal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
   .deal-title { font-weight: 700; font-size: 15px; word-break: break-word; }
-  .deal-imei { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .deal-imei { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.45; }
   .deal-price { text-align: right; flex-shrink: 0; margin-left: 10px; }
   .deal-buy { font-size: 11px; color: var(--text-muted); }
-  .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; flex-wrap: wrap; gap: 10px; }
+  .deal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
   .status { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap; }
   .st-in { background: #1e3a8a; color: #93c5fd; }
   .st-sold { background: #14532d; color: #86efac; }
@@ -63,7 +64,7 @@
   .p-info { flex: 1; min-width: 0; }
   .p-model { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .p-qty { font-size: 11px; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
-  .p-desc { font-size: 11px; word-break: break-word; }
+  .p-desc { font-size: 12px; word-break: break-word; }
   .p-price-wrap { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
   .p-price { font-size: 18px; font-weight: 800; white-space: nowrap; }
   .p-old-price { font-size: 12px; text-decoration: line-through; white-space: nowrap; }
@@ -125,6 +126,11 @@
   .input-group input, .input-group select, .input-group textarea {
     width: 100%; background: #0f111a; border: 1px solid #2a2e42; color: #fff; padding: 10px; border-radius: 8px; font-size: 14px; outline: none;
   }
+  .qty-badge { background: #334155; color: #fff; font-size: 12px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+  .report-card { background: var(--bg-card); border: 1px solid #2a2e42; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .report-period { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .report-period button { flex: 1; min-width: 70px; }
+  .report-period button.active { background: var(--green); color: #000; }
 </style>
 </head>
 <body>
@@ -185,7 +191,7 @@
 <!-- ========== ВКЛАДКА ВИТРИНА ========== -->
 <div id="page-store" class="page">
   <h1 style="font-size: 20px; margin-bottom: 16px;">🛍 Витрина</h1>
-  <div class="action-buttons" style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px;">
     <button class="btn btn-green" onclick="downloadImage()">⬇️ Скачать ВСЮ витрину</button>
   </div>
   <div style="display:flex; gap:8px; margin-bottom: 20px;">
@@ -212,6 +218,48 @@
   </div>
 </div>
 
+<!-- ========== ВКЛАДКА ОТЧЁТ ========== -->
+<div id="page-report" class="page">
+  <h1 style="font-size: 20px; margin-bottom: 16px;">📊 Отчёт</h1>
+
+  <div class="report-period">
+    <button class="btn-sm btn-gray active" onclick="setReportPeriod('all', this)">Всё время</button>
+    <button class="btn-sm btn-gray" onclick="setReportPeriod('week', this)">Неделя</button>
+    <button class="btn-sm btn-gray" onclick="setReportPeriod('month', this)">Месяц</button>
+    <button class="btn-sm btn-gray" onclick="setReportPeriod('prevmonth', this)">Прошлый</button>
+  </div>
+
+  <div class="report-card">
+    <div class="dash-title">Деньги в обороте (закупка проданных)</div>
+    <div class="dash-value" id="reportTurnover">0 ₽</div>
+  </div>
+
+  <div class="report-card">
+    <div class="dash-title">Заработано (прибыль)</div>
+    <div class="dash-value green-text" id="reportProfit">0 ₽</div>
+  </div>
+
+  <div class="report-card">
+    <div class="dash-title">Рентабельность</div>
+    <div class="dash-value" id="reportPercent">0%</div>
+  </div>
+
+  <div class="report-card">
+    <div class="dash-title">Количество продаж</div>
+    <div class="dash-value" id="reportCount">0</div>
+  </div>
+
+  <div class="report-card" style="border-color: #334155;">
+    <div class="dash-title">Расходы за период</div>
+    <div class="dash-value red-text" id="reportExpenses">0 ₽</div>
+  </div>
+
+  <div class="report-card" style="border-color: var(--green);">
+    <div class="dash-title">Чистая прибыль (после расходов)</div>
+    <div class="dash-value green-text" id="reportNet">0 ₽</div>
+  </div>
+</div>
+
 <!-- Скрытый контейнер для одиночного списка -->
 <div id="singleItemContainer" style="position: absolute; left: -9999px; top: 0;">
   <div class="poster theme-dark" id="singlePosterBody">
@@ -235,11 +283,11 @@
 <div class="bottom-nav">
   <div class="nav-item active" onclick="switchTab('deals')" id="nav-deals">📊 Склад</div>
   <div class="nav-item" onclick="switchTab('store')" id="nav-store">🛍 Витрина</div>
+  <div class="nav-item" onclick="switchTab('report')" id="nav-report">📈 Отчёт</div>
 </div>
 
 <!-- ========== МОДАЛКИ ========== -->
 
-<!-- Добавить товар -->
 <div class="modal" id="addModal">
   <div class="modal-content">
     <h2>Добавить товар</h2>
@@ -287,7 +335,6 @@
   </div>
 </div>
 
-<!-- Редактировать товар -->
 <div class="modal" id="editModal">
   <div class="modal-content">
     <h2>Редактировать</h2>
@@ -298,14 +345,8 @@
         <input name="model" id="editModel">
       </div>
       <div class="input-grid" style="margin-bottom:10px;">
-        <div class="input-group">
-          <label>Память</label>
-          <input name="storage" id="editStorage">
-        </div>
-        <div class="input-group">
-          <label>Цвет</label>
-          <input name="color" id="editColor">
-        </div>
+        <div class="input-group"><label>Память</label><input name="storage" id="editStorage"></div>
+        <div class="input-group"><label>Цвет</label><input name="color" id="editColor"></div>
       </div>
       <div class="input-group" style="margin-bottom:10px;">
         <label>Серийный номер (IMEI)</label>
@@ -323,7 +364,6 @@
   </div>
 </div>
 
-<!-- Список расходов -->
 <div class="modal" id="expenseListModal">
   <div class="modal-content">
     <h2>История расходов</h2>
@@ -333,7 +373,6 @@
   </div>
 </div>
 
-<!-- Добавить расход -->
 <div class="modal" id="expenseModal">
   <div class="modal-content">
     <h2>Новый расход</h2>
@@ -348,7 +387,6 @@
   </div>
 </div>
 
-<!-- Бронь -->
 <div class="modal" id="bookModal">
   <div class="modal-content">
     <h2>Бронь</h2>
@@ -364,7 +402,6 @@
   </div>
 </div>
 
-<!-- Цена на витрину -->
 <div class="modal" id="priceModal">
   <div class="modal-content">
     <h2>Цена на витрину</h2>
@@ -381,7 +418,6 @@
   </div>
 </div>
 
-<!-- Продажа -->
 <div class="modal" id="sellModal">
   <div class="modal-content">
     <h2>Продажа</h2>
@@ -410,7 +446,6 @@
   </div>
 </div>
 
-<!-- Изменить оплату -->
 <div class="modal" id="editPayModal">
   <div class="modal-content">
     <h2>Изменить оплату</h2>
@@ -435,7 +470,6 @@
   </div>
 </div>
 
-<!-- Частичная оплата -->
 <div class="modal" id="partialPayModal">
   <div class="modal-content">
     <h2>Внести оплату</h2>
@@ -454,7 +488,6 @@
   </div>
 </div>
 
-<!-- Бэкап -->
 <div class="modal" id="backupModal">
   <div class="modal-content">
     <h2>Управление базой</h2>
@@ -466,7 +499,6 @@
   </div>
 </div>
 
-<!-- Импорт -->
 <div class="modal" id="importModal">
   <div class="modal-content">
     <h2>📥 Импорт из текста</h2>
@@ -495,13 +527,14 @@
   let customCategories = [];
   let isSoldVisible = false;
   let dataLoaded = false;
+  let currentReportPeriod = 'all';
 
-  // ========== НАВИГАЦИЯ ==========
   window.switchTab = function(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + tab).classList.add('active');
     document.getElementById('nav-' + tab).classList.add('active');
+    if (tab === 'report') renderReport();
   };
 
   window.toggleSold = function() {
@@ -514,14 +547,13 @@
     document.getElementById('posterBody').className = 'poster ' + themeName;
   };
 
-  // ========== ПОДПИСКИ НА ДАННЫЕ ==========
   onValue(ref(db, 'deals'), (snap) => {
     deals = snap.val() || {};
     dataLoaded = true;
     renderAll();
   }, (error) => {
-    console.error('Firebase deals error:', error);
-    document.getElementById('stockList').innerHTML = '<div style="text-align:center; color:#f87171; padding:20px;">Ошибка загрузки данных.<br>Проверьте правила Firebase (Rules → .read = true)</div>';
+    console.error(error);
+    document.getElementById('stockList').innerHTML = '<div style="text-align:center;color:#f87171;padding:20px;">Ошибка загрузки. Проверьте Rules в Firebase.</div>';
   });
 
   onValue(ref(db, 'expenses'), (snap) => {
@@ -534,29 +566,82 @@
     updateCategoryList();
   });
 
-  // Если за 6 секунд данные не пришли — показываем сообщение
   setTimeout(() => {
     if (!dataLoaded) {
-      document.getElementById('stockList').innerHTML = `
-        <div style="text-align:center; color:#f87171; padding:20px; line-height:1.5;">
-          Не удалось загрузить данные из Firebase.<br><br>
-          <b>Что проверить:</b><br>
-          1. Правила базы (Rules) должны быть:<br>
-          <code style="font-size:11px; background:#2a2e42; padding:4px 8px; border-radius:4px; display:inline-block; margin:6px 0;">
-            { "rules": { ".read": true, ".write": true } }
-          </code><br>
-          2. Есть ли интернет<br>
-          3. Правильный ли URL базы
-        </div>`;
+      document.getElementById('stockList').innerHTML = '<div style="text-align:center;color:#f87171;padding:20px;">Данные не загрузились. Проверьте Rules Firebase</div>';
     }
   }, 6000);
 
   window.renderAll = function() {
     renderDeals();
     renderPoster();
+    if (document.getElementById('page-report').classList.contains('active')) renderReport();
   };
 
-  // ========== КАТЕГОРИИ ==========
+  // ========== ОТЧЁТ ==========
+  window.setReportPeriod = function(period, btn) {
+    currentReportPeriod = period;
+    document.querySelectorAll('.report-period button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderReport();
+  };
+
+  function getPeriodRange(period) {
+    const now = new Date();
+    let start, end = now.getTime();
+
+    if (period === 'week') {
+      const day = now.getDay() || 7;
+      start = new Date(now);
+      start.setDate(now.getDate() - day + 1);
+      start.setHours(0,0,0,0);
+      start = start.getTime();
+    } else if (period === 'month') {
+      start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+    } else if (period === 'prevmonth') {
+      start = new Date(now.getFullYear(), now.getMonth() - 1, 1).getTime();
+      end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59).getTime();
+    } else {
+      start = 0;
+    }
+    return { start, end };
+  }
+
+  window.renderReport = function() {
+    const { start, end } = getPeriodRange(currentReportPeriod);
+
+    let turnover = 0;
+    let profit = 0;
+    let count = 0;
+    let expensesSum = 0;
+
+    Object.values(deals).forEach(it => {
+      if (it.status !== 'sold') return;
+      const soldAt = it.soldAt || 0;
+      if (soldAt < start || soldAt > end) return;
+
+      turnover += (it.buy || 0);
+      profit += ((it.sell || 0) - (it.buy || 0));
+      count++;
+    });
+
+    Object.values(expenses).forEach(e => {
+      // расходы пока без даты — считаем все
+      expensesSum += (e.amount || 0);
+    });
+
+    const percent = turnover > 0 ? Math.round((profit / turnover) * 100) : 0;
+    const net = profit - expensesSum;
+
+    document.getElementById('reportTurnover').textContent = turnover.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('reportProfit').textContent = (profit >= 0 ? '+' : '') + profit.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('reportPercent').textContent = percent + '%';
+    document.getElementById('reportCount').textContent = count;
+    document.getElementById('reportExpenses').textContent = '-' + expensesSum.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('reportNet').textContent = (net >= 0 ? '+' : '') + net.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('reportNet').className = 'dash-value ' + (net >= 0 ? 'green-text' : 'red-text');
+  };
+
   window.updateCategoryList = function() {
     const select = document.getElementById('addCategory');
     select.innerHTML = `
@@ -592,22 +677,16 @@
     }
   });
 
-  // ========== РЕНДЕР СПИСКА ТОВАРОВ ==========
+  // ========== РЕНДЕР СКЛАДА ==========
   window.renderDeals = function() {
     let sumBuy = 0, sumCash = 0, totalProfit = 0, totalExpenses = 0;
-    let categoriesStock = {};
     let soldHtml = '';
     let pendingHtml = '';
+    const groups = {};
 
     Object.values(expenses).forEach(e => totalExpenses += (e.amount || 0));
 
-    const sortedKeys = Object.keys(deals).sort((a, b) => {
-      const aIsIphone = deals[a].category === 'iPhone' ? 1 : 0;
-      const bIsIphone = deals[b].category === 'iPhone' ? 1 : 0;
-      return bIsIphone - aIsIphone;
-    });
-
-    sortedKeys.forEach((key) => {
+    Object.keys(deals).forEach(key => {
       const it = deals[key];
       const profit = (it.sell || 0) - (it.buy || 0);
       const paidAmount = it.partialPaid || 0;
@@ -618,52 +697,10 @@
         if (it.paymentMethod === 'Наличные' || it.paymentReceived) sumCash += (it.sell || 0);
       }
 
-      let title = it.model || 'Без названия';
-      if (it.category === 'iPhone') {
-        title += ` <span style="font-size:12px; color:#aaa;">${it.storage || ''} ${it.color || ''}</span>`;
-      }
-      let imeiText = it.imei ? ` • IMEI: ${it.imei}` : '';
-
-      // ===== В НАЛИЧИИ / БРОНЬ =====
-      if (it.status === 'in' || it.status === 'booked') {
-        if (!categoriesStock[it.category]) categoriesStock[it.category] = '';
-        let statusBadge = it.status === 'booked'
-          ? '<span class="status st-booked">Забронирован</span>'
-          : '<span class="status st-in">В наличии</span>';
-        let bookInfo = it.status === 'booked'
-          ? `<div style="font-size:11px; color:var(--yellow); margin-top:4px;">Бронь: ${it.bookName || ''} (${it.bookPhone || ''})</div>`
-          : '';
-        let storePriceHtml = it.storePrice
-          ? `<div style="font-size:12px; color:#4ade80; font-weight:700; margin-top:4px;">На витрине: ${Number(it.storePrice).toLocaleString('ru-RU')} ₽</div>`
-          : '';
-
-        categoriesStock[it.category] += `
-        <div class="deal-card">
-          <div class="deal-header">
-            <div>
-              <div class="deal-title">${title}</div>
-              <div class="deal-imei">${it.category === 'iPhone' ? (it.sim || '') : it.category}${imeiText}</div>
-              ${bookInfo}${storePriceHtml}
-            </div>
-            <div class="deal-price">
-              <div class="deal-buy">Закупка</div>
-              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${(it.buy || 0).toLocaleString('ru-RU')} ₽</div>
-            </div>
-          </div>
-          <div class="deal-footer">
-            <div>${statusBadge}</div>
-            <div class="action-buttons-row">
-              ${it.status === 'in' ? `<button class="btn-sm btn-yellow" onclick="openBookModal('${key}')">Бронь</button>` : ''}
-              <button class="btn-sm btn-outline" onclick="openPriceModal('${key}')">Цена</button>
-              <button class="btn-sm btn-gray" onclick="openEditModal('${key}')">✏️ Изменить</button>
-              <button class="btn-sm btn-green" onclick="openSellModal('${key}')">Продать</button>
-            </div>
-          </div>
-        </div>`;
-      }
-      // ===== ОЖИДАЮТ ПЕРЕВОД =====
-      else if (it.status === 'sold' && it.paymentMethod === 'Перевод' && !it.paymentReceived) {
-        let buyerInfo = `Покупатель: <b>${it.buyerName || 'Не указан'}</b> ${it.buyerPhone ? `<a href="tel:${it.buyerPhone}" style="color:#3b82f6; text-decoration:none;">(${it.buyerPhone})</a>` : ''}`;
+      if (it.status === 'sold' && it.paymentMethod === 'Перевод' && !it.paymentReceived) {
+        let title = it.model || 'Без названия';
+        if (it.category === 'iPhone') title += ` ${it.storage || ''} ${it.color || ''}`;
+        let buyerInfo = `Покупатель: <b>${it.buyerName || 'Не указан'}</b> ${it.buyerPhone ? `<a href="tel:${it.buyerPhone}" style="color:#3b82f6;">(${it.buyerPhone})</a>` : ''}`;
         let progressHtml = '';
         if (paidAmount > 0) {
           const percent = Math.min(100, Math.round((paidAmount / it.sell) * 100));
@@ -671,74 +708,163 @@
             <div style="width:100%; background:#2a2e42; height:6px; border-radius:3px; margin: 10px 0 5px 0;">
               <div style="width:${percent}%; background:var(--green); height:6px; border-radius:3px;"></div>
             </div>
-            <div style="font-size:12px; color:#4ade80; margin-bottom:8px;">Оплачено: ${paidAmount.toLocaleString('ru-RU')} из ${Number(it.sell).toLocaleString('ru-RU')} ₽</div>
-          `;
+            <div style="font-size:12px; color:#4ade80; margin-bottom:8px;">Оплачено: ${paidAmount.toLocaleString('ru-RU')} из ${Number(it.sell).toLocaleString('ru-RU')} ₽</div>`;
         }
+
+        const remaining = (it.sell || 0) - paidAmount;
+        const phoneClean = (it.buyerPhone || '').replace(/\D/g, '');
+        const waText = encodeURIComponent(`Здравствуйте, ${it.buyerName || ''}!\n\nНапоминаем об оплате оставшейся суммы по заказу:\n${title}\n\nОсталось оплатить: ${remaining.toLocaleString('ru-RU')} ₽\n\nFREE ZONE`);
+
         pendingHtml += `
         <div class="deal-card" style="border-color: var(--yellow);">
           <div class="deal-header">
             <div>
               <div class="deal-title">${title}</div>
-              <div class="deal-imei">${imeiText}</div>
+              <div class="deal-imei">${it.imei ? 'IMEI: ' + it.imei : ''}</div>
             </div>
             <div class="deal-price">
               <div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div>
-              <div class="deal-profit green-text">+${profit.toLocaleString('ru-RU')} ₽</div>
+              <div class="green-text">+${profit.toLocaleString('ru-RU')} ₽</div>
             </div>
           </div>
-          <div class="deal-footer" style="flex-direction: column; align-items: flex-start; padding-top:5px; border-top:none;">
+          <div class="deal-footer" style="flex-direction: column; align-items: flex-start; border-top:none; padding-top:5px;">
             ${progressHtml}
             <div style="margin-bottom: 8px;">
               <span class="status st-sold">Продан</span>
               <span class="status" style="background:#b45309; color:#fde047; margin-left:4px;">Ждёт перевод</span>
             </div>
             <div style="font-size:13px; color:#fff; margin-bottom: 10px;">${buyerInfo}</div>
-            <div class="action-buttons-row" style="width: 100%;">
-              <button class="btn-sm btn-green" onclick="openPartialPayModal('${key}')" style="flex: 1; font-weight:bold;">+ Внести оплату</button>
+            <div class="action-buttons-row" style="width:100%;">
+              <button class="btn-sm btn-green" onclick="openPartialPayModal('${key}')" style="flex:1;">+ Внести оплату</button>
+              ${phoneClean ? `<a href="https://wa.me/${phoneClean}?text=${waText}" target="_blank" class="btn-sm btn-whatsapp" style="flex:1; text-decoration:none; display:flex; align-items:center; justify-content:center;">WhatsApp</a>` : ''}
               <button class="btn-sm btn-gray" onclick="openEditModal('${key}')">✏️</button>
               <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
             </div>
           </div>
         </div>`;
-      }
-      // ===== ПРОДАННЫЕ =====
-      else {
-        let buyerInfo = `Покупатель: <b>${it.buyerName || 'Не указан'}</b> ${it.buyerPhone ? `<a href="tel:${it.buyerPhone}" style="color:#3b82f6; text-decoration:none;">(${it.buyerPhone})</a>` : ''}`;
+      } else if (it.status === 'sold') {
+        let title = it.model || 'Без названия';
+        if (it.category === 'iPhone') title += ` ${it.storage || ''} ${it.color || ''}`;
+        let buyerInfo = `Покупатель: <b>${it.buyerName || 'Не указан'}</b> ${it.buyerPhone ? `<a href="tel:${it.buyerPhone}" style="color:#3b82f6;">(${it.buyerPhone})</a>` : ''}`;
         soldHtml += `
         <div class="deal-card" style="opacity: 0.8;">
           <div class="deal-header">
             <div>
               <div class="deal-title">${title}</div>
-              <div class="deal-imei">${imeiText}</div>
+              <div class="deal-imei">${it.imei ? 'IMEI: ' + it.imei : ''}</div>
             </div>
             <div class="deal-price">
               <div class="deal-buy">Продажа: ${(it.sell || 0).toLocaleString('ru-RU')} ₽</div>
-              <div class="deal-profit ${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>
+              <div class="${profit >= 0 ? 'green-text' : 'red-text'}">${profit >= 0 ? '+' : ''}${profit.toLocaleString('ru-RU')} ₽</div>
             </div>
           </div>
           <div class="deal-footer" style="flex-direction: column; align-items: flex-start;">
             <div style="margin-bottom: 8px;"><span class="status st-sold">Продан</span></div>
             <div style="font-size:13px; color:#fff; margin-bottom: 10px;">${buyerInfo}</div>
-            <div class="action-buttons-row" style="width: 100%; justify-content: flex-end;">
+            <div class="action-buttons-row" style="width:100%; justify-content:flex-end;">
               <button class="btn-sm btn-blue" onclick="openEditPayModal('${key}')">✏️ Изменить</button>
               <button class="btn-sm btn-red" onclick="delDeal('${key}')">Удалить</button>
             </div>
           </div>
         </div>`;
+      } else if (it.status === 'in' || it.status === 'booked') {
+        const gKey = `${it.category}|${it.model}|${it.storage || ''}|${it.color || ''}|${it.status}`;
+        if (!groups[gKey]) {
+          groups[gKey] = {
+            category: it.category,
+            model: it.model,
+            storage: it.storage || '',
+            color: it.color || '',
+            status: it.status,
+            buy: it.buy || 0,
+            storePrice: it.storePrice || 0,
+            bookName: it.bookName || '',
+            bookPhone: it.bookPhone || '',
+            items: []
+          };
+        }
+        groups[gKey].items.push({ key, imei: it.imei || '' });
       }
     });
 
-    // Собираем HTML по категориям
     let stockHtml = '';
     const catOrder = ['iPhone', 'PlayStation', 'Ноутбук', 'Телевизор'];
-    catOrder.forEach(cat => {
-      if (categoriesStock[cat]) {
-        stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
-        delete categoriesStock[cat];
-      }
+    const byCat = {};
+
+    Object.values(groups).forEach(g => {
+      if (!byCat[g.category]) byCat[g.category] = [];
+      byCat[g.category].push(g);
     });
-    for (let cat in categoriesStock) {
-      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>${categoriesStock[cat]}`;
+
+    catOrder.forEach(cat => {
+      if (!byCat[cat]) return;
+      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>`;
+      byCat[cat].forEach(g => {
+        const count = g.items.length;
+        const firstKey = g.items[0].key;
+        let imeiList = g.items.map(i => i.imei ? `• ${i.imei}` : '• без IMEI').join('<br>');
+        let statusBadge = g.status === 'booked' ? '<span class="status st-booked">Забронирован</span>' : '<span class="status st-in">В наличии</span>';
+        let bookInfo = g.status === 'booked' ? `<div style="font-size:12px; color:var(--yellow); margin-top:4px;">Бронь: ${g.bookName} (${g.bookPhone})</div>` : '';
+        let storePriceHtml = g.storePrice ? `<div style="font-size:13px; color:#4ade80; font-weight:700; margin-top:4px;">На витрине: ${Number(g.storePrice).toLocaleString('ru-RU')} ₽</div>` : '';
+        let extraInfo = g.category === 'iPhone' ? `<div style="font-size:14px; color:#cbd5e1; margin-top:3px; font-weight:500;">${g.storage} ${g.color}</div>` : '';
+
+        stockHtml += `
+        <div class="deal-card">
+          <div class="deal-header">
+            <div>
+              <div class="deal-title">${g.model}${count > 1 ? ` <span class="qty-badge">${count} шт</span>` : ''}</div>
+              ${extraInfo}
+              <div class="deal-imei">${imeiList}</div>
+              ${bookInfo}${storePriceHtml}
+            </div>
+            <div class="deal-price">
+              <div class="deal-buy">Закупка</div>
+              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${g.buy.toLocaleString('ru-RU')} ₽</div>
+            </div>
+          </div>
+          <div class="deal-footer">
+            <div>${statusBadge}</div>
+            <div class="action-buttons-row">
+              <button class="btn-sm btn-green" onclick="openSellModal('${firstKey}')">Продать</button>
+              ${g.status === 'in' ? `<button class="btn-sm btn-yellow" onclick="openBookModal('${firstKey}')">Бронь</button>` : ''}
+              <button class="btn-sm btn-outline" onclick="openPriceModal('${firstKey}')">Цена</button>
+              <button class="btn-sm btn-gray" onclick="openEditModal('${firstKey}')">✏️ Изменить</button>
+            </div>
+          </div>
+        </div>`;
+      });
+      delete byCat[cat];
+    });
+
+    for (let cat in byCat) {
+      stockHtml += `<div class="section-title" style="margin-top:15px; color:#fff;">📱 ${cat}</div>`;
+      byCat[cat].forEach(g => {
+        const count = g.items.length;
+        const firstKey = g.items[0].key;
+        let imeiList = g.items.map(i => i.imei ? `• ${i.imei}` : '• без IMEI').join('<br>');
+        stockHtml += `
+        <div class="deal-card">
+          <div class="deal-header">
+            <div>
+              <div class="deal-title">${g.model}${count > 1 ? ` <span class="qty-badge">${count} шт</span>` : ''}</div>
+              <div class="deal-imei">${imeiList}</div>
+            </div>
+            <div class="deal-price">
+              <div class="deal-buy">Закупка</div>
+              <div style="font-size:15px; font-weight:700; color:#f5c76a;">${g.buy.toLocaleString('ru-RU')} ₽</div>
+            </div>
+          </div>
+          <div class="deal-footer">
+            <div><span class="status st-in">В наличии</span></div>
+            <div class="action-buttons-row">
+              <button class="btn-sm btn-green" onclick="openSellModal('${firstKey}')">Продать</button>
+              <button class="btn-sm btn-yellow" onclick="openBookModal('${firstKey}')">Бронь</button>
+              <button class="btn-sm btn-outline" onclick="openPriceModal('${firstKey}')">Цена</button>
+              <button class="btn-sm btn-gray" onclick="openEditModal('${firstKey}')">✏️ Изменить</button>
+            </div>
+          </div>
+        </div>`;
+      });
     }
 
     document.getElementById('stockList').innerHTML = stockHtml || '<div style="text-align:center; color:#64748b; font-size:12px; padding:10px;">Склад пуст</div>';
@@ -753,14 +879,12 @@
 
     document.getElementById('sumBuy').textContent = sumBuy.toLocaleString('ru-RU') + ' ₽';
     document.getElementById('sumCash').textContent = sumCash.toLocaleString('ru-RU') + ' ₽';
-
     const netProfit = totalProfit - totalExpenses;
     const pEl = document.getElementById('sumProfit');
     pEl.textContent = (netProfit >= 0 ? '+' : '') + netProfit.toLocaleString('ru-RU') + ' ₽';
     pEl.className = 'dash-value ' + (netProfit >= 0 ? 'green-text' : 'red-text');
   };
 
-  // ========== РЕНДЕР ВИТРИНЫ ==========
   window.renderPoster = function() {
     const listWrap = document.getElementById('posterList');
     let groupedItems = {};
@@ -772,13 +896,7 @@
         const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
         const price = item.storePrice || item.buy;
         if (!groupedItems[groupKey]) {
-          groupedItems[groupKey] = {
-            model: item.model,
-            desc: desc || item.category,
-            count: 1,
-            price: price,
-            oldPrice: item.oldPrice || null
-          };
+          groupedItems[groupKey] = { model: item.model, desc: desc || item.category, count: 1, price: price, oldPrice: item.oldPrice || null };
         } else {
           groupedItems[groupKey].count++;
           if (price < groupedItems[groupKey].price) groupedItems[groupKey].price = price;
@@ -814,7 +932,7 @@
     listWrap.innerHTML = posterHtml || '<p style="font-size:12px; text-align:center; opacity:0.6;">Нет товаров</p>';
   };
 
-  // ========== БЭКАП ==========
+  // Остальные функции (бэкап, модалки, импорт и т.д.)
   window.openBackupModal = function() { document.getElementById('backupModal').classList.add('active'); };
   window.closeBackupModal = function() { document.getElementById('backupModal').classList.remove('active'); };
 
@@ -849,7 +967,6 @@
     reader.readAsText(file);
   };
 
-  // ========== РЕДАКТИРОВАНИЕ ТОВАРА ==========
   window.openEditModal = function(key) {
     const code = prompt('Введите пароль для изменения:');
     if (code !== '0537') {
@@ -881,7 +998,6 @@
     closeEditModal();
   });
 
-  // ========== ИЗМЕНИТЬ ОПЛАТУ ==========
   window.openEditPayModal = function(key) {
     document.getElementById('editPayKey').value = key;
     const d = deals[key];
@@ -901,7 +1017,6 @@
     closeEditPayModal();
   });
 
-  // ========== УДАЛЕНИЕ ==========
   window.delDeal = function(key) {
     const code = prompt('Введите код для удаления (0537):');
     if (code === '0537') {
@@ -911,7 +1026,6 @@
     }
   };
 
-  // ========== БРОНЬ ==========
   window.openBookModal = function(key) {
     document.getElementById('bookKey').value = key;
     document.getElementById('bookForm').reset();
@@ -930,7 +1044,6 @@
     closeBookModal();
   });
 
-  // ========== ПРОДАЖА ==========
   window.openSellModal = function(key) {
     document.getElementById('sellKey').value = key;
     document.getElementById('sellForm').reset();
@@ -949,12 +1062,12 @@
       paymentMethod: payMethod,
       paymentReceived: payMethod === 'Наличные',
       status: 'sold',
-      partialPaid: 0
+      partialPaid: 0,
+      soldAt: Date.now()
     });
     closeSellModal();
   });
 
-  // ========== ЦЕНА НА ВИТРИНУ ==========
   window.openPriceModal = function(key) {
     document.getElementById('priceKey').value = key;
     const current = deals[key].storePrice || Math.round((deals[key].buy || 0) * 1.1);
@@ -974,7 +1087,6 @@
     closePriceModal();
   });
 
-  // ========== РАСХОДЫ ==========
   window.openExpenseListModal = function() {
     let html = '';
     const sortedExpenses = Object.entries(expenses).sort((a, b) => b[0].localeCompare(a[0]));
@@ -1021,14 +1133,13 @@
     const amount = Number(f.get('amount'));
     const reason = f.get('reason');
     if (!amount || !reason) return alert('Заполните сумму и причину');
-    push(ref(db, 'expenses'), { amount, reason }).then(() => {
+    push(ref(db, 'expenses'), { amount, reason, createdAt: Date.now() }).then(() => {
       closeExpenseModal();
       e.target.reset();
       setTimeout(() => openExpenseListModal(), 300);
     });
   });
 
-  // ========== ДОБАВЛЕНИЕ ТОВАРА ==========
   window.openAddModal = function() {
     document.getElementById('addModal').classList.add('active');
     document.getElementById('addCategory').value = 'iPhone';
@@ -1067,7 +1178,8 @@
       buy: buy,
       status: 'in',
       storePrice: 0,
-      imei: f.get('imei') || ''
+      imei: f.get('imei') || '',
+      createdAt: Date.now()
     };
 
     if (cat === 'iPhone') {
@@ -1084,7 +1196,6 @@
     closeAddModal();
   });
 
-  // ========== ИМПОРТ ==========
   window.openImportModal = function() { document.getElementById('importModal').classList.add('active'); };
   window.closeImportModal = function() {
     document.getElementById('importModal').classList.remove('active');
@@ -1140,7 +1251,8 @@
           buy: price,
           status: 'in',
           storePrice: 0,
-          imei: ''
+          imei: '',
+          createdAt: Date.now()
         });
         addedCount++;
       }
@@ -1155,7 +1267,6 @@
     }
   };
 
-  // ========== СКАЧАТЬ ФОТО (список без количества) ==========
   window.generateSingleListImage = function() {
     const listWrap = document.getElementById('singlePosterList');
     let groupedItems = {};
@@ -1167,12 +1278,7 @@
         const desc = [item.storage, item.sim, item.color].filter(Boolean).join(' • ');
         const price = item.storePrice || item.buy;
         if (!groupedItems[groupKey]) {
-          groupedItems[groupKey] = {
-            model: item.model,
-            desc: desc || item.category,
-            price: price,
-            oldPrice: item.oldPrice || null
-          };
+          groupedItems[groupKey] = { model: item.model, desc: desc || item.category, price: price, oldPrice: item.oldPrice || null };
         }
       }
     });
@@ -1219,7 +1325,6 @@
     });
   };
 
-  // ========== ТЕКСТ ДЛЯ WHATSAPP ==========
   window.copyWhatsAppList = function() {
     let groupedItems = {};
     Object.keys(deals).forEach(key => {
@@ -1255,7 +1360,6 @@
     });
   };
 
-  // ========== СКАЧАТЬ ВСЮ ВИТРИНУ ==========
   window.downloadImage = function() {
     const posterElement = document.getElementById('posterContainer');
     html2canvas(posterElement, { scale: 2, backgroundColor: null, useCORS: true }).then(canvas => {
@@ -1272,7 +1376,6 @@
     });
   };
 
-  // ========== ЧАСТИЧНАЯ ОПЛАТА ==========
   window.openPartialPayModal = function(key) {
     const d = deals[key];
     const paid = d.partialPaid || 0;
